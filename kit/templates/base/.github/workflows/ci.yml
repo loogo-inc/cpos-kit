@@ -1,0 +1,19 @@
+# cpos-kit が所有する (update で置き換わる)。
+# 共通 CI の実体は cpos-kit 側 (loogo-inc/cpos-kit/.github/workflows/ci.yml@v1)。
+# cpos-kit が GitHub に置かれるまでは、下のローカル版が動く。
+name: CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - run: npm install   # package-lock.json を commit したら npm ci に変えてよい
+      - run: npx cpos-kit validate
+      - run: npm test

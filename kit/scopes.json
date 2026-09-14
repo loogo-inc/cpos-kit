@@ -1,0 +1,2233 @@
+{
+ "generatedFrom": {
+  "version": "1.0.0",
+  "revision": "00201-58l",
+  "fetchedAt": "2026-09-14",
+  "operations": 1372
+ },
+ "note": "CPOS が知る全スコープ (OpenAPI の oauth2 scopes) と、それを要求する operation の数。{appId} を含むものは雛形 (appId を入れて使う)。生成物。手で編集しない",
+ "scopes": [
+  {
+   "name": "*",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 4,
+   "ns": [
+    "session"
+   ],
+   "examples": [
+    "GET /api/device/bootstrap",
+    "GET /api/device/facilities",
+    "GET /api/device/ping"
+   ]
+  },
+  {
+   "name": "alerts:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 3,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/alerts",
+    "GET /api/alerts/{id}",
+    "GET /api/alerts/search"
+   ]
+  },
+  {
+   "name": "alerts:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 5,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/alerts",
+    "POST /api/alerts/{id}/acknowledge",
+    "POST /api/alerts/{id}/dismiss"
+   ]
+  },
+  {
+   "name": "android-app:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 6,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/android-app/v1/devices",
+    "POST /api/android-app/v1/devices/disconnect",
+    "POST /api/android-app/v1/devices/heartbeat"
+   ]
+  },
+  {
+   "name": "android-app:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 2,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "PUT /api/android-app/v1/releases/{versionCode}",
+    "DELETE /api/android-app/v1/releases/{versionCode}"
+   ]
+  },
+  {
+   "name": "app-data:{appId}:delete",
+   "template": true,
+   "known": true,
+   "adminOnly": false,
+   "operations": 1,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "DELETE /api/app-data/{appId}/{resource}/{id}"
+   ]
+  },
+  {
+   "name": "app-data:{appId}:read",
+   "template": true,
+   "known": true,
+   "adminOnly": false,
+   "operations": 7,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/app-data/{appId}/{resource}",
+    "GET /api/app-data/{appId}/{resource}/{id}",
+    "GET /api/app-data/{appId}/{resource}/{id}/attachments"
+   ]
+  },
+  {
+   "name": "app-data:{appId}:write",
+   "template": true,
+   "known": true,
+   "adminOnly": false,
+   "operations": 9,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/app-data/{appId}/{resource}",
+    "PUT /api/app-data/{appId}/{resource}/{id}",
+    "POST /api/app-data/{appId}/{resource}/{id}/attachments"
+   ]
+  },
+  {
+   "name": "app-invocations:run",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 0,
+   "ns": [],
+   "examples": []
+  },
+  {
+   "name": "app-usage:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 1,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/app-usage/summary"
+   ]
+  },
+  {
+   "name": "app-usage:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 1,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/app-usage/ingest"
+   ]
+  },
+  {
+   "name": "apps:admin",
+   "template": false,
+   "known": true,
+   "adminOnly": true,
+   "operations": 4,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/apps/{id}/tokens/rotate",
+    "GET /api/apps/fleet",
+    "POST /api/apps/fleet/rotate-tokens"
+   ]
+  },
+  {
+   "name": "apps:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 3,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/app-data/catalog",
+    "GET /api/platform/apps",
+    "GET /api/platform/apps/{appId}"
+   ]
+  },
+  {
+   "name": "apps:{appId}:ai:run",
+   "template": true,
+   "known": true,
+   "adminOnly": false,
+   "operations": 6,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/apps/{appId}/ai/{promptKey}/resolve",
+    "POST /api/apps/{appId}/ai/{promptKey}/run",
+    "POST /api/apps/{appId}/ai/{promptKey}/run-document"
+   ]
+  },
+  {
+   "name": "ask-ai",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 1,
+   "ns": [
+    "session"
+   ],
+   "examples": [
+    "POST /api/device/ask"
+   ]
+  },
+  {
+   "name": "audio-notes:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 2,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/device/audio-notes/v1",
+    "GET /api/device/audio-notes/v1/{id}"
+   ]
+  },
+  {
+   "name": "audio-notes:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 5,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/device/audio-notes/v1",
+    "POST /api/device/audio-notes/v1/{id}/cancel",
+    "POST /api/device/audio-notes/v1/{id}/run"
+   ]
+  },
+  {
+   "name": "benefits:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 1,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/platform/benefits/summary"
+   ]
+  },
+  {
+   "name": "billing-masters:delete",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 2,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "DELETE /api/billing-masters/area-rates/{id}",
+    "DELETE /api/billing-masters/service-codes/{id}"
+   ]
+  },
+  {
+   "name": "billing-masters:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 13,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/billing-masters/area-rates",
+    "GET /api/billing-masters/area-rates/export.csv",
+    "GET /api/billing-masters/area-rates/template.csv"
+   ]
+  },
+  {
+   "name": "billing-masters:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 9,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/billing-masters/area-rates",
+    "PUT /api/billing-masters/area-rates/{id}",
+    "POST /api/billing-masters/area-rates/import-csv/apply"
+   ]
+  },
+  {
+   "name": "billing:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 7,
+   "ns": [
+    "session"
+   ],
+   "examples": [
+    "POST /api/billing/v1/check-requirements",
+    "GET /api/billing/v1/facility-standards",
+    "POST /api/billing/v1/imports/pdf/preview"
+   ]
+  },
+  {
+   "name": "care-claim-candidates:delete",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 1,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "DELETE /api/care-claim-candidates/v1/{id}"
+   ]
+  },
+  {
+   "name": "care-claim-candidates:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 6,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/care-billing-contexts/v1",
+    "GET /api/care-billing-plans/v1",
+    "GET /api/care-billing-plans/v1/{id}"
+   ]
+  },
+  {
+   "name": "care-claim-candidates:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 13,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "PUT /api/care-billing-contexts/v1/{id}",
+    "POST /api/care-billing-contexts/v1/bulk-upsert",
+    "PUT /api/care-billing-plans/v1/{id}"
+   ]
+  },
+  {
+   "name": "care-documents:*",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 0,
+   "ns": [],
+   "examples": []
+  },
+  {
+   "name": "care-documents:ai",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 2,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/care-documents/v1/{id}/ai-fill",
+    "POST /api/care-documents/v1/draft-from-context"
+   ]
+  },
+  {
+   "name": "care-documents:approve",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 4,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/care-documents/v1/{id}/archive",
+    "POST /api/care-documents/v1/{id}/mark-canonical",
+    "POST /api/care-documents/v1/{id}/revert-canonical"
+   ]
+  },
+  {
+   "name": "care-documents:delete",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 1,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "DELETE /api/care-documents/v1/{id}"
+   ]
+  },
+  {
+   "name": "care-documents:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 12,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/care-documents/v1",
+    "GET /api/care-documents/v1/{id}",
+    "POST /api/care-documents/v1/{id}/convert"
+   ]
+  },
+  {
+   "name": "care-documents:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 11,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/care-documents/v1",
+    "PUT /api/care-documents/v1/{id}",
+    "POST /api/care-documents/v1/{id}/attach-file"
+   ]
+  },
+  {
+   "name": "care-records:ask-ai",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 1,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/device/records/ask"
+   ]
+  },
+  {
+   "name": "care-records:important:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 1,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/device/records/users/{insuredNumber}/important-matters"
+   ]
+  },
+  {
+   "name": "care-records:important:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 1,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/device/records/users/{insuredNumber}/important-matters"
+   ]
+  },
+  {
+   "name": "care-records:photo:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 3,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/care-records/v1/records/photos",
+    "POST /api/device/records/photos",
+    "POST /api/record-app/records/photos"
+   ]
+  },
+  {
+   "name": "care-records:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 68,
+   "ns": [
+    "session",
+    "app"
+   ],
+   "examples": [
+    "GET /api/care-records/missing",
+    "GET /api/care-records/v1/attachments/{attachmentId}/content",
+    "GET /api/care-records/v1/bootstrap"
+   ]
+  },
+  {
+   "name": "care-records:sync",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 3,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/care-records/v1/records/batch-sync",
+    "POST /api/device/records/batch-sync",
+    "POST /api/record-app/records/batch-sync"
+   ]
+  },
+  {
+   "name": "care-records:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 67,
+   "ns": [
+    "app",
+    "session"
+   ],
+   "examples": [
+    "POST /api/care-records/v1/batch-records",
+    "POST /api/care-records/v1/day-service/arrival-vitals",
+    "POST /api/care-records/v1/day-service/batch-fluid"
+   ]
+  },
+  {
+   "name": "care-schedule-exceptions:delete",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 1,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "DELETE /api/care-schedule-exceptions/{id}"
+   ]
+  },
+  {
+   "name": "care-schedule-exceptions:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 2,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/care-schedule-exceptions",
+    "GET /api/care-schedule-exceptions/{id}"
+   ]
+  },
+  {
+   "name": "care-schedule-exceptions:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 3,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/care-schedule-exceptions",
+    "PUT /api/care-schedule-exceptions/{id}",
+    "POST /api/care-schedule-exceptions/{id}/void"
+   ]
+  },
+  {
+   "name": "care-schedules:delete",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 1,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "DELETE /api/care-schedules/{id}"
+   ]
+  },
+  {
+   "name": "care-schedules:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 7,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/care-schedules",
+    "GET /api/care-schedules/{id}",
+    "POST /api/care-schedules/{id}/create-actual"
+   ]
+  },
+  {
+   "name": "care-schedules:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 5,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/care-schedules",
+    "PUT /api/care-schedules/{id}",
+    "POST /api/care-schedules/{id}/cancel"
+   ]
+  },
+  {
+   "name": "care-service-actuals:approve",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 1,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/care-service-actuals/v1/{id}/approve"
+   ]
+  },
+  {
+   "name": "care-service-actuals:delete",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 1,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "DELETE /api/care-service-actuals/v1/{id}"
+   ]
+  },
+  {
+   "name": "care-service-actuals:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 5,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/care-service-actuals/v1",
+    "GET /api/care-service-actuals/v1/{id}",
+    "GET /api/care-service-actuals/v1/metrics"
+   ]
+  },
+  {
+   "name": "care-service-actuals:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 8,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/care-service-actuals/v1",
+    "PUT /api/care-service-actuals/v1/{id}",
+    "POST /api/care-service-actuals/v1/{id}/reopen"
+   ]
+  },
+  {
+   "name": "careplans:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 0,
+   "ns": [],
+   "examples": []
+  },
+  {
+   "name": "claims:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 1,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/platform/claims/summary"
+   ]
+  },
+  {
+   "name": "employees:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 1,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/platform/employees"
+   ]
+  },
+  {
+   "name": "employees:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 2,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/platform/employees/{authUserId}/employment",
+    "PATCH /api/platform/employees/{authUserId}/hrm"
+   ]
+  },
+  {
+   "name": "external-partners:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 3,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/platform/external-partners/care-managers",
+    "GET /api/platform/external-partners/medical-providers",
+    "GET /api/platform/external-partners/search"
+   ]
+  },
+  {
+   "name": "external-partners:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 2,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/platform/external-partners/care-managers",
+    "POST /api/platform/external-partners/medical-providers"
+   ]
+  },
+  {
+   "name": "facilities:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 12,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/facilities",
+    "POST /api/facilities",
+    "GET /api/facilities/{facilityId}/bath-schedule/{weekStart}"
+   ]
+  },
+  {
+   "name": "facilities:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 6,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "PUT /api/facilities/{id}",
+    "DELETE /api/facilities/{id}",
+    "PUT /api/facilities/{id}/billing-settings"
+   ]
+  },
+  {
+   "name": "facility-handover:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 1,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/facilities/{facilityId}/handover/{date}"
+   ]
+  },
+  {
+   "name": "facility-handover:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 3,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/facilities/{facilityId}/handover/{date}/export-doc",
+    "PATCH /api/facilities/{facilityId}/handover/{date}/records/{recordId}",
+    "DELETE /api/facilities/{facilityId}/handover/{date}/records/{recordId}"
+   ]
+  },
+  {
+   "name": "facility-intakes:delete",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 1,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "DELETE /api/facilities/{facilityId}/intakes/{id}"
+   ]
+  },
+  {
+   "name": "facility-intakes:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 3,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/facilities/{facilityId}/intakes",
+    "GET /api/facilities/{facilityId}/intakes/{id}",
+    "GET /api/facilities/{facilityId}/intakes/prefill"
+   ]
+  },
+  {
+   "name": "facility-intakes:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 8,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/facilities/{facilityId}/intakes",
+    "PUT /api/facilities/{facilityId}/intakes/{id}",
+    "POST /api/facilities/{facilityId}/intakes/{id}/convert-to-master-user"
+   ]
+  },
+  {
+   "name": "facility-modules:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 1,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/facilities/{facilityId}/modules"
+   ]
+  },
+  {
+   "name": "facility-modules:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 12,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/facilities/{facilityId}/bath-schedule",
+    "PUT /api/facilities/{facilityId}/bath-schedule/{weekStart}",
+    "DELETE /api/facilities/{facilityId}/bath-schedule/{weekStart}"
+   ]
+  },
+  {
+   "name": "facility-staff:delete",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 1,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "DELETE /api/facilities/{facilityId}/staff/{id}"
+   ]
+  },
+  {
+   "name": "facility-staff:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 3,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/facilities/{facilityId}/staff",
+    "GET /api/facilities/{facilityId}/staff/{id}",
+    "GET /api/platform/facility-staff"
+   ]
+  },
+  {
+   "name": "facility-staff:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 7,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/facilities/{facilityId}/staff",
+    "PUT /api/facilities/{facilityId}/staff/{id}",
+    "POST /api/facilities/{facilityId}/staff/{id}/deactivate"
+   ]
+  },
+  {
+   "name": "facility-users:export",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 1,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/facilities/{facilityId}/users/export.csv"
+   ]
+  },
+  {
+   "name": "facility-users:import",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 2,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/facilities/{facilityId}/business-diary",
+    "POST /api/facilities/{facilityId}/users/import-csv/undo"
+   ]
+  },
+  {
+   "name": "facility-users:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 5,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/facilities/{facilityId}/care-manager-links",
+    "GET /api/facilities/{facilityId}/users",
+    "GET /api/facilities/{facilityId}/users/{insuredNumber}/extras"
+   ]
+  },
+  {
+   "name": "facility-users:schema:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 2,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/facilities/{facilityId}/users/extras-schema",
+    "GET /api/facilities/{facilityId}/users/import-mapping"
+   ]
+  },
+  {
+   "name": "facility-users:schema:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 3,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "PUT /api/facilities/{facilityId}/users/extras-schema",
+    "PUT /api/facilities/{facilityId}/users/import-mapping",
+    "POST /api/facilities/{facilityId}/users/migrate-burden-ratio"
+   ]
+  },
+  {
+   "name": "facility-users:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 4,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/facilities/{facilityId}/care-manager-links/apply",
+    "POST /api/facilities/{facilityId}/users",
+    "PUT /api/facilities/{facilityId}/users/{insuredNumber}"
+   ]
+  },
+  {
+   "name": "feedback:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 2,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/feedback",
+    "GET /api/feedback/{id}/attachments/{fileId}"
+   ]
+  },
+  {
+   "name": "feedback:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 2,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/feedback",
+    "POST /api/feedback/{id}/resolve"
+   ]
+  },
+  {
+   "name": "filing:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 0,
+   "ns": [],
+   "examples": []
+  },
+  {
+   "name": "filing:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 0,
+   "ns": [],
+   "examples": []
+  },
+  {
+   "name": "form-templates:delete",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 1,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "DELETE /api/form-templates/{id}"
+   ]
+  },
+  {
+   "name": "form-templates:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 3,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/form-templates",
+    "GET /api/form-templates/{id}",
+    "GET /api/form-templates/{id}/export.json"
+   ]
+  },
+  {
+   "name": "form-templates:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 4,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/form-templates",
+    "PUT /api/form-templates/{id}",
+    "POST /api/form-templates/{id}/clone"
+   ]
+  },
+  {
+   "name": "fte:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 1,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/platform/fte"
+   ]
+  },
+  {
+   "name": "handover:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 0,
+   "ns": [],
+   "examples": []
+  },
+  {
+   "name": "handover:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 0,
+   "ns": [],
+   "examples": []
+  },
+  {
+   "name": "help:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 2,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/care-records/v1/ask",
+    "POST /api/help/ask"
+   ]
+  },
+  {
+   "name": "incidents:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 2,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/incidents",
+    "GET /api/incidents/{id}"
+   ]
+  },
+  {
+   "name": "incidents:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 3,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/incidents",
+    "PUT /api/incidents/{id}",
+    "DELETE /api/incidents/{id}"
+   ]
+  },
+  {
+   "name": "kasan-export:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 1,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/platform/kasan/export"
+   ]
+  },
+  {
+   "name": "kasan:pii:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 0,
+   "ns": [],
+   "examples": []
+  },
+  {
+   "name": "life:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 6,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/life/assessment-rows",
+    "GET /api/life/assessments",
+    "POST /api/life/barthel-draft"
+   ]
+  },
+  {
+   "name": "life:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 4,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "PUT /api/life/assessments",
+    "DELETE /api/life/assessments/{id}",
+    "PUT /api/life/feedbacks"
+   ]
+  },
+  {
+   "name": "ltc-web:audit:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 1,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/ltc-web/request-logs"
+   ]
+  },
+  {
+   "name": "ltc-web:careplan:import",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 2,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/ltc-web/careplan/receive/{externalDataId}/import",
+    "POST /api/ltc-web/careplan/receive/{externalDataId}/import-preview"
+   ]
+  },
+  {
+   "name": "ltc-web:careplan:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 3,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/ltc-web/careplan/envelopes",
+    "GET /api/ltc-web/careplan/envelopes/{id}",
+    "GET /api/ltc-web/careplan/send-list"
+   ]
+  },
+  {
+   "name": "ltc-web:careplan:receive",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 2,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/ltc-web/careplan/receive-list",
+    "POST /api/ltc-web/careplan/receive/{externalDataId}/fetch"
+   ]
+  },
+  {
+   "name": "ltc-web:careplan:send",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 5,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/ltc-web/careplan/consent-register",
+    "POST /api/ltc-web/careplan/delivery-register",
+    "POST /api/ltc-web/careplan/envelopes"
+   ]
+  },
+  {
+   "name": "ltc-web:eligibility:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 8,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/ltc-web/facilities/{facilityId}/user-list",
+    "POST /api/ltc-web/facilities/{facilityId}/users/{insuredNumber}/{kind}",
+    "POST /api/ltc-web/facilities/{facilityId}/users/{insuredNumber}/diff-master-user"
+   ]
+  },
+  {
+   "name": "ltc-web:eligibility:sync",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 2,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/ltc-web/facilities/{facilityId}/user-list/sync",
+    "POST /api/ltc-web/facilities/{facilityId}/users/{insuredNumber}/apply-diff"
+   ]
+  },
+  {
+   "name": "ltc-web:settings:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 4,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/ltc-web/access-policies",
+    "GET /api/ltc-web/settings",
+    "GET /api/ltc-web/settings/{facilityId}"
+   ]
+  },
+  {
+   "name": "ltc-web:settings:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 3,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/ltc-web/access-policies/seed",
+    "PUT /api/ltc-web/settings/{facilityId}",
+    "POST /api/ltc-web/settings/{facilityId}/test-connection"
+   ]
+  },
+  {
+   "name": "master-users:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 4,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/platform/master-users",
+    "GET /api/platform/master-users/{insuredNumber}",
+    "GET /api/platform/master-users/{insuredNumber}/face-sheet"
+   ]
+  },
+  {
+   "name": "migration-jobs:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 3,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/migration-jobs/v1",
+    "GET /api/migration-jobs/v1/{id}",
+    "GET /api/migration-jobs/v1/kinds"
+   ]
+  },
+  {
+   "name": "migration-jobs:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 5,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/migration-jobs/v1",
+    "POST /api/migration-jobs/v1/{id}/cancel",
+    "POST /api/migration-jobs/v1/{id}/pause"
+   ]
+  },
+  {
+   "name": "notifications:send",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 1,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/platform/email/send"
+   ]
+  },
+  {
+   "name": "office:render:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 1,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/office/convert"
+   ]
+  },
+  {
+   "name": "organizations:provision",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 1,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/platform/organizations"
+   ]
+  },
+  {
+   "name": "patients:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 0,
+   "ns": [],
+   "examples": []
+  },
+  {
+   "name": "patients:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 0,
+   "ns": [],
+   "examples": []
+  },
+  {
+   "name": "pdf:render:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 1,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/pdf/render"
+   ]
+  },
+  {
+   "name": "platform:pii:scan",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 3,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/platform/facility-context",
+    "POST /api/platform/pii/redact",
+    "POST /api/platform/pii/scan"
+   ]
+  },
+  {
+   "name": "progress-notes:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 4,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/progress-notes",
+    "GET /api/progress-notes/{id}",
+    "GET /api/progress-notes/{id}/attachments"
+   ]
+  },
+  {
+   "name": "progress-notes:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 8,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/progress-notes",
+    "PUT /api/progress-notes/{id}",
+    "DELETE /api/progress-notes/{id}"
+   ]
+  },
+  {
+   "name": "prompts:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 4,
+   "ns": [
+    "session"
+   ],
+   "examples": [
+    "GET /api/prompts",
+    "GET /api/prompts/{id}",
+    "PUT /api/prompts/{id}"
+   ]
+  },
+  {
+   "name": "providers:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 8,
+   "ns": [
+    "session"
+   ],
+   "examples": [
+    "GET /api/providers",
+    "GET /api/providers/{id}",
+    "PUT /api/providers/{id}"
+   ]
+  },
+  {
+   "name": "qualified-persons:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 1,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/platform/qualified-persons"
+   ]
+  },
+  {
+   "name": "record-extractors:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 11,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/record-extractors/rehab",
+    "GET /api/record-extractors/rules",
+    "POST /api/record-extractors/structured-note"
+   ]
+  },
+  {
+   "name": "records:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 0,
+   "ns": [],
+   "examples": []
+  },
+  {
+   "name": "records:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 0,
+   "ns": [],
+   "examples": []
+  },
+  {
+   "name": "reported-placements:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 3,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/reported-placements",
+    "GET /api/reported-placements/divergence",
+    "GET /api/reported-placements/summary"
+   ]
+  },
+  {
+   "name": "reported-placements:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 3,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/reported-placements",
+    "DELETE /api/reported-placements/{id}",
+    "POST /api/reported-placements/{id}/end"
+   ]
+  },
+  {
+   "name": "sales:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 3,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/platform/sales/activities",
+    "GET /api/platform/sales/activities/{id}",
+    "GET /api/platform/sales/activities/summary"
+   ]
+  },
+  {
+   "name": "sales:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 3,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/platform/sales/activities",
+    "PUT /api/platform/sales/activities/{id}",
+    "DELETE /api/platform/sales/activities/{id}"
+   ]
+  },
+  {
+   "name": "self-inspections:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 2,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/self-inspections",
+    "GET /api/self-inspections/{id}"
+   ]
+  },
+  {
+   "name": "self-inspections:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 3,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/self-inspections",
+    "PUT /api/self-inspections/{id}",
+    "DELETE /api/self-inspections/{id}"
+   ]
+  },
+  {
+   "name": "service-actuals:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 0,
+   "ns": [],
+   "examples": []
+  },
+  {
+   "name": "service-code-master:delete",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 1,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "DELETE /api/service-code-master/v1/{id}"
+   ]
+  },
+  {
+   "name": "service-code-master:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 2,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/service-code-master/v1",
+    "GET /api/service-code-master/v1/{id}"
+   ]
+  },
+  {
+   "name": "service-code-master:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 3,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/service-code-master/v1",
+    "PUT /api/service-code-master/v1/{id}",
+    "POST /api/service-code-master/v1/import"
+   ]
+  },
+  {
+   "name": "shifts:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 6,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/shifts/plans",
+    "GET /api/shifts/plans/{id}",
+    "GET /api/shifts/plans/{id}/history"
+   ]
+  },
+  {
+   "name": "shifts:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 10,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/shifts/plans",
+    "PUT /api/shifts/plans/{id}/assignments",
+    "POST /api/shifts/plans/{id}/finalize"
+   ]
+  },
+  {
+   "name": "sources:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 4,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/sources",
+    "GET /api/sources/{sourceId}/extractions",
+    "GET /api/sources/{sourceId}/ocr"
+   ]
+  },
+  {
+   "name": "sources:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 4,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/sources",
+    "POST /api/sources/{sourceId}/extractions",
+    "PATCH /api/sources/{sourceId}/metadata"
+   ]
+  },
+  {
+   "name": "spreadsheet-import:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 1,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/facilities/{facilityId}/spreadsheet-import"
+   ]
+  },
+  {
+   "name": "staffing-standards:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 4,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/staffing-standards",
+    "GET /api/staffing-standards/{facilityId}/{serviceTypeCode}",
+    "GET /api/staffing-standards/{facilityId}/{serviceTypeCode}/compliance"
+   ]
+  },
+  {
+   "name": "staffing-standards:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 2,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "PUT /api/staffing-standards/{facilityId}/{serviceTypeCode}",
+    "DELETE /api/staffing-standards/{facilityId}/{serviceTypeCode}"
+   ]
+  },
+  {
+   "name": "trainings:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 2,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/trainings",
+    "GET /api/trainings/{id}"
+   ]
+  },
+  {
+   "name": "trainings:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 3,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/trainings",
+    "PUT /api/trainings/{id}",
+    "DELETE /api/trainings/{id}"
+   ]
+  },
+  {
+   "name": "transport:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 8,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/transport/plans",
+    "GET /api/transport/plans/{id}",
+    "GET /api/transport/plans/{id}/crew-view"
+   ]
+  },
+  {
+   "name": "transport:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 12,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/transport/plans",
+    "POST /api/transport/plans/{id}/activate",
+    "PUT /api/transport/plans/{id}/crew"
+   ]
+  },
+  {
+   "name": "user-groups:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 2,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/user-groups",
+    "GET /api/user-groups/{id}"
+   ]
+  },
+  {
+   "name": "user-groups:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 3,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/user-groups",
+    "PATCH /api/user-groups/{id}",
+    "DELETE /api/user-groups/{id}"
+   ]
+  },
+  {
+   "name": "user-list-import:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 3,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/user-list-import/analyze",
+    "POST /api/user-list-import/apply",
+    "POST /api/user-list-import/preview"
+   ]
+  },
+  {
+   "name": "users:admin",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 2,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "PUT /api/platform/organizations/{id}/entitlements/{product}",
+    "POST /api/platform/organizations/{id}/users"
+   ]
+  },
+  {
+   "name": "users:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 3,
+   "ns": [
+    "session",
+    "app"
+   ],
+   "examples": [
+    "GET /api/device/users",
+    "GET /api/platform/organizations/{id}",
+    "GET /api/platform/users"
+   ]
+  },
+  {
+   "name": "visit-checkins:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 2,
+   "ns": [
+    "app",
+    "session"
+   ],
+   "examples": [
+    "GET /api/visit-checkins",
+    "GET /api/visit-checkins/orphans"
+   ]
+  },
+  {
+   "name": "visit-checkins:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 3,
+   "ns": [
+    "app",
+    "session"
+   ],
+   "examples": [
+    "POST /api/visit-checkins",
+    "POST /api/visit-checkins/reassign",
+    "POST /api/visit-checkins/reconcile"
+   ]
+  },
+  {
+   "name": "vitals:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 0,
+   "ns": [],
+   "examples": []
+  },
+  {
+   "name": "vitals:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 0,
+   "ns": [],
+   "examples": []
+  },
+  {
+   "name": "welfare-equipment:benefit-review",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 4,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/welfare-equipment/v2/purchase-applications",
+    "POST /api/welfare-equipment/v2/purchase-applications",
+    "POST /api/welfare-equipment/v2/purchase-applications/{applicationId}/transition"
+   ]
+  },
+  {
+   "name": "welfare-equipment:billing-review",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 5,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/welfare-equipment/v2/monthly-actuals/preview",
+    "POST /api/welfare-equipment/v2/monthly-closes/{closeId}/close",
+    "POST /api/welfare-equipment/v2/monthly-closes/{closeId}/export"
+   ]
+  },
+  {
+   "name": "welfare-equipment:contract-approve",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 3,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/welfare-equipment/v2/contracts/{contractId}/agree",
+    "POST /api/welfare-equipment/v2/contracts/{contractId}/amend",
+    "POST /api/welfare-equipment/v2/contracts/{contractId}/end"
+   ]
+  },
+  {
+   "name": "welfare-equipment:export",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 2,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/welfare-equipment/v2/audit-packs",
+    "POST /api/welfare-equipment/v2/form-templates/{templateId}/render"
+   ]
+  },
+  {
+   "name": "welfare-equipment:handoff-receive",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 4,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/welfare-equipment/v2/handoffs",
+    "GET /api/welfare-equipment/v2/handoffs/{handoffId}",
+    "POST /api/welfare-equipment/v2/handoffs/{handoffId}/respond"
+   ]
+  },
+  {
+   "name": "welfare-equipment:handoff-send",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 1,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/welfare-equipment/v2/handoffs"
+   ]
+  },
+  {
+   "name": "welfare-equipment:migration-manage",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 4,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/welfare-equipment/v2/migration/{batchId}/apply",
+    "POST /api/welfare-equipment/v2/migration/{batchId}/reconcile",
+    "POST /api/welfare-equipment/v2/migration/preview"
+   ]
+  },
+  {
+   "name": "welfare-equipment:monitoring-finalize",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 3,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/welfare-equipment/v2/monitorings/{sessionId}/finalize",
+    "POST /api/welfare-equipment/v2/monitorings/{sessionId}/revise",
+    "POST /api/welfare-equipment/v2/obligations/{obligationId}/reschedule"
+   ]
+  },
+  {
+   "name": "welfare-equipment:plan-approve",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 1,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/welfare-equipment/v2/plans/{documentId}/approve"
+   ]
+  },
+  {
+   "name": "welfare-equipment:price-manage",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 5,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/welfare-equipment/v2/commercial-observations/{observationId}/confirm-meaning",
+    "POST /api/welfare-equipment/v2/imports/{importId}/benchmark-options",
+    "POST /api/welfare-equipment/v2/prices"
+   ]
+  },
+  {
+   "name": "welfare-equipment:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 60,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/welfare-equipment/aggregate",
+    "GET /api/welfare-equipment/ceiling-check",
+    "POST /api/welfare-equipment/export"
+   ]
+  },
+  {
+   "name": "welfare-equipment:stock-manage",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 8,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/welfare-equipment/v2/assets/{assetId}/movements",
+    "POST /api/welfare-equipment/v2/maintenance-jobs",
+    "POST /api/welfare-equipment/v2/maintenance-jobs/{jobId}/release"
+   ]
+  },
+  {
+   "name": "welfare-equipment:void",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 2,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/welfare-equipment/v2/consents/{consentId}/withdraw",
+    "POST /api/welfare-equipment/v2/monitorings/{sessionId}/void"
+   ]
+  },
+  {
+   "name": "welfare-equipment:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 56,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "PUT /api/welfare-equipment/benchmarks",
+    "POST /api/welfare-equipment/benchmarks/import",
+    "PUT /api/welfare-equipment/loans"
+   ]
+  }
+ ]
+}

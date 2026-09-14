@@ -1,0 +1,213 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cpos-kit/spec/manifest.schema.json",
+  "title": "cpos.manifest.json",
+  "description": "登録アプリが https://<app-url>/cpos.manifest.json で配信する名札。正準は CPOS 本体の manifest 取込の型 (kit の保守者が追随する)。",
+  "type": "object",
+  "required": [
+    "appId",
+    "name"
+  ],
+  "properties": {
+    "appId": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+      "description": "正準アプリ ID。英小文字・数字・_・- で 64 字まで。AppData のパスやスコープ名に使われる"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "表示名"
+    },
+    "version": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "fullstack",
+        "api",
+        "worker"
+      ]
+    },
+    "url": {
+      "type": "string",
+      "description": "アプリの公開 URL (https)"
+    },
+    "icon": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "isPublic": {
+      "type": "boolean",
+      "description": "初回登録時にだけ使われる。再取込では上書きされない (以後は CPOS 管理画面の設定が正)"
+    },
+    "apiTokenScopes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^(\\*|[a-z0-9_-]+(:[a-z0-9_*-]+)*)$"
+      },
+      "description": "App Token に許可するスコープ。例: app-data:<appId>:read, master-users:read, facilities:read"
+    },
+    "resources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+            "description": "AppData のリソース名。英小文字・数字・ハイフンで 64 字まで、先頭は英数字 (CPOS 本体の検証と同じ。camelCase は 400 になる)"
+          },
+          "description": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string",
+            "description": "管理画面での表示名 (任意)"
+          },
+          "schema": {
+            "type": "object",
+            "description": "data の形の宣言 (JSON Schema の部分集合)。使えるキーワードは type / properties / required / items / enum / additionalProperties / description / format(date, date-time) だけ。トップは type: 'object' で properties を 1 つ以上。CPOS の書込照合は既定で報告のみ、APP_DATA_SCHEMA_ENFORCE=true で 400。KIT 模擬サーバは常に 400 (kit/app-data-schema.js が CPOS と同じ規則で検査する)"
+          },
+          "indexedFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "索引にしたい項目名 (任意。CPOS 側はまだ索引に使わない)"
+          },
+          "requiredPermissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "このリソースに必要な権限 (任意)"
+          }
+        }
+      },
+      "description": "AppData のリソース名の宣言。名前は a-z 0-9 ハイフンのみ (ステージングで確認: transportPlans は 400)"
+    },
+    "prompts": {
+      "type": "array"
+    },
+    "promptManifestPath": {
+      "type": "string"
+    },
+    "scheduledTasks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "taskKey",
+          "schedule",
+          "endpoint"
+        ],
+        "properties": {
+          "taskKey": {
+            "type": "string"
+          },
+          "schedule": {
+            "type": "string",
+            "description": "cron 式"
+          },
+          "timezone": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "endpoint": {
+            "type": "string"
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "GET",
+              "POST"
+            ]
+          }
+        }
+      }
+    },
+    "webhookEvents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "description"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "payloadType": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "requiredPermissions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "resource",
+          "actions"
+        ],
+        "properties": {
+          "resource": {
+            "type": "string"
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "description": "apiTokenScopes 未指定時のフォールバック"
+    },
+    "tokenDelivery": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "App Token の配り先 (任意)。宣言すると CPOS 側の一括運用 (apps:fleet rotate) が新トークンを Secret Manager の新しい版として書く。staging では secret 名に -staging が付く",
+      "properties": {
+        "secretManager": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "secret"
+          ],
+          "properties": {
+            "secret": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_-]{1,255}$",
+              "description": "Secret Manager のシークレット名"
+            },
+            "project": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]{4,29}$",
+              "description": "GCP プロジェクト ID (省略時は CPOS と同じ)"
+            }
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": true
+}
