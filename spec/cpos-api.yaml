@@ -1,0 +1,713 @@
+openapi: 3.1.0
+info:
+  title: KIT 模擬サーバの契約 (本物で確かめた応答の形)
+  version: 0.1.0
+  description: |
+    KIT 模擬サーバ (kit/fake) が応答を持つ operation と、その応答の形。本物 (ステージング) で確かめたものだけを書く。
+    CPOS の全 API の一覧と client の生成元は spec/cpos-openapi.json (公式 OpenAPI の写し)。ここは「模擬サーバで手元で動く範囲」。
+    手書きの 5 系統 (platform / facilities / masterUsers / staffAccounts / appData) はこの形に従う。
+    実装の参照位置は kit の保守者が手元の道具で追う。ここには書かない (配布物に内部構造を載せない)。
+
+    注意: CPOS の規約文書は /api/platform/* を { ok: true, ... } 包みと
+    定めているが、実装の facilities / users / app-data の一覧は素の配列を返す。
+    ここでは実装に合わせる (アプリが実際に受け取る形が正)。
+servers:
+  - url: http://localhost:4300
+    description: 偽 CPOS (npx cpos-kit fake)
+  - url: https://<cpos-host>
+    description: 本物 (staging / 本番)
+components:
+  securitySchemes:
+    cookie:
+      type: apiKey
+      in: cookie
+      name: cpos_session
+      description: ブラウザのログインセッション (共通ログインゲートウェイが発行)
+    appToken:
+      type: http
+      scheme: bearer
+      description: App Token (cpos_app_*) または PAT (cpos_pat_*)。サーバ間専用。ブラウザに置かない
+  parameters:
+    facilityHeader:
+      name: X-Cpos-Facility-Id
+      in: header
+      required: true
+      schema: { type: string }
+      description: 対象の事業所。許可されていない事業所は 403 (fail-close)
+  schemas:
+    Error:
+      type: object
+      required: [error]
+      description: |
+        本物の失敗応答 (ステージングで確認): { error: "<日本語の文>" }。401 だけ ok:false が付く。
+        スコープ不足の 403 は requiredScope と have が付く。存在しない事業所は 404、許可されていない事業所は 403。
+        知らないパスは JSON ではなく HTML の 404。偽 CPOS はこれに加えて code (スラッグ) と hint を返す。
+      properties:
+        ok: { type: boolean, const: false }
+        error: { type: string, description: 人向けの文 (例 "認証が必要です") }
+        requiredScope: { type: string }
+        have: { type: array, items: { type: string } }
+    FacilityScope:
+      type: object
+      properties:
+        mode: { type: string, enum: [all, limited, unknown] }
+        allowedFacilityIds: { type: [array, "null"], items: { type: string } }
+        managerFacilityIds: { type: [array, "null"], items: { type: string } }
+    FacilityStaff:
+      type: object
+      description: 職員 (担当者列の正。2026-09-14 実測)。userId は空のことが多い (22 人中 1〜2 人)。人事台帳 (Employee) との共通キーは無い
+      properties:
+        id: { type: string, description: staff_… }
+        facilityId: { type: string }
+        userId: { type: [string, "null"] }
+        name: { type: string }
+        displayName: { type: [string, "null"] }
+        normalizedNameKey: { type: [string, "null"] }
+        role: { type: [string, "null"] }
+        profession: { type: [string, "null"], description: nurse / care_worker / physical_therapist … }
+        professions: { type: array, items: { type: string } }
+        status: { type: string, description: active / inactive }
+        email: { type: [string, "null"] }
+        displayOrder: { type: [integer, "null"] }
+    ShiftType:
+      type: object
+      description: 勤務区分 (2026-09-14 ステージング実測)。facilityId null は組織共通。休みは startTime / endTime が "-"
+      required: [id, code, name, startTime, endTime, isActive]
+      properties:
+        id: { type: string }
+        organizationId: { type: string }
+        facilityId: { type: [string, "null"] }
+        code: { type: string, description: 例 EE / D / L / H / Y }
+        name: { type: string }
+        category: { type: string }
+        startTime: { type: string, description: "HH:MM。休みは -" }
+        endTime: { type: string }
+        breakMinutes: { type: integer }
+        workHours: { type: [number, "null"] }
+        color: { type: string }
+        sortOrder: { type: integer }
+        isActive: { type: boolean }
+        note: { type: [string, "null"] }
+    ShiftPlan:
+      type: object
+      description: シフト計画 (2026-09-14 ステージング実測)。同じ事業所・同じ月の計画を複数作れる。DELETE は無い
+      required: [id, facilityId, targetMonth, status, revision]
+      properties:
+        id: { type: string, description: shplan_… }
+        organizationId: { type: string }
+        facilityId: { type: [string, "null"], description: null は会社全体計画 }
+        targetMonth: { type: string, description: YYYY-MM }
+        status: { type: string, enum: [draft, finalized, published, archived] }
+        revision: { type: integer, description: 割当を置換するたびに +1 }
+        createdBy: { type: string }
+        finalizedBy: { type: [string, "null"] }
+        finalizedAt: { type: [string, "null"] }
+        publishedAt: { type: [string, "null"] }
+        createdAt: { type: string }
+        updatedAt: { type: string }
+    ShiftAssignment:
+      type: object
+      description: |
+        割当 (CPOS 本体の shifts ルートの実装と 2026-09-14 の実測)。userId / date / startTime / endTime の無い項目は
+        **本物は 400 にせず黙って捨てる** (KIT 模擬サーバは 400 で止める)。shiftType は自由な文字列 (既定 'day'。勤務区分の code を入れるのが自然)。
+        userId は職員の識別子 (本物は検証しない。facility-staff の userId は空のことが多い)
+      required: [userId, date, startTime, endTime]
+      properties:
+        id: { type: string, description: shasg_… (置換のたびに振り直す) }
+        planId: { type: string }
+        organizationId: { type: string }
+        facilityId: { type: [string, "null"], description: 事業所計画は計画の事業所。会社全体計画は割当ごと (null = 配置先なし) }
+        userId: { type: string }
+        date: { type: string, description: YYYY-MM-DD }
+        startTime: { type: string, description: HH:MM }
+        endTime: { type: string, description: HH:MM }
+        shiftType: { type: string }
+        roleRequired: { type: [string, "null"] }
+        notes: { type: [string, "null"] }
+    ShiftPreference:
+      type: object
+      description: 勤務希望 (CPOS 本体の shifts ルートの実装から。ステージングでは 0 件)
+      properties:
+        id: { type: string, description: shpref_… }
+        facilityId: { type: string }
+        userId: { type: string }
+        targetMonth: { type: string }
+        preferredDays: { type: array, items: { type: string } }
+        unavailableDays: { type: array, items: { type: string } }
+        constraints: { type: array, items: { type: string } }
+        note: { type: [string, "null"] }
+        status: { type: string, enum: [draft, submitted, withdrawn] }
+        submittedAt: { type: [string, "null"] }
+    StaffingRequirement:
+      type: object
+      description: 必要人員 (曜日別。CPOS 本体の shifts ルートの実装から)
+      properties:
+        id: { type: string, description: shreq_… }
+        facilityId: { type: [string, "null"] }
+        dayOfWeek: { type: [integer, "null"] }
+        startTime: { type: [string, "null"] }
+        endTime: { type: [string, "null"] }
+        role: { type: string }
+        requiredCount: { type: integer }
+        isActive: { type: boolean }
+        note: { type: [string, "null"] }
+    ShiftConflict:
+      type: object
+      description: 割当の衝突 (CPOS 本体の rules。実験 15 で本物の形を確認)。休みを startTime/endTime "-" で入れると invalid-time-range になるが保存はされる
+      required: [kind, userId, date, message, assignmentIds]
+      properties:
+        kind: { type: string, enum: [double-booking, unavailable-day, invalid-time-range] }
+        userId: { type: string }
+        date: { type: string }
+        message: { type: string }
+        assignmentIds: { type: array, items: { type: string } }
+    ShiftPlanHistory:
+      type: object
+      description: 割当を置換した記録 (新しい順)
+      properties:
+        id: { type: string, description: shlog_… }
+        planId: { type: string }
+        changedBy: { type: string }
+        changedAt: { type: string }
+        reason: { type: [string, "null"] }
+        before: { type: object, properties: { count: { type: integer } } }
+        after: { type: object, properties: { count: { type: integer } } }
+    Employee:
+      type: object
+      description: 従業員 (人事の台帳。2026-09-14 実測)。職員 (facility-staff) とは別の台帳で、突合は authUserId / email / 氏名
+      properties:
+        id: { type: string, description: qp_… }
+        name: { type: string }
+        email: { type: [string, "null"] }
+        role: { type: string }
+        qualifications: { type: array, items: { type: string } }
+        active: { type: boolean }
+        facilityIds: { type: array, items: { type: string } }
+        authUserId: { type: [string, "null"] }
+        mainEvaluationFacilityId: { type: [string, "null"] }
+        jobClassCode: { type: [string, "null"] }
+        jobClassName: { type: [string, "null"] }
+        positionCode: { type: [string, "null"] }
+        positionName: { type: [string, "null"] }
+        jobGrade: { type: [string, "null"] }
+        hireDate: { type: [string, "null"] }
+        employeeNumber: { type: [string, "null"] }
+        employmentType: { type: [string, "null"] }
+        evaluationTarget: { type: boolean, description: 人事考課の対象か。考課そのものの API は CPOS に無い (実験 14) }
+        retireDate: { type: [string, "null"] }
+        setupWarnings: { type: array, items: { type: object } }
+    Me:
+      type: object
+      required: [ok, user, facilityScope]
+      properties:
+        ok: { type: boolean, const: true }
+        authMethod: { type: string }
+        organizationId: { type: string }
+        user:
+          type: object
+          properties:
+            id: { type: string }
+            email: { type: string }
+            name: { type: string }
+            role: { type: string, description: admin / manager / staff / nurse など }
+            organizationId: { type: string }
+        facilityScope: { $ref: '#/components/schemas/FacilityScope' }
+        allFacilities: { type: boolean }
+        allowedFacilityIds: { type: [array, "null"], items: { type: string } }
+    Facility:
+      type: object
+      required: [id, name]
+      description: ステージングの実応答には address / areaGrade / businessNumber / facilityCategoryCode / serviceTypeCodes / isActive / nameKana / phone / records / users などがある。ここには外部向けに約束する最小だけ書く
+      properties:
+        id: { type: string }
+        name: { type: string }
+        nameKana: { type: string }
+        isActive: { type: boolean }
+        serviceTypeCodes: { type: array, items: { type: string } }
+        facilityCategoryCode: { type: string }
+        organizationId: { type: string }
+    MasterUser:
+      type: object
+      required: [masterUserId, insuredNumber, name]
+      description: 一意キーは masterUserId (id という項目は無い。ステージングで確認)。実応答には address / gender / careManagerName / certificationStartDate / extras なども含まれる
+      properties:
+        masterUserId: { type: string, description: 不変 ID }
+        insuredNumber: { type: string, description: 被保険者番号 }
+        name: { type: string }
+        furigana: { type: string }
+        birthDate: { type: string, format: date }
+        careLevel: { type: string, description: 要介護度 (例 要介護2) }
+        isActive: { type: boolean }
+        status: { type: string }
+        facilityIds: { type: array, items: { type: string }, description: 偽 CPOS のみ。本物は includeFacilities 指定時に付く }
+    AppDataRecord:
+      type: object
+      required: [id, data, facilityId]
+      description: |
+        本物の応答 (ステージング、App Token、2026-09-08 に読み書きして確認): 組織単位 (scope: 'organization') の記録は facilityId が **空文字 ""** (null ではない)。
+        実応答には appId / resource / createdByName / confidential / ownerOnly / ownerUserId / date / insuredNumber / tags もあるが、ここでは約束しない (observed)。
+      properties:
+        id: { type: string }
+        organizationId: { type: string }
+        facilityId: { type: string, description: 事業所 ID。組織単位の記録は "" }
+        createdBy: { type: string }
+        status: { type: string }
+        data: { type: object, additionalProperties: true }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+paths:
+  /api/auth/me:
+    get:
+      summary: ログイン中のユーザーと事業所スコープ
+      security: [{ cookie: [] }, { appToken: [] }]
+      responses:
+        '200':
+          content: { application/json: { schema: { $ref: '#/components/schemas/Me' } } }
+        '401':
+          content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
+  /api/platform/me:
+    get:
+      summary: App Token の検証 (どのアプリとして、どのスコープで呼べているか)
+      security: [{ appToken: [] }]
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok: { type: boolean, const: true }
+                  authMethod: { type: string }
+                  organizationId: { type: string }
+                  token:
+                    type: object
+                    properties:
+                      scopes: { type: array, items: { type: string } }
+                      allowedFacilityIds: { type: [array, "null"], items: { type: string } }
+        '401':
+          content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
+  /api/capabilities:
+    get:
+      summary: CPOS が有効にしている機能フラグ (自己記述)。ステージングで確認済み
+      security: [{ cookie: [] }, { appToken: [] }]
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  server: { type: string, const: cpos }
+                  features: { type: object, additionalProperties: { type: object, additionalProperties: { type: boolean } } }
+  /api/platform/facilities:
+    get:
+      summary: 呼び出し側が見てよい事業所の一覧
+      security: [{ cookie: [] }, { appToken: [] }]
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: '#/components/schemas/Facility' } }
+  /api/platform/master-users:
+    get:
+      summary: 利用者 (介護を受ける人) の一覧。CPOS の用語では master user
+      description: |
+        facilityId を省くと「許可された全事業所」の利用者を返す (本物の挙動。ステージングで確認)。
+        kit の client は facilityId を必須にしている (省略を許さない方が事故が少ない)。
+        注意: /api/platform/users は別物 (組織内のログインユーザー = 職員アカウント、scope users:read)。
+      security: [{ cookie: [] }, { appToken: [] }]
+      parameters:
+        - name: facilityId
+          in: query
+          schema: { type: string }
+          description: 対象の事業所。許可されていなければ 403 (fail-close)
+        - name: query
+          in: query
+          schema: { type: string }
+          description: 名前・ふりがなの部分一致
+        - name: activeOnly
+          in: query
+          schema: { type: string, enum: ['true'] }
+        - name: limit
+          in: query
+          schema: { type: integer }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: '#/components/schemas/MasterUser' } }
+        '403':
+          description: 許可されていない事業所、またはスコープ不足 (master-users:read)
+          content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
+        '404':
+          description: '存在しない事業所 ({ error: "facility <id> が見つかりません" })'
+          content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
+  /api/platform/users:
+    get:
+      summary: 組織内のログインユーザー (職員のアカウント) の一覧。利用者ではない
+      description: scope users:read (admin / manager のセッションでも可)
+      security: [{ appToken: [] }]
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users: { type: array, items: { type: object } }
+  /api/app-data/{appId}/{resource}:
+    parameters:
+      - { name: appId, in: path, required: true, schema: { type: string } }
+      - { name: resource, in: path, required: true, schema: { type: string } }
+    get:
+      summary: アプリ専用データの一覧 (素の配列。paginated=true で {items, nextCursor})
+      security: [{ cookie: [] }, { appToken: [] }]
+      parameters:
+        - name: X-Cpos-Facility-Id
+          in: header
+          required: false
+          schema: { type: string }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: '#/components/schemas/AppDataRecord' } }
+    post:
+      summary: 作成
+      security: [{ cookie: [] }, { appToken: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [data]
+              properties:
+                data: { type: object, additionalProperties: true }
+                facilityId: { type: string }
+      responses:
+        '201':
+          content: { application/json: { schema: { $ref: '#/components/schemas/AppDataRecord' } } }
+        '400':
+          content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
+  /api/app-data/{appId}/{resource}/{id}:
+    parameters:
+      - { name: appId, in: path, required: true, schema: { type: string } }
+      - { name: resource, in: path, required: true, schema: { type: string } }
+      - { name: id, in: path, required: true, schema: { type: string } }
+    get:
+      summary: 1 件取得
+      security: [{ cookie: [] }, { appToken: [] }]
+      responses:
+        '200':
+          content: { application/json: { schema: { $ref: '#/components/schemas/AppDataRecord' } } }
+        '404':
+          content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
+    put:
+      summary: 更新 (data を置き換える)
+      security: [{ cookie: [] }, { appToken: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [data]
+              properties:
+                data: { type: object, additionalProperties: true }
+      responses:
+        '200':
+          content: { application/json: { schema: { $ref: '#/components/schemas/AppDataRecord' } } }
+    delete:
+      summary: 削除
+      security: [{ cookie: [] }, { appToken: [] }]
+      responses:
+        '204': { description: 削除した }
+
+  /api/shifts/shift-types:
+    get:
+      summary: 勤務区分マスタ (配列。?facilityId= で事業所固有も含む)
+      security: [{ cookie: [] }, { appToken: [] }]
+      responses:
+        '200':
+          content: { application/json: { schema: { type: array, items: { $ref: '#/components/schemas/ShiftType' } } } }
+    post:
+      summary: 勤務区分を登録 (code と name が必須。id を付ければ更新)
+      security: [{ cookie: [] }, { appToken: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [code, name]
+              properties:
+                facilityId: { type: [string, "null"], description: 事業所固有なら指定。無ければ組織共通 }
+                code: { type: string }
+                name: { type: string }
+                startTime: { type: [string, "null"] }
+                endTime: { type: [string, "null"] }
+                breakMinutes: { type: [integer, "null"] }
+                color: { type: [string, "null"] }
+                sortOrder: { type: [integer, "null"] }
+                isActive: { type: boolean }
+      responses:
+        '201':
+          content: { application/json: { schema: { $ref: '#/components/schemas/ShiftType' } } }
+  /api/shifts/plans:
+    get:
+      summary: シフト計画の一覧 (配列。?facilityId=&targetMonth= で絞る)
+      security: [{ cookie: [] }, { appToken: [] }]
+      responses:
+        '200':
+          content: { application/json: { schema: { type: array, items: { $ref: '#/components/schemas/ShiftPlan' } } } }
+    post:
+      summary: シフト計画を作る (targetMonth と facilityId が必須。消す API は無い)
+      security: [{ cookie: [] }, { appToken: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [facilityId, targetMonth]
+              properties:
+                facilityId: { type: [string, "null"], description: null は会社全体計画 (事業所限定トークンでは 403) }
+                targetMonth: { type: string, description: YYYY-MM }
+      responses:
+        '201':
+          content: { application/json: { schema: { $ref: '#/components/schemas/ShiftPlan' } } }
+        '400':
+          content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
+  /api/shifts/plans/{id}:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: string } }
+    get:
+      summary: シフト計画 1 件 (割当と衝突を含む)
+      security: [{ cookie: [] }, { appToken: [] }]
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [plan, assignments, conflicts]
+                properties:
+                  plan: { $ref: '#/components/schemas/ShiftPlan' }
+                  assignments: { type: array, items: { $ref: '#/components/schemas/ShiftAssignment' } }
+                  conflicts: { type: array, items: { $ref: '#/components/schemas/ShiftConflict' } }
+  /api/shifts/plans/{id}/assignments:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: string } }
+    put:
+      summary: 割当の置換 (1 計画分を丸ごと。送らなかった割当は消える。revision +1、履歴 1 件)
+      security: [{ cookie: [] }, { appToken: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [assignments]
+              properties:
+                assignments: { type: array, items: { $ref: '#/components/schemas/ShiftAssignment' } }
+                reason: { type: string }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  assignments: { type: array, items: { $ref: '#/components/schemas/ShiftAssignment' } }
+                  conflicts: { type: array, items: { $ref: '#/components/schemas/ShiftConflict' } }
+  /api/shifts/plans/{id}/history:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: string } }
+    get:
+      summary: 変更履歴 (新しい順)
+      security: [{ cookie: [] }, { appToken: [] }]
+      responses:
+        '200':
+          content: { application/json: { schema: { type: array, items: { $ref: '#/components/schemas/ShiftPlanHistory' } } } }
+  /api/shifts/plans/{id}/finalize:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: string } }
+    post:
+      summary: 計画を確定 (status finalized)
+      security: [{ cookie: [] }, { appToken: [] }]
+      responses:
+        '200':
+          content: { application/json: { schema: { $ref: '#/components/schemas/ShiftPlan' } } }
+  /api/shifts/plans/{id}/publish:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: string } }
+    post:
+      summary: 計画を公開 (finalized のものだけ。それ以外は 409)
+      security: [{ cookie: [] }, { appToken: [] }]
+      responses:
+        '200':
+          content: { application/json: { schema: { $ref: '#/components/schemas/ShiftPlan' } } }
+        '409':
+          content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
+  /api/shifts/shift-types/{id}:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: string } }
+    delete:
+      summary: 勤務区分を削除
+      security: [{ cookie: [] }, { appToken: [] }]
+      responses:
+        '200': { description: 消した }
+  /api/shifts/preferences:
+    get:
+      summary: 勤務希望 (配列。ステージングでは 0 件のため応答は本体の実装から)
+      security: [{ cookie: [] }, { appToken: [] }]
+      responses:
+        '200':
+          content: { application/json: { schema: { type: array, items: { $ref: '#/components/schemas/ShiftPreference' } } } }
+    post:
+      summary: 勤務希望を保存 (下書き)。トークン経由は userId 必須
+      security: [{ cookie: [] }, { appToken: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [facilityId, targetMonth]
+              properties:
+                facilityId: { type: string }
+                targetMonth: { type: string, description: YYYY-MM }
+                userId: { type: string, description: 本人の代わりに出すとき (API トークン経由では必須) }
+                preferredDays: { type: array, items: { type: string } }
+                unavailableDays: { type: array, items: { type: string } }
+                constraints: { type: array, items: { type: string } }
+                note: { type: [string, "null"] }
+      responses:
+        '201':
+          content: { application/json: { schema: { $ref: '#/components/schemas/ShiftPreference' } } }
+  /api/shifts/preferences/{id}/submit:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: string } }
+    post:
+      summary: 勤務希望を提出 (status submitted)
+      security: [{ cookie: [] }, { appToken: [] }]
+      responses:
+        '200':
+          content: { application/json: { schema: { $ref: '#/components/schemas/ShiftPreference' } } }
+  /api/shifts/staffing-requirements:
+    get:
+      summary: 必要人員 (配列。ステージングでは 0 件のため応答は本体の実装から)
+      security: [{ cookie: [] }, { appToken: [] }]
+      responses:
+        '200':
+          content: { application/json: { schema: { type: array, items: { $ref: '#/components/schemas/StaffingRequirement' } } } }
+    post:
+      summary: 必要人員を登録 (role と requiredCount が必須)
+      security: [{ cookie: [] }, { appToken: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [role, requiredCount]
+              properties:
+                facilityId: { type: string }
+                role: { type: string, description: 例 nurse / care_worker }
+                requiredCount: { type: integer }
+                dayOfWeek: { type: [integer, "null"], description: 0 (日) 〜 6 (土)。null = 毎日 }
+                startTime: { type: [string, "null"] }
+                endTime: { type: [string, "null"] }
+                note: { type: [string, "null"] }
+      responses:
+        '201':
+          content: { application/json: { schema: { $ref: '#/components/schemas/StaffingRequirement' } } }
+  /api/shifts/staffing-requirements/{id}:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: string } }
+    delete:
+      summary: 必要人員を削除
+      security: [{ cookie: [] }, { appToken: [] }]
+      responses:
+        '200': { description: 消した }
+  /api/platform/employees:
+    get:
+      summary: 従業員 (人事の台帳。?facilityId= で絞る)
+      security: [{ cookie: [] }, { appToken: [] }]
+      responses:
+        '200':
+          content: { application/json: { schema: { type: object, required: [employees], properties: { employees: { type: array, items: { $ref: '#/components/schemas/Employee' } } } } } }
+  /api/platform/qualified-persons:
+    get:
+      summary: 有資格者名簿 (?facilityId= で絞る)
+      security: [{ cookie: [] }, { appToken: [] }]
+      responses:
+        '200':
+          content: { application/json: { schema: { type: object, required: [qualifiedPersons], properties: { qualifiedPersons: { type: array, items: { type: object, properties: { id: { type: string }, displayName: { type: string }, personType: { type: string }, qualifications: { type: array, items: { type: string } }, facilityIds: { type: array, items: { type: string } }, active: { type: boolean }, validFrom: { type: [string, "null"] }, validTo: { type: [string, "null"] } } } } } } } }
+  /api/trainings:
+    get:
+      summary: 研修 (facilityId 必須。ステージングでは 0 件のため項目名は未確認)
+      security: [{ cookie: [] }, { appToken: [] }]
+      parameters: [{ $ref: '#/components/parameters/facilityHeader' }]
+      responses:
+        '200':
+          content: { application/json: { schema: { type: object, properties: { items: { type: array, items: { type: object } } } } } }
+  /api/platform/fte:
+    get:
+      summary: 常勤換算 (facilityId と month)
+      security: [{ cookie: [] }, { appToken: [] }]
+      parameters: [{ $ref: '#/components/parameters/facilityHeader' }]
+      responses:
+        '200':
+          content: { application/json: { schema: { type: object, properties: { facilityId: { type: string }, month: { type: string }, fteEntries: { type: array, items: { type: object } }, summary: { type: object, properties: { totalFte: { type: number }, careWorkerFte: { type: number }, nurseFte: { type: number }, ptOtStFte: { type: number }, careWorkerCertifiedRatio: { type: number } } } } } } }
+  /api/staffing-standards:
+    get:
+      summary: 人員配置基準の一覧 (ステージングでは 0 件のため項目名は未確認)
+      security: [{ cookie: [] }, { appToken: [] }]
+      responses:
+        '200':
+          content: { application/json: { schema: { type: object, properties: { items: { type: array, items: { type: object } } } } } }
+  /api/platform/facility-staff:
+    get:
+      summary: 事業所の職員一覧 (facilityId 必須。{ items, staff } の 2 名で同じ配列)
+      security: [{ cookie: [] }, { appToken: [] }]
+      parameters: [{ $ref: '#/components/parameters/facilityHeader' }]
+      responses:
+        '200':
+          content: { application/json: { schema: { type: object, properties: { items: { type: array, items: { $ref: '#/components/schemas/FacilityStaff' } }, staff: { type: array, items: { $ref: '#/components/schemas/FacilityStaff' } } } } } }
+  /api/facilities/{facilityId}/staff:
+    parameters:
+      - { name: facilityId, in: path, required: true, schema: { type: string } }
+    get:
+      summary: 事業所の職員一覧 (platform/facility-staff と同じ形)
+      security: [{ cookie: [] }, { appToken: [] }]
+      responses:
+        '200':
+          content: { application/json: { schema: { type: object, properties: { items: { type: array, items: { $ref: '#/components/schemas/FacilityStaff' } } } } } }
+  /api/facilities/{facilityId}/staff/{id}:
+    parameters:
+      - { name: facilityId, in: path, required: true, schema: { type: string } }
+      - { name: id, in: path, required: true, schema: { type: string } }
+    get:
+      summary: 職員 1 件
+      security: [{ cookie: [] }, { appToken: [] }]
+      responses:
+        '200':
+          content: { application/json: { schema: { $ref: '#/components/schemas/FacilityStaff' } } }
+  /api/care-schedules/occurrences:
+    get:
+      summary: 予定を日付に展開したもの (facilityId, dateFrom, dateTo 必須。assignedStaffId で絞れる)
+      security: [{ cookie: [] }, { appToken: [] }]
+      parameters: [{ $ref: '#/components/parameters/facilityHeader' }]
+      responses:
+        '200':
+          content: { application/json: { schema: { type: object, properties: { dateFrom: { type: string }, dateTo: { type: string }, items: { type: array, items: { type: object } } } } } }
+  /api/care-service-actuals/v1:
+    get:
+      summary: サービス提供実績 (facilityId 必須。insuredNumber で絞れる)
+      security: [{ cookie: [] }, { appToken: [] }]
+      parameters: [{ $ref: '#/components/parameters/facilityHeader' }]
+      responses:
+        '200':
+          content: { application/json: { schema: { type: object, properties: { items: { type: array, items: { type: object } } } } } }

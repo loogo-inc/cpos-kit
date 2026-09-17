@@ -1,0 +1,25 @@
+{
+  "name": "{{appId}}",
+  "version": "0.1.0",
+  "private": true,
+  "description": "{{name}} (CPOS アプリ)",
+  "type": "module",
+  "engines": {
+    "node": ">=22.9"
+  },
+  "scripts": {
+    "dev": "node --env-file-if-exists=.env dev.mjs",
+    "dev:mock": "node --env-file-if-exists=.env dev.mjs --mock",
+    "start": "node --env-file-if-exists=.env server.mjs",
+    "test": "node --test \"test/**/*.test.mjs\"",
+    "test:staging": "node --env-file=.env --test \"test/**/*.test.mjs\"",
+    "verify:staging": "node --env-file-if-exists=.env scripts/verify-staging.mjs",
+    "validate": "cpos-kit validate",
+    "guide": "cpos-kit guide",
+    "connect": "cpos-kit connect",
+    "scopes": "cpos-kit scopes --used"
+  },
+  "dependencies": {
+    "@cpos/kit": "{{kitDep}}"
+  }
+}

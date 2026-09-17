@@ -1,0 +1,37 @@
+{
+  "appId": "{{appId}}",
+  "name": "{{name}}",
+  "version": "0.1.0",
+  "description": "{{name}} (cpos-kit で作成)",
+  "type": "fullstack",
+  "url": "https://{{appId}}.example.com",
+  "apiTokenScopes": [
+    "app-data:{{appId}}:read",
+    "app-data:{{appId}}:write",
+    "app-data:{{appId}}:delete",
+    "facilities:read",
+    "master-users:read"
+  ],
+  "resources": [
+    {
+      "name": "notes",
+      "description": "見本: 利用者ごとのメモ。使わなければ消す",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "メモ本文"
+          },
+          "recordedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "text"
+        ]
+      }
+    }
+  ]
+}

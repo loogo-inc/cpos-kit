@@ -1,0 +1,52 @@
+{
+  "name": "@cpos/kit",
+  "version": "0.1.0",
+  "private": true,
+  "description": "CPOS の上でアプリを作る人に配る共通開発基盤。このリポジトリそのものが npm パッケージ (git 参照で入れる)",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "bin": {
+    "cpos-kit": "kit/bin/cpos-kit.mjs"
+  },
+  "exports": {
+    "./client": {
+      "types": "./kit/client.d.ts",
+      "default": "./kit/client.js"
+    },
+    "./manifest": {
+      "types": "./kit/manifest.d.ts",
+      "default": "./kit/manifest.js"
+    },
+    "./fake": {
+      "types": "./kit/fake/server.d.ts",
+      "default": "./kit/fake/server.js"
+    },
+    "./testing": {
+      "types": "./kit/testing.d.ts",
+      "default": "./kit/testing.js"
+    },
+    "./package.json": "./package.json",
+    "./app-kit": {
+      "default": "./kit/app-kit.js"
+    },
+    "./tickets": {
+      "default": "./kit/tickets.js"
+    }
+  },
+  "files": [
+    "kit",
+    "skills",
+    "spec",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test \"kit/test/**/*.test.mjs\""
+  },
+  "license": "MPL-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/loogo-inc/cpos-kit.git"
+  }
+}
