@@ -21,3 +21,7 @@ test('create の既定の依存は kit の版の系統を指す (#semver:^0.<min
     assert.equal(dep.split('#semver:')[1], maj === '0' ? `^0.${min}` : `^${maj}`, dep);
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
+
+test('配布する kit に CHANGELOG.md が入る (update が UPGRADE.md を書くのに読む。0.2.1 は files に無く、UPGRADE.md が書かれなかった)', () => {
+  assert.ok(pkg.files.includes('CHANGELOG.md'), JSON.stringify(pkg.files));
+});

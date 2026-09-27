@@ -5,6 +5,11 @@ v1 の間は API の削除をしない (deprecated の印だけ)。
 
 ## [Unreleased]
 
+## [0.2.2] - 2026-09-27
+
+### Fixed
+- `update`: `docs/cpos/UPGRADE.md` が書かれず、「実装を直しますか？」も出なかった。配布する kit に `CHANGELOG.md` が入っていなかった (package.json の `files` に無い) → 入れる。見つからないときも UPGRADE.md を書き、公開リポの CHANGELOG を指す。
+
 ## [0.2.1] - 2026-09-27
 
 ### Changed

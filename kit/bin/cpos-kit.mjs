@@ -874,12 +874,13 @@ async function update() {
 // 旧版より後、新版までの CHANGELOG の節を docs/cpos/UPGRADE.md に書く。書いたパス (相対) を返す
 function writeUpgradeNotes(cwd, from, to) {
   const src = [resolve(kitRoot, 'CHANGELOG.md'), resolve(kitRoot, 'sync', 'public', 'CHANGELOG.md')].find((p) => existsSync(p));
-  if (!src || !from) return null;
+  if (!from) return null;
   const num = (v) => String(v).split('.').map((x) => Number(x) || 0);
   const cmp = (a, b) => { const x = num(a), y = num(b); for (let i = 0; i < 3; i++) if (x[i] !== y[i]) return x[i] - y[i]; return 0; };
-  const text = readFileSync(src, 'utf8');
-  const parts = text.split(/^(?=## \[)/m).filter((p) => { const v = p.match(/^## \[(\d+\.\d+\.\d+)\]/)?.[1]; return v && cmp(v, from) > 0 && cmp(v, to) <= 0; });
-  if (!parts.length) return null;
+  // CHANGELOG が kit に入っていなければ (0.2.1 は package.json の files に無かった)、公開リポの CHANGELOG を指す
+  const text = src ? readFileSync(src, 'utf8') : '';
+  const found = text.split(/^(?=## \[)/m).filter((p) => { const v = p.match(/^## \[(\d+\.\d+\.\d+)\]/)?.[1]; return v && cmp(v, from) > 0 && cmp(v, to) <= 0; });
+  const parts = found.length ? found : [`CHANGELOG を kit の中に見つけられませんでした。https://github.com/loogo-inc/cpos-kit/blob/main/CHANGELOG.md の ${from} より後の節を読む。\n`];
   const rel = 'docs/cpos/UPGRADE.md';
   mkdirSync(resolve(cwd, 'docs', 'cpos'), { recursive: true });
   writeFileSync(resolve(cwd, rel), `# cpos-kit の更新: ${from} → ${to} (${new Date().toISOString().slice(0, 10)})
