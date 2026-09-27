@@ -34,7 +34,12 @@ export interface Facility {
 
 /** 利用者 (介護を受ける人)。本物の一意キーは masterUserId (id は無い)。 */
 export interface MasterUser {
+  /** 不変 ID。利用者を指すキー・保存するキーはこれ */
   masterUserId: string;
+  /**
+   * 保存キー (被保険者番号)。**変わる** (仮番号から本番号、転居、訂正)。番号の無い人は仮番号 (tmp-*) か masterUserId そのもの。
+   * キーにしない。帳票に出すなら displayInsuredNumber(user) を通す (この一覧には displayInsuredNumber が無い)
+   */
   insuredNumber: string;
   name: string;
   furigana?: string;
@@ -50,6 +55,13 @@ export interface AppDataRecord<T = Record<string, unknown>> {
   id: string;
   organizationId?: string;
   facilityId?: string | null;
+  /**
+   * 封筒の利用者の保存キー。user を付けて作ると、CPOS が本人の今の保存キーに揃える (番号・masterUserId・過去の番号・仮番号のどれを渡しても)。
+   * 利用者に紐づけていない行は null。番号は変わるので、本人は masterUserId で見る
+   */
+  insuredNumber?: string | null;
+  /** 封筒の利用者の不変 ID。CPOS が付ける (2026-09-26 以降の CPOS。それより前の CPOS・紐づけ前の行には無い) */
+  masterUserId?: string | null;
   createdBy?: string;
   status?: string;
   data: T;
@@ -87,15 +99,27 @@ export interface RawOptions {
 /** 事業所境界: facilityId を付けるか、scope: 'organization' と明示するかのどちらかが必須 */
 export type AppDataScope = { facilityId: string; scope?: undefined } | { facilityId?: undefined; scope: 'organization' };
 
+/**
+ * 利用者への紐づけ (封筒の insuredNumber)。利用者のデータは付けて保存する: 利用者ごとの画面・統合・番号変更の追随は封筒しか見ない。
+ * 値は利用者の masterUserId (番号でも本人に着地するが、番号は変わる)。付けなければ今までと同じ本文を送る
+ */
+export interface AppDataUserOption {
+  /** list: 本人の行だけ (本人の全キーで引く。紐づけ前の行は返らない) / create: 本人に紐づけて作る / update: 付け直す (ふつうは渡さない) */
+  user?: string;
+}
+
 export interface AppDataApi {
-  list<T = Record<string, unknown>>(resource: string, p: AppDataScope & { paginated?: false }): Promise<AppDataRecord<T>[]>;
-  list<T = Record<string, unknown>>(resource: string, p: AppDataScope & { paginated: true; cursor?: string; limit?: number }): Promise<{ items: AppDataRecord<T>[]; nextCursor: string | null }>;
+  list<T = Record<string, unknown>>(resource: string, p: AppDataScope & AppDataUserOption & { paginated?: false }): Promise<AppDataRecord<T>[]>;
+  list<T = Record<string, unknown>>(resource: string, p: AppDataScope & AppDataUserOption & { paginated: true; cursor?: string; limit?: number }): Promise<{ items: AppDataRecord<T>[]; nextCursor: string | null }>;
   get<T = Record<string, unknown>>(resource: string, id: string, p: AppDataScope): Promise<AppDataRecord<T>>;
-  create<T = Record<string, unknown>>(resource: string, data: T, p: AppDataScope): Promise<AppDataRecord<T>>;
-  update<T = Record<string, unknown>>(resource: string, id: string, data: T, p: AppDataScope): Promise<AppDataRecord<T>>;
+  create<T = Record<string, unknown>>(resource: string, data: T, p: AppDataScope & AppDataUserOption): Promise<AppDataRecord<T>>;
+  update<T = Record<string, unknown>>(resource: string, id: string, data: T, p: AppDataScope & AppDataUserOption): Promise<AppDataRecord<T>>;
   remove(resource: string, id: string, p: AppDataScope): Promise<null>;
-  /** data[keyField] が一致する 1 件を update、無ければ create。「利用者 1 人に 1 件」のような約束をここで守る */
-  upsertBy<T extends Record<string, unknown>>(resource: string, keyField: keyof T & string, data: T, p: AppDataScope): Promise<AppDataRecord<T> & { duplicates?: string[] }>;
+  /**
+   * data[keyField] が一致する 1 件を update、無ければ create。「利用者 1 人に 1 件」のような約束をここで守る。
+   * user を付けると本人の行だけを CPOS 側で絞って探し、作るときは本人に紐づける。紐づけ前の行は data[keyField] === user のときだけ拾って紐づける
+   */
+  upsertBy<T extends Record<string, unknown>>(resource: string, keyField: keyof T & string, data: T, p: AppDataScope & AppDataUserOption): Promise<AppDataRecord<T> & { duplicates?: string[] }>;
 }
 
 import type { CposApi_app, CposApi_session, CposApiGeneratedFrom } from './api.js';
@@ -148,3 +172,8 @@ export function pathMatches(pattern: string, path: string): boolean;
 export function tokenResolver(o?: { file?: string; fallback?: () => string | null | undefined; env?: string; ttlMs?: number }): () => string | null;
 /** いまの接続先: 'staging' (本物) / 'mock' (--mock か 127.0.0.1 の URL) / 'unset' (URL が無い) */
 export function connectionMode(o?: { baseUrl?: string | null; argv?: string[] }): 'staging' | 'mock' | 'unset';
+/**
+ * 帳票・画面に出してよい被保険者番号 (無ければ null)。CPOS が displayInsuredNumber を返せばそれ、
+ * 返さない API (platform/master-users) では insuredNumber が仮番号 (tmp-*) や masterUserId (mu_ + 6 文字以上) なら null (CPOS と同じ規則)
+ */
+export function displayInsuredNumber(user: { insuredNumber?: string | null; displayInsuredNumber?: string | null }): string | null;

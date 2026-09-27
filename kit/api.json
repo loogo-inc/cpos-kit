@@ -1,9 +1,9 @@
 {
  "generatedFrom": {
   "version": "1.0.0",
-  "revision": "00201-58l",
-  "fetchedAt": "2026-09-14",
-  "operations": 1372
+  "revision": "00278-7tl",
+  "fetchedAt": "2026-09-27",
+  "operations": 1418
  },
  "note": "client が実行時に読む operation の表。kit の保守者が生成器 (gen-api) で spec/cpos-openapi.json から作る。手で編集しない",
  "operations": [
@@ -30,7 +30,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "authorization_endpoint",
      "code_challenge_methods_supported",
@@ -74,7 +74,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "authorization_servers",
      "bearer_methods_supported",
@@ -108,7 +108,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "authorization_servers",
      "bearer_methods_supported",
@@ -328,7 +328,7 @@
    "mcp": "alerts_list",
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "alertType",
      "appId",
@@ -401,7 +401,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "alertType",
      "appId",
@@ -557,7 +557,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items",
      "limit",
@@ -610,7 +610,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": []
    },
    "sig": "fa7ec23de2fa"
@@ -859,7 +859,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "b86aea1707d7"
@@ -977,7 +977,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "016f29a46722"
@@ -1005,7 +1005,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "415e929dd793"
@@ -1063,7 +1063,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "63b43c7be191"
@@ -1127,7 +1127,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "9917a519e1c9"
@@ -1840,6 +1840,51 @@
    "sig": "65980f1b8fb2"
   },
   {
+   "id": "post_api_app_data_appId_resource_id_unvoid",
+   "ns": "app",
+   "group": "appData",
+   "name": "postByAppIdByResourceByIdUnvoid",
+   "method": "POST",
+   "path": "/api/app-data/{appId}/{resource}/{id}/unvoid",
+   "summary": "AppData レコードの取消を戻す",
+   "tags": [
+    "アプリデータ"
+   ],
+   "auth": "both",
+   "scope": "app-data:{appId}:write",
+   "params": [
+    {
+     "name": "appId",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "アプリ ID (vns / record / staff-shift / jinji / careplan-ai / kasan / dayservice-transport ...)"
+    },
+    {
+     "name": "resource",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "リソース名。一覧は GET /api/app-data/catalog"
+    },
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "レコード ID (作成時に採番される ad_*)"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": true,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "42d5ad841de0"
+  },
+  {
    "id": "post_api_app_data_appId_resource_id_void",
    "ns": "app",
    "group": "appData",
@@ -2011,7 +2056,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "allowedMimeTypes",
      "jsonBodyLimit",
@@ -2069,6 +2114,37 @@
    "sig": "43f3c1a0cb14"
   },
   {
+   "id": "get_api_app_data_lifecycle_health",
+   "ns": "session",
+   "group": "appData",
+   "name": "getLifecycleHealth",
+   "method": "GET",
+   "path": "/api/app-data/lifecycle-health",
+   "summary": "AppData lifecycle listener の失敗件数と直近の失敗 (診断)",
+   "tags": [
+    "アプリデータ"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [
+    {
+     "name": "all",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": "true で全組織 (super_admin のみ)"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "b2c8a9fcb76e"
+  },
+  {
    "id": "post_api_app_invocations",
    "ns": "session",
    "group": "appInvocations",
@@ -2121,7 +2197,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "5547782e7c09"
@@ -2239,7 +2315,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "69865aa0c030"
@@ -2274,7 +2350,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "ff4aee42b01c"
@@ -2379,7 +2455,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "approvedAt",
      "approvedBy",
@@ -2400,6 +2476,7 @@
      "status",
      "submittedAt",
      "submittedBy",
+     "tokenSecret",
      "type",
      "updatedAt",
      "url"
@@ -2634,7 +2711,7 @@
    "mcp": null,
    "observed": {
     "status": 404,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "app-not-found"
    },
    "sig": "f3d6eff5c266"
@@ -2669,7 +2746,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": []
    },
    "sig": "69d4e719f1ad"
@@ -2734,7 +2811,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "ac25d1831921"
@@ -2871,7 +2948,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "021fb4af0f03"
@@ -2912,7 +2989,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "dafb82debae1"
@@ -2977,7 +3054,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "approvedAt",
      "approvedBy",
@@ -2998,6 +3075,7 @@
      "status",
      "submittedAt",
      "submittedBy",
+     "tokenSecret",
      "type",
      "updatedAt",
      "url"
@@ -3142,7 +3220,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "appId",
      "grants",
@@ -3259,7 +3337,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "actions",
      "currentStatus"
@@ -3297,7 +3375,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "1ee10ba25567"
@@ -3392,7 +3470,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "appId",
      "scopes"
@@ -3401,13 +3479,43 @@
    "sig": "71ece7f6771d"
   },
   {
+   "id": "put_api_apps_id_scopes",
+   "ns": "session",
+   "group": "apps",
+   "name": "putByIdScopes",
+   "method": "PUT",
+   "path": "/api/apps/{id}/scopes",
+   "summary": "必要 API Token scopes を直す (dryRun=true で差分だけ)。manifest を取れないアプリ用",
+   "tags": [
+    "登録アプリ"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "4dbc5b2140f2"
+  },
+  {
    "id": "post_api_apps_id_tokens_rotate",
    "ns": "app",
    "group": "apps",
    "name": "postByIdTokensRotate",
    "method": "POST",
    "path": "/api/apps/{id}/tokens/rotate",
-   "summary": "1 アプリの App Token を発行し直して配る (dryRun 可)",
+   "summary": "1 アプリの App Token を発行し直して配る (dryRun 可)。manifest を確かめられなければ 422 で断る",
    "tags": [
     "登録アプリ"
    ],
@@ -3460,7 +3568,7 @@
    "name": "getFleet",
    "method": "GET",
    "path": "/api/apps/fleet",
-   "summary": "登録アプリの棚卸し (manifest が要るスコープと有効トークンの不足、配信先の有無)",
+   "summary": "登録アプリの棚卸し (manifest が要るスコープと有効トークンの不足、配信先の有無)。既定で manifest を取り直す (?verify=false で登録の保存値のみ)",
    "tags": [
     "登録アプリ"
    ],
@@ -3483,7 +3591,7 @@
    "name": "postFleetRotateTokens",
    "method": "POST",
    "path": "/api/apps/fleet/rotate-tokens",
-   "summary": "不足のあるアプリの App Token を発行し直し、Secret Manager に配って旧トークンを猶予付きで失効 (dryRun 可)",
+   "summary": "不足のあるアプリの App Token を発行し直し、Secret Manager に配って旧トークンを猶予付きで失効 (dryRun 可)。manifest を確かめられないアプリは発行しない",
    "tags": [
     "登録アプリ"
    ],
@@ -3545,7 +3653,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "abd75a7419a7"
@@ -3596,7 +3704,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "183b7eae6288"
@@ -3624,7 +3732,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "71be5a64384b"
@@ -3682,7 +3790,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "3e61b4a96de1"
@@ -3777,7 +3885,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "f68dbe957405"
@@ -3902,7 +4010,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "fd204116bb04"
@@ -3953,7 +4061,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "4c41088ce1cf"
@@ -3981,7 +4089,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "68afdc2747c9"
@@ -4032,7 +4140,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "1dd7425af125"
@@ -4083,7 +4191,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "8319ee7ef5b5"
@@ -4111,7 +4219,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "appUrl",
      "configured",
@@ -4143,7 +4251,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": []
    },
    "sig": "d56de7773589"
@@ -4171,10 +4279,102 @@
    "mcp": null,
    "observed": {
     "status": 400,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パラメータが要る: missing code"
    },
    "sig": "7802a7fcccb6"
+  },
+  {
+   "id": "get_api_auth_impersonation",
+   "ns": "app",
+   "group": "auth",
+   "name": "getImpersonation",
+   "method": "GET",
+   "path": "/api/auth/impersonation",
+   "summary": "(台帳未記載)",
+   "tags": [
+    "未分類"
+   ],
+   "auth": "none",
+   "scope": null,
+   "params": [],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "fb234bb0c165"
+  },
+  {
+   "id": "post_api_auth_impersonation",
+   "ns": "app",
+   "group": "auth",
+   "name": "postImpersonation",
+   "method": "POST",
+   "path": "/api/auth/impersonation",
+   "summary": "(台帳未記載)",
+   "tags": [
+    "未分類"
+   ],
+   "auth": "none",
+   "scope": null,
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "f01f855c0bee"
+  },
+  {
+   "id": "delete_api_auth_impersonation",
+   "ns": "app",
+   "group": "auth",
+   "name": "deleteImpersonation",
+   "method": "DELETE",
+   "path": "/api/auth/impersonation",
+   "summary": "(台帳未記載)",
+   "tags": [
+    "未分類"
+   ],
+   "auth": "none",
+   "scope": null,
+   "params": [],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "97ff30392cf5"
+  },
+  {
+   "id": "get_api_auth_impersonation_candidates",
+   "ns": "app",
+   "group": "auth",
+   "name": "getImpersonationCandidates",
+   "method": "GET",
+   "path": "/api/auth/impersonation/candidates",
+   "summary": "(台帳未記載)",
+   "tags": [
+    "未分類"
+   ],
+   "auth": "none",
+   "scope": null,
+   "params": [],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "13855e8dfb67"
   },
   {
    "id": "get_api_auth_login",
@@ -4199,7 +4399,7 @@
    "mcp": null,
    "observed": {
     "status": 400,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パラメータが要る: {\"code\":\"INVALID_NEXT\",\"message\":\"next が指定されていません\"}"
    },
    "sig": "50b941dd718f"
@@ -4227,7 +4427,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": []
    },
    "sig": "f89b5175cb6d"
@@ -4278,7 +4478,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "not authenticated"
    },
    "sig": "79e632f92a71"
@@ -4352,7 +4552,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": []
    },
    "sig": "785954bdedd9"
@@ -4742,7 +4942,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items"
     ],
@@ -4938,7 +5138,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": []
    },
    "sig": "8f6e39bb97e2"
@@ -4966,7 +5166,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items"
     ],
@@ -5009,7 +5209,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items",
      "version"
@@ -5061,7 +5261,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items"
     ],
@@ -5105,7 +5305,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items",
      "version"
@@ -5332,7 +5532,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "areaRates",
      "byProgram",
@@ -5364,7 +5564,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": []
    },
    "sig": "1bfb19327322"
@@ -5392,7 +5592,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items"
     ],
@@ -5435,7 +5635,7 @@
    "mcp": null,
    "observed": {
     "status": 500,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "JSON ではない"
    },
    "sig": "5ae04a72f8e0"
@@ -5463,7 +5663,7 @@
    "mcp": "billing_masters_version",
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "checkedAt",
      "version"
@@ -5494,7 +5694,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "f6c43be9c8a5"
@@ -5831,7 +6031,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "5b3e2132471b"
@@ -5859,7 +6059,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "5e6bdc76104d"
@@ -5887,7 +6087,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items"
     ],
@@ -5931,7 +6131,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "b15559407e9b"
@@ -6074,7 +6274,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "0ccbf913ac4d"
@@ -6178,7 +6378,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "f121e9fffef9"
@@ -6236,7 +6436,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "1e1e615b2d5b"
@@ -6331,7 +6531,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "f370c06d2048"
@@ -6492,7 +6692,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "0b459a3e319b"
@@ -6683,7 +6883,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "5cbcf9b2c78d"
@@ -6860,10 +7060,33 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "6438ef48d6f8"
+  },
+  {
+   "id": "get_api_build_info",
+   "ns": "session",
+   "group": "buildInfo",
+   "name": "get",
+   "method": "GET",
+   "path": "/api/build-info",
+   "summary": "いま動いている版 (設定画面の「ビルド版」)。コミット SHA を含むため認証が要る",
+   "tags": [
+    "ヘルスチェック"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "d16516a8053d"
   },
   {
    "id": "get_api_capabilities",
@@ -6888,7 +7111,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "features",
      "server"
@@ -6919,7 +7142,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items"
     ]
@@ -7002,7 +7225,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items"
     ]
@@ -7039,7 +7262,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "3db1b3a5c7b0"
@@ -7120,7 +7343,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items"
     ]
@@ -7157,7 +7380,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "46f87beb6fc0"
@@ -7473,7 +7696,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items"
     ],
@@ -7555,7 +7778,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "data",
      "documentDate",
@@ -7939,7 +8162,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "bb0af7f90dab"
@@ -8269,7 +8492,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items"
     ],
@@ -8319,10 +8542,33 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "4faf5585512f"
+  },
+  {
+   "id": "post_api_care_documents_v1_maintenance_backfill_master_user_id",
+   "ns": "app",
+   "group": "careDocuments",
+   "name": "postV1MaintenanceBackfillMasterUserId",
+   "method": "POST",
+   "path": "/api/care-documents/v1/maintenance/backfill-master-user-id",
+   "summary": "masterUserId 未付与の業務文書に本人の不変 ID を付ける (保守。被保険者番号 → 氏名の順で名簿から引く。dryRun 既定)",
+   "tags": [
+    "業務ドキュメント"
+   ],
+   "auth": "both",
+   "scope": "care-documents:approve",
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "847fb4904d31"
   },
   {
    "id": "get_api_care_documents_v1_templates",
@@ -8347,7 +8593,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items"
     ],
@@ -8402,7 +8648,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "createdAt",
      "documentType",
@@ -8489,7 +8735,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "63e9e09938e6"
@@ -8524,7 +8770,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "b2537852d873"
@@ -8559,7 +8805,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "446296f682f8"
@@ -8594,7 +8840,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "387252d203aa"
@@ -8629,7 +8875,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "7b1ff9175f7c"
@@ -8664,7 +8910,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "dfe9f2e7363a"
@@ -8761,7 +9007,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "0be31fae42f0"
@@ -8819,7 +9065,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "f01f007d3a72"
@@ -9034,7 +9280,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "a4c3fd9f558c"
@@ -9207,7 +9453,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "4bbd30573a95"
@@ -9265,7 +9511,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "e648f894e2a1"
@@ -9542,7 +9788,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "4502bb79a844"
@@ -9570,7 +9816,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "88bbe72dd1a6"
@@ -10062,7 +10308,15 @@
    ],
    "auth": "both",
    "scope": "care-records:read",
-   "params": [],
+   "params": [
+    {
+     "name": "includeVoided",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": "true で取消済み (recordStatus='voided') も返す (取消の取り消しの入口)。既定は落とす"
+    }
+   ],
    "hasBody": false,
    "bodyRequired": false,
    "facilityRequired": false,
@@ -10070,7 +10324,7 @@
    "fake": false,
    "fakeBody": false,
    "mcp": null,
-   "sig": "80af5cc3849b"
+   "sig": "3eea06dfaa20"
   },
   {
    "id": "post_api_care_records_v1_records",
@@ -10132,7 +10386,7 @@
    "name": "deleteV1RecordsById",
    "method": "DELETE",
    "path": "/api/care-records/v1/records/{id}",
-   "summary": "記録を 1 件削除",
+   "summary": "記録を取消 (物理削除せず voided にする)",
    "tags": [
     "介護記録"
    ],
@@ -10154,6 +10408,36 @@
    "fakeBody": false,
    "mcp": null,
    "sig": "15ee4cb71728"
+  },
+  {
+   "id": "post_api_care_records_v1_records_id_classify",
+   "ns": "app",
+   "group": "careRecords",
+   "name": "postV1RecordsByIdClassify",
+   "method": "POST",
+   "path": "/api/care-records/v1/records/{id}/classify",
+   "summary": "未分類の記録を利用者に分類する",
+   "tags": [
+    "介護記録"
+   ],
+   "auth": "both",
+   "scope": "care-records:write",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "4a3a168b84ec"
   },
   {
    "id": "patch_api_care_records_v1_records_id_flags",
@@ -10214,6 +10498,36 @@
    "fakeBody": false,
    "mcp": null,
    "sig": "10c13cc43522"
+  },
+  {
+   "id": "post_api_care_records_v1_records_id_unvoid",
+   "ns": "app",
+   "group": "careRecords",
+   "name": "postV1RecordsByIdUnvoid",
+   "method": "POST",
+   "path": "/api/care-records/v1/records/{id}/unvoid",
+   "summary": "記録の取消を戻す (voided → draft)",
+   "tags": [
+    "介護記録"
+   ],
+   "auth": "both",
+   "scope": "care-records:write",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "e0837cf09bc5"
   },
   {
    "id": "get_api_care_records_v1_records_recordId_attachments",
@@ -10558,13 +10872,42 @@
    "name": "getV1RecordsUpdates",
    "method": "GET",
    "path": "/api/care-records/v1/records/updates",
-   "summary": "差分同期 (since=ISO)",
+   "summary": "差分同期 (since 以降の更新を updatedAt 順にページで返す。取消・削除は removed[])",
    "tags": [
     "介護記録"
    ],
    "auth": "both",
    "scope": "care-records:read",
-   "params": [],
+   "params": [
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "事業所 ID (X-Cpos-Facility-Id ヘッダでも可)"
+    },
+    {
+     "name": "since",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "ISO 8601。省略で全件 (初回同期)"
+    },
+    {
+     "name": "limit",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": "1〜1000 (既定 500)"
+    },
+    {
+     "name": "cursor",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "前ページの nextCursor (不透明トークン)"
+    }
+   ],
    "hasBody": false,
    "bodyRequired": false,
    "facilityRequired": false,
@@ -10572,7 +10915,7 @@
    "fake": false,
    "fakeBody": false,
    "mcp": null,
-   "sig": "1120b42546c2"
+   "sig": "9210979b23bf"
   },
   {
    "id": "get_api_care_records_v1_records_users",
@@ -11103,7 +11446,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "4cd004834edd"
@@ -11131,7 +11474,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "6e1f4ec0de0d"
@@ -11242,7 +11585,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "4e11448e9500"
@@ -11376,7 +11719,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "25499a681219"
@@ -11404,7 +11747,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items"
     ],
@@ -11491,7 +11834,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "8085c9372a24"
@@ -11659,7 +12002,7 @@
    "mcp": "care_schedules_list",
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items"
     ]
@@ -11719,7 +12062,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "a7365069971b"
@@ -12000,7 +12343,7 @@
    "mcp": "care_schedule_occurrences",
    "observed": {
     "status": 400,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パラメータが要る: dateFrom / dateTo (YYYY-MM-DD) が必要です"
    },
    "sig": "530b17e014df"
@@ -12028,7 +12371,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "date",
      "items",
@@ -12107,7 +12450,7 @@
    "mcp": "care_schedules_today",
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "date",
      "items"
@@ -12138,7 +12481,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items"
     ],
@@ -12227,7 +12570,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "0f952f2693f1"
@@ -12504,7 +12847,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "dateFrom",
      "dateTo",
@@ -12515,6 +12858,29 @@
     ]
    },
    "sig": "77c598604ff9"
+  },
+  {
+   "id": "get_api_care_service_actuals_v1_metrics_csv",
+   "ns": "app",
+   "group": "careServiceActuals",
+   "name": "getV1MetricsCsv",
+   "method": "GET",
+   "path": "/api/care-service-actuals/v1/metrics.csv",
+   "summary": "月次の実績指標を CSV で (人事考課アプリの月次KPI取込用。事業所・月が必須)",
+   "tags": [
+    "サービス実績"
+   ],
+   "auth": "both",
+   "scope": "care-service-actuals:read",
+   "params": [],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "5393c8ab62be"
   },
   {
    "id": "get_api_care_service_actuals_v1_monthly_close",
@@ -12539,7 +12905,7 @@
    "mcp": null,
    "observed": {
     "status": 400,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パラメータが要る: serviceMonth (YYYY-MM) が必要です"
    },
    "sig": "5fc807fe7e7e"
@@ -12567,10 +12933,33 @@
    "mcp": null,
    "observed": {
     "status": 400,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パラメータが要る: date (YYYY-MM-DD) が必要です"
    },
    "sig": "0847dd3fb0ca"
+  },
+  {
+   "id": "post_api_chat_google",
+   "ns": "app",
+   "group": "chat",
+   "name": "postGoogle",
+   "method": "POST",
+   "path": "/api/chat/google",
+   "summary": "Google Chat アプリのイベント受け口 (Google の署名付き JWT で検証)",
+   "tags": [
+    "Google Chat"
+   ],
+   "auth": "none",
+   "scope": null,
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "85d7395a2a75"
   },
   {
    "id": "get_api_connectors_google_status",
@@ -12595,10 +12984,33 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "72e5db855b09"
+  },
+  {
+   "id": "post_api_data_browser_exports",
+   "ns": "session",
+   "group": "dataBrowser",
+   "name": "postExports",
+   "method": "POST",
+   "path": "/api/data-browser/exports",
+   "summary": "データブラウザ: CSV エクスポートの記録 (監査ログ)",
+   "tags": [
+    "管理"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "1a786f7c6b8f"
   },
   {
    "id": "get_api_data_browser_tables",
@@ -12631,7 +13043,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "7b14cdaa518d"
@@ -12688,7 +13100,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "1ae92413b0f3"
@@ -12716,7 +13128,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "0d8104ffb4d8"
@@ -13010,7 +13422,7 @@
    "mcp": null,
    "observed": {
     "status": 403,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "スコープ * が必要です"
    },
    "sig": "4b13c79c59ce"
@@ -13038,7 +13450,7 @@
    "mcp": null,
    "observed": {
     "status": 403,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "スコープ * が必要です"
    },
    "sig": "7fadb33419f6"
@@ -13066,7 +13478,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "appId",
      "ok",
@@ -13090,7 +13502,15 @@
    ],
    "auth": "session",
    "scope": "care-records:read",
-   "params": [],
+   "params": [
+    {
+     "name": "includeVoided",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": "true で取消済み (recordStatus='voided') も返す (取消の取り消しの入口)。既定は落とす"
+    }
+   ],
    "hasBody": false,
    "bodyRequired": false,
    "facilityRequired": false,
@@ -13100,10 +13520,10 @@
    "mcp": null,
    "observed": {
     "status": 400,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パラメータが要る: facilityId is required"
    },
-   "sig": "fc3db4abcdbb"
+   "sig": "b3df7ded2c8f"
   },
   {
    "id": "post_api_device_records",
@@ -13189,6 +13609,36 @@
    "sig": "9c2aa76c1911"
   },
   {
+   "id": "post_api_device_records_id_classify",
+   "ns": "app",
+   "group": "device",
+   "name": "postRecordsByIdClassify",
+   "method": "POST",
+   "path": "/api/device/records/{id}/classify",
+   "summary": "未分類の記録を利用者に分類する",
+   "tags": [
+    "デバイス API"
+   ],
+   "auth": "both",
+   "scope": "care-records:write",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "231d04d145b7"
+  },
+  {
    "id": "patch_api_device_records_id_flags",
    "ns": "app",
    "group": "device",
@@ -13247,6 +13697,36 @@
    "fakeBody": false,
    "mcp": null,
    "sig": "60514fa3edac"
+  },
+  {
+   "id": "post_api_device_records_id_unvoid",
+   "ns": "app",
+   "group": "device",
+   "name": "postRecordsByIdUnvoid",
+   "method": "POST",
+   "path": "/api/device/records/{id}/unvoid",
+   "summary": "記録の取消を戻す (voided → draft)",
+   "tags": [
+    "デバイス API"
+   ],
+   "auth": "both",
+   "scope": "care-records:write",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "02b720de8f9c"
   },
   {
    "id": "get_api_device_records_all",
@@ -13547,7 +14027,7 @@
    "mcp": null,
    "observed": {
     "status": 400,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パラメータが要る: facilityId is required"
    },
    "sig": "07143184f6a1"
@@ -13787,7 +14267,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "appId",
      "ok",
@@ -13819,7 +14299,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "appId",
      "latest",
@@ -13853,7 +14333,7 @@
    "mcp": null,
    "observed": {
     "status": 400,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パラメータが要る: facilityId is required"
    },
    "sig": "e516173f70b6"
@@ -13888,7 +14368,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "e85e6e0dc37a"
@@ -13953,7 +14433,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "bdfe94edb14f"
@@ -13981,7 +14461,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "08da09a27412"
@@ -14503,7 +14983,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "1a60f316edcc"
@@ -14561,7 +15041,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "5556a1eb01d3"
@@ -14718,7 +15198,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "d6d91744f8d3"
@@ -14776,7 +15256,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "039e454318aa"
@@ -14864,7 +15344,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "9342118a4d21"
@@ -14892,7 +15372,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "address",
      "areaGrade",
@@ -14970,7 +15450,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "9d4706e8e94b"
@@ -15107,7 +15587,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "18e0dcae88bf"
@@ -15250,7 +15730,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "dfca6ff28433"
@@ -15393,7 +15873,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "careManagerCount",
      "includedAllProfessions",
@@ -15672,7 +16152,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "count",
      "items"
@@ -15769,7 +16249,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "convertedAt",
      "createdAt",
@@ -16076,7 +16556,7 @@
    "mcp": null,
    "observed": {
     "status": 400,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パラメータが要る: templateId が必要です"
    },
    "sig": "cf770fc958bf"
@@ -16231,7 +16711,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items",
      "staff"
@@ -16355,7 +16835,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "aliases",
      "createdAt",
@@ -16618,6 +17098,36 @@
    "sig": "fa27a1d02780"
   },
   {
+   "id": "post_api_facilities_facilityId_staff_sync_names_from_users",
+   "ns": "app",
+   "group": "facilities",
+   "name": "postByFacilityIdStaffSyncNamesFromUsers",
+   "method": "POST",
+   "path": "/api/facilities/{facilityId}/staff/sync-names-from-users",
+   "summary": "従業員 (AuthUser) の氏名 → 事業所スタッフの氏名 を一括で揃える (既存の不一致の修復用)。対象は本人と確定できる行 (userId / employeeId / 本人の有資格者 id) だけで、氏名だけが一致する行は触らない。旧姓は aliases に残す。dryRun=true (既定) は差分のみ返す",
+   "tags": [
+    "事業所"
+   ],
+   "auth": "both",
+   "scope": "facility-staff:write",
+   "params": [
+    {
+     "name": "facilityId",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": true,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "866f3ed841b4"
+  },
+  {
    "id": "get_api_facilities_facilityId_users",
    "ns": "app",
    "group": "facilities",
@@ -16647,7 +17157,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "count",
      "items"
@@ -16765,7 +17275,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "createdAt",
      "extras",
@@ -17181,7 +17691,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "0091def10671"
@@ -17324,7 +17834,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "address",
      "areaGrade",
@@ -17439,7 +17949,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "areaGrade",
      "billingEnrollment",
@@ -17540,7 +18050,7 @@
    "mcp": null,
    "observed": {
     "status": 503,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": ""
    },
    "sig": "7f131054823b"
@@ -17575,13 +18085,43 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items",
      "reason"
     ]
    },
    "sig": "0ede7f4f686c"
+  },
+  {
+   "id": "post_api_facilities_id_geocode",
+   "ns": "app",
+   "group": "facilities",
+   "name": "postByIdGeocode",
+   "method": "POST",
+   "path": "/api/facilities/{id}/geocode",
+   "summary": "事業所の住所から座標を付ける (geoSource='manual' は force なしでは 409)",
+   "tags": [
+    "事業所"
+   ],
+   "auth": "both",
+   "scope": "facilities:write",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "13e5baf769c7"
   },
   {
    "id": "post_api_facilities_id_import_csv",
@@ -17703,7 +18243,7 @@
    "mcp": null,
    "observed": {
     "status": 503,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "OAuth セッションなし"
    },
    "sig": "10a1bf52a9d6"
@@ -17807,7 +18347,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "b64d99035502"
@@ -17835,7 +18375,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items"
     ]
@@ -17901,7 +18441,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "39be9fa59533"
@@ -18041,7 +18581,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "9b1af03142a7"
@@ -18069,7 +18609,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "a4b8bdfd60cb"
@@ -18371,7 +18911,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "allowedServiceTypeCodes",
      "createdAt",
@@ -18443,7 +18983,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "allowedServiceTypeCodes",
      "createdAt",
@@ -18642,7 +19182,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "20376cb56144"
@@ -18700,7 +19240,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "1f45b866515e"
@@ -18860,8 +19400,11 @@
    "mcp": "health",
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
+     "app",
+     "appEnv",
+     "revision",
      "status",
      "timestamp"
     ]
@@ -18891,7 +19434,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "4845cda10ce7"
@@ -19191,7 +19734,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items"
     ]
@@ -19251,7 +19794,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "2a5d9c09f367"
@@ -19385,7 +19928,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "ffb037ee7b97"
@@ -19413,7 +19956,7 @@
    "mcp": null,
    "observed": {
     "status": 400,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パラメータが要る: facilityId が必要です"
    },
    "sig": "7ad7f0600150"
@@ -19441,7 +19984,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "connected",
      "cpos",
@@ -19495,7 +20038,7 @@
    "mcp": null,
    "observed": {
     "status": 400,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パラメータが要る: serviceMonth は YYYY-MM 形式"
    },
    "sig": "adbdf6f6b53b"
@@ -19523,7 +20066,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "e0ee04fdb653"
@@ -19664,7 +20207,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "d1f983faaf09"
@@ -19715,7 +20258,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "de4368a7ccc3"
@@ -19750,7 +20293,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "87af8fe9d1a3"
@@ -20115,7 +20658,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "624ed2d72077"
@@ -20180,7 +20723,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "e6b29f58548b"
@@ -20215,7 +20758,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "1c22a0ac58ac"
@@ -20280,7 +20823,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "c00434675048"
@@ -20374,7 +20917,7 @@
    "mcp": null,
    "observed": {
     "status": 400,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パラメータが要る: facilityId が必要です"
    },
    "sig": "a3734d807e6c"
@@ -20402,7 +20945,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "assessments"
     ]
@@ -20508,7 +21051,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "feedbacks"
     ]
@@ -20598,7 +21141,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "524da6483cb0"
@@ -20626,7 +21169,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "interfaceName",
      "note",
@@ -20800,7 +21343,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "interfaces",
      "relations",
@@ -20852,7 +21395,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "364466f592a6"
@@ -21598,6 +22141,29 @@
    "sig": "0a16adc50d39"
   },
   {
+   "id": "post_api_maintenance_purge_user_test_data",
+   "ns": "session",
+   "group": "maintenance",
+   "name": "postPurgeUserTestData",
+   "method": "POST",
+   "path": "/api/maintenance/purge-user-test-data",
+   "summary": "保守: テスト利用者の試験データを片付ける (super_admin 専用・既定は dry-run・要実行理由)",
+   "tags": [
+    "保守"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "122e9230bbea"
+  },
+  {
    "id": "get_api_mapping_profiles",
    "ns": "session",
    "group": "mappingProfiles",
@@ -21620,7 +22186,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "921c5ff95a70"
@@ -21731,7 +22297,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "31764ecc56e1"
@@ -21789,7 +22355,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "84a97f6beac3"
@@ -21884,7 +22450,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "a8995fbc719e"
@@ -21919,7 +22485,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "449908a1838e"
@@ -21984,7 +22550,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "731f8c92cbfc"
@@ -22079,7 +22645,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "e6d3299217a7"
@@ -22144,7 +22710,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "e4cfe1965894"
@@ -22180,6 +22746,37 @@
    "sig": "347844b1b1a4"
   },
   {
+   "id": "post_api_master_users_insuredNumber_geocode",
+   "ns": "app",
+   "group": "masterUsers",
+   "name": "postByInsuredNumberGeocode",
+   "method": "POST",
+   "path": "/api/master-users/{insuredNumber}/geocode",
+   "summary": "利用者の住所から座標を付ける (geoSource='manual' は force なしでは 409)",
+   "tags": [
+    "利用者マスタ"
+   ],
+   "auth": "both",
+   "scope": "master-users:write",
+   "params": [
+    {
+     "name": "insuredNumber",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "被保険者番号 / 不変 ID (mu_*) / 仮 ID (tmp-*)"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "2c3e475e80cf"
+  },
+  {
    "id": "get_api_master_users_insuredNumber_identifier_aliases",
    "ns": "session",
    "group": "masterUsers",
@@ -22209,7 +22806,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "e175693451e9"
@@ -22304,7 +22901,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "3f91d37f0c2b"
@@ -22369,7 +22966,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "94bed24a1e08"
@@ -22548,6 +23145,29 @@
    "sig": "e7ef0734872a"
   },
   {
+   "id": "post_api_master_users_assignments_dedupe",
+   "ns": "session",
+   "group": "masterUsers",
+   "name": "postAssignmentsDedupe",
+   "method": "POST",
+   "path": "/api/master-users/assignments/dedupe",
+   "summary": "利用者マスタ: 事業所アサインの重複整理 (同じ本人 x 同じ事業所の行を 1 件にまとめる)",
+   "tags": [
+    "利用者マスタ"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "6fbc10fb7fb1"
+  },
+  {
    "id": "post_api_master_users_bulk_delete",
    "ns": "session",
    "group": "masterUsers",
@@ -22623,7 +23243,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "cd0b97417b63"
@@ -22651,7 +23271,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "74ac40e8bd8c"
@@ -22771,7 +23391,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "8ca4a76fdc26"
@@ -22799,7 +23419,7 @@
    "mcp": null,
    "observed": {
     "status": 501,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "利用者統合の復旧機能は現在無効です。保守作業時のみ有効化されます"
    },
    "sig": "4d2d4b6c9f72"
@@ -22942,7 +23562,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "551742f2f0db"
@@ -22993,7 +23613,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "cd5ef03369e8"
@@ -23090,7 +23710,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "8c8b7a0b346d"
@@ -23240,7 +23860,7 @@
    "mcp": null,
    "observed": {
     "status": 501,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "利用者統合の復旧機能は現在無効です。保守作業時のみ有効化されます"
    },
    "sig": "15309dd1e6dc"
@@ -23487,7 +24107,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "9ea00007d6b0"
@@ -23545,7 +24165,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "7a16362d1ee4"
@@ -23686,7 +24306,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "51f4db9762a4"
@@ -23760,7 +24380,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "components",
      "info",
@@ -23805,7 +24425,7 @@
    "mcp": "openapi_status",
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "autoSummaries",
      "catalog",
@@ -23886,7 +24506,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "bfb541d09626"
@@ -23914,7 +24534,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "610c65c48300"
@@ -23942,7 +24562,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "4ac644a9cf0b"
@@ -24039,7 +24659,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "8c8690ff9e30"
@@ -24181,6 +24801,29 @@
    "sig": "6c5c55a300f4"
   },
   {
+   "id": "post_api_platform_audit_events",
+   "ns": "app",
+   "group": "platform",
+   "name": "postAuditEvents",
+   "method": "POST",
+   "path": "/api/platform/audit-events",
+   "summary": "監査ログ: アプリからの申告 (自前セッションのアプリのなりすまし開始・停止)",
+   "tags": [
+    "監査ログ"
+   ],
+   "auth": "both",
+   "scope": "audit-events:write",
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "0493f8835869"
+  },
+  {
    "id": "get_api_platform_benefits_summary",
    "ns": "app",
    "group": "platform",
@@ -24241,7 +24884,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "d63d3d56346d"
@@ -24307,7 +24950,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "abdbcd159337"
@@ -24381,7 +25024,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "8bf0bad07128"
@@ -24439,7 +25082,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "185a617a3c2e"
@@ -24527,7 +25170,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "ad0d4e878a8c"
@@ -24676,7 +25319,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "internalCount",
      "items"
@@ -24741,7 +25384,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items"
     ],
@@ -24826,7 +25469,7 @@
    "mcp": "external_partners_search",
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items"
     ],
@@ -24865,7 +25508,7 @@
    "mcp": "facilities_list",
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "address",
      "areaGrade",
@@ -24914,12 +25557,12 @@
    "bodyRequired": false,
    "facilityRequired": true,
    "hasResponseSchema": false,
-   "fake": false,
+   "fake": true,
    "fakeBody": false,
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "ok",
      "users"
@@ -24983,7 +25626,7 @@
    "mcp": "facility_get",
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "address",
      "areaGrade",
@@ -25030,10 +25673,33 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "65bf5293c2f3"
+  },
+  {
+   "id": "post_api_platform_facility_assignments_backfill_user_facilities",
+   "ns": "session",
+   "group": "platform",
+   "name": "postFacilityAssignmentsBackfillUserFacilities",
+   "method": "POST",
+   "path": "/api/platform/facility-assignments/backfill-user-facilities",
+   "summary": "旧「事業所アクセス」の割当から、ユーザーの所属 (facilityIds) を埋め戻す (移行・修復用)。足すだけで所属からは何も消さない。dryRun=true (既定) は差分のみ返す",
+   "tags": [
+    "Platform: facility-assignments"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "50150ab8d0da"
   },
   {
    "id": "post_api_platform_facility_assignments_groups",
@@ -25089,13 +25755,49 @@
    "sig": "a202a4ba6e1f"
   },
   {
+   "id": "delete_api_platform_facility_assignments_membership_userId_facilityId",
+   "ns": "session",
+   "group": "platform",
+   "name": "deleteFacilityAssignmentsMembershipByUserIdByFacilityId",
+   "method": "DELETE",
+   "path": "/api/platform/facility-assignments/membership/{userId}/{facilityId}",
+   "summary": "この人をこの事業所の所属から外す (ユーザーの facilityIds から削除 + 対応する明細も削除)",
+   "tags": [
+    "Platform: facility-assignments"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [
+    {
+     "name": "userId",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "facilityId",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": true,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "d4dbc711d88a"
+  },
+  {
    "id": "post_api_platform_facility_assignments_users",
    "ns": "session",
    "group": "platform",
    "name": "postFacilityAssignmentsUsers",
    "method": "POST",
    "path": "/api/platform/facility-assignments/users",
-   "summary": "user 割当 upsert",
+   "summary": "user 割当 upsert (ユーザーの所属 facilityIds にも書き戻す)",
    "tags": [
     "Platform: facility-assignments"
    ],
@@ -25202,7 +25904,7 @@
    "mcp": "facility_staff_list",
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items",
      "staff"
@@ -25280,7 +25982,7 @@
    "mcp": "facility_users_summary",
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "activeUserCount",
      "careLevelDistribution",
@@ -25326,6 +26028,75 @@
    "fakeBody": false,
    "mcp": "fte_monthly",
    "sig": "0c5e5d52e149"
+  },
+  {
+   "id": "post_api_platform_geo_geocode",
+   "ns": "app",
+   "group": "platform",
+   "name": "postGeoGeocode",
+   "method": "POST",
+   "path": "/api/platform/geo/geocode",
+   "summary": "住所→座標 (Nominatim / Google。住所はログに残さない)",
+   "tags": [
+    "Platform: Geo"
+   ],
+   "auth": "both",
+   "scope": "geo:read",
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": false,
+   "hasResponseSchema": true,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "39251ff648d1"
+  },
+  {
+   "id": "post_api_platform_geo_geocode_missing",
+   "ns": "app",
+   "group": "platform",
+   "name": "postGeoGeocodeMissing",
+   "method": "POST",
+   "path": "/api/platform/geo/geocode-missing",
+   "summary": "事業所の利用者のうち座標が無い人にまとめて座標を付ける (手動座標は飛ばす)",
+   "tags": [
+    "Platform: Geo"
+   ],
+   "auth": "both",
+   "scope": "master-users:write",
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": false,
+   "hasResponseSchema": true,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "ceb5d9bc5800"
+  },
+  {
+   "id": "post_api_platform_geo_travel_matrix",
+   "ns": "app",
+   "group": "platform",
+   "name": "postGeoTravelMatrix",
+   "method": "POST",
+   "path": "/api/platform/geo/travel-matrix",
+   "summary": "所要時間・距離の行列 (OSRM。未設定・障害時は概算に縮退)",
+   "tags": [
+    "Platform: Geo"
+   ],
+   "auth": "both",
+   "scope": "geo:read",
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": false,
+   "hasResponseSchema": true,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "b1ca03e713bb"
   },
   {
    "id": "get_api_platform_kasan_export",
@@ -25550,7 +26321,7 @@
    "mcp": "master_users_list",
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "address",
      "birthDate",
@@ -25609,12 +26380,12 @@
    "bodyRequired": false,
    "facilityRequired": false,
    "hasResponseSchema": false,
-   "fake": false,
+   "fake": true,
    "fakeBody": false,
    "mcp": "master_user_get",
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "address",
      "birthDate",
@@ -25685,7 +26456,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "facilityIds",
      "hasContent",
@@ -25717,12 +26488,12 @@
    "bodyRequired": false,
    "facilityRequired": false,
    "hasResponseSchema": false,
-   "fake": false,
+   "fake": true,
    "fakeBody": false,
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items"
     ],
@@ -25761,7 +26532,7 @@
    "mcp": "platform_me",
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "authMethod",
      "ok",
@@ -25795,7 +26566,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "defaultFacilityId",
      "facilities",
@@ -25870,7 +26641,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "279b9c7e1563"
@@ -26071,7 +26842,7 @@
    "mcp": "qualified_persons_list",
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "qualifiedPersons"
     ],
@@ -26177,7 +26948,7 @@
    "mcp": "sales_activities_list",
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items",
      "nextCursor"
@@ -26239,7 +27010,7 @@
    "mcp": "sales_activity_get",
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "e6530ad040bc"
@@ -26356,13 +27127,96 @@
    "mcp": "sales_activities_summary",
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "summary",
      "truncated"
     ]
    },
    "sig": "39eb275244da"
+  },
+  {
+   "id": "get_api_platform_sales_pipeline",
+   "ns": "app",
+   "group": "platform",
+   "name": "getSalesPipeline",
+   "method": "GET",
+   "path": "/api/platform/sales/pipeline",
+   "summary": "営業パイプライン (営業先ごとの現在ステージ・次にすること・期限超過)",
+   "tags": [
+    "Platform: 営業管理"
+   ],
+   "auth": "both",
+   "scope": "sales:read",
+   "params": [
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "事業所 ID (省略時は組織全体)"
+    },
+    {
+     "name": "today",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "期限超過の基準日 YYYY-MM-DD (省略時は JST の今日)"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": true,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": "sales_pipeline",
+   "sig": "a22e19899ea1"
+  },
+  {
+   "id": "get_api_platform_sales_referral_outcomes",
+   "ns": "app",
+   "group": "platform",
+   "name": "getSalesReferralOutcomes",
+   "method": "GET",
+   "path": "/api/platform/sales/referral-outcomes",
+   "summary": "紹介元別の受付・契約実績 (月別。利用者の氏名・番号は含まない)",
+   "tags": [
+    "Platform: 営業管理"
+   ],
+   "auth": "both",
+   "scope": "sales:read",
+   "params": [
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "事業所 ID (必須)"
+    },
+    {
+     "name": "from",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "開始月 YYYY-MM (省略時は to の 5 か月前)"
+    },
+    {
+     "name": "to",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "終了月 YYYY-MM (省略時は今月)"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": true,
+   "hasResponseSchema": true,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": "sales_referral_outcomes",
+   "sig": "c20780e88a97"
   },
   {
    "id": "get_api_platform_users",
@@ -26387,7 +27241,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "entitlements",
      "nextCursor",
@@ -26432,9 +27286,10 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
-     "items"
+     "items",
+     "truncated"
     ],
     "itemKeys": {
      "items": [
@@ -26519,12 +27374,14 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "addenda",
      "author",
      "body",
      "category",
+     "clientOpHash",
+     "clientOpId",
      "createdAt",
      "createdBy",
      "facilityId",
@@ -26666,7 +27523,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items"
     ]
@@ -26775,7 +27632,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "1fa1f03ccfcc"
@@ -26849,7 +27706,7 @@
    "mcp": null,
    "observed": {
     "status": 403,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "scope prompts:read"
    },
    "sig": "943e3edbd826"
@@ -26907,7 +27764,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "793463206fd5"
@@ -27055,7 +27912,7 @@
    "mcp": null,
    "observed": {
     "status": 403,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "scope providers:read"
    },
    "sig": "a07a88cab4cc"
@@ -27113,7 +27970,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "487958f2df88"
@@ -27270,7 +28127,7 @@
    "mcp": null,
    "observed": {
     "status": 403,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "scope providers:read"
    },
    "sig": "1b07f3397c83"
@@ -27298,7 +28155,7 @@
    "mcp": null,
    "observed": {
     "status": 403,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "scope providers:read"
    },
    "sig": "7e2954db62f8"
@@ -27326,7 +28183,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "8bbe72c02ddf"
@@ -27384,7 +28241,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "2e70c7620e71"
@@ -27479,7 +28336,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "7d3afc3a0433"
@@ -27596,7 +28453,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "7d905b4a2b2a"
@@ -27654,7 +28511,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "3db235fa89f2"
@@ -28275,7 +29132,22 @@
    ],
    "auth": "both",
    "scope": "care-records:read",
-   "params": [],
+   "params": [
+    {
+     "name": "includeVoided",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": "true で取消済み (recordStatus='voided') も返す (取消の取り消しの入口)。既定は落とす"
+    },
+    {
+     "name": "isUnclassified",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": "true でこの事業所の未分類 (利用者を特定できずに保存された記録) だけを期間を問わず返す (過去記録の「未分類」タブ)。他の絞り込みは使わない。取消済みは出さない"
+    }
+   ],
    "hasBody": false,
    "bodyRequired": false,
    "facilityRequired": false,
@@ -28283,7 +29155,7 @@
    "fake": false,
    "fakeBody": false,
    "mcp": null,
-   "sig": "f4a801df4130"
+   "sig": "3125fe711ed4"
   },
   {
    "id": "post_api_record_app_records",
@@ -28345,7 +29217,7 @@
    "name": "deleteRecordsById",
    "method": "DELETE",
    "path": "/api/record-app/records/{id}",
-   "summary": "記録を 1 件削除",
+   "summary": "記録を取消 (物理削除せず voided にする)",
    "tags": [
     "記録アプリ facade"
    ],
@@ -28367,6 +29239,36 @@
    "fakeBody": false,
    "mcp": null,
    "sig": "650b4aa77bf2"
+  },
+  {
+   "id": "post_api_record_app_records_id_classify",
+   "ns": "app",
+   "group": "recordApp",
+   "name": "postRecordsByIdClassify",
+   "method": "POST",
+   "path": "/api/record-app/records/{id}/classify",
+   "summary": "未分類の記録を利用者に分類する",
+   "tags": [
+    "記録アプリ facade"
+   ],
+   "auth": "both",
+   "scope": "care-records:write",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "84199c879083"
   },
   {
    "id": "patch_api_record_app_records_id_flags",
@@ -28427,6 +29329,36 @@
    "fakeBody": false,
    "mcp": null,
    "sig": "e8001b33bdb3"
+  },
+  {
+   "id": "post_api_record_app_records_id_unvoid",
+   "ns": "app",
+   "group": "recordApp",
+   "name": "postRecordsByIdUnvoid",
+   "method": "POST",
+   "path": "/api/record-app/records/{id}/unvoid",
+   "summary": "記録の取消を戻す (voided → draft)",
+   "tags": [
+    "記録アプリ facade"
+   ],
+   "auth": "both",
+   "scope": "care-records:write",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "ebbe537d3f0f"
   },
   {
    "id": "get_api_record_app_records_recordId_attachments",
@@ -29339,7 +30271,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "ok",
      "vitals"
@@ -29422,7 +30354,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "allowedModels",
      "appliedProvider",
@@ -29473,7 +30405,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items"
     ]
@@ -29526,7 +30458,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "allowedModels",
      "apiKeyPresent",
@@ -29635,7 +30567,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "b9f92dc97472"
@@ -29670,7 +30602,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "c632c902c33d"
@@ -29970,7 +30902,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "513803185b5c"
@@ -30094,7 +31026,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "e1744e8a49ac"
@@ -30122,7 +31054,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items"
     ]
@@ -30235,7 +31167,7 @@
    "mcp": null,
    "observed": {
     "status": 400,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パラメータが要る: month (YYYY-MM) は必須です"
    },
    "sig": "a6994117a031"
@@ -30263,7 +31195,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "roles"
     ]
@@ -30749,7 +31681,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "efbb876dca9b"
@@ -30777,7 +31709,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "d8e5d0d5fd67"
@@ -30828,7 +31760,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items"
     ]
@@ -30888,7 +31820,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "b11e2921fb64"
@@ -30976,7 +31908,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "0df9a99876b9"
@@ -31027,7 +31959,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "48b25d8a732e"
@@ -31078,7 +32010,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "5d7b4542e60c"
@@ -31113,7 +32045,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "12c7d1e21d64"
@@ -31237,7 +32169,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "c6b7ec181514"
@@ -31371,7 +32303,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "5beef30f7bfa"
@@ -31399,7 +32331,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items"
     ]
@@ -31459,7 +32391,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "8baef9103c88"
@@ -31570,7 +32502,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "6ddab9ee091b"
@@ -31621,7 +32553,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "ac05bdde5053"
@@ -31694,8 +32626,21 @@
    "mcp": "shift_plans_list",
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
-    "keys": []
+    "at": "2026-09-27",
+    "keys": [
+     "createdAt",
+     "createdBy",
+     "facilityId",
+     "finalizedAt",
+     "finalizedBy",
+     "id",
+     "organizationId",
+     "publishedAt",
+     "revision",
+     "status",
+     "targetMonth",
+     "updatedAt"
+    ]
    },
    "sig": "669aa672bfc6"
   },
@@ -31751,9 +32696,13 @@
    "fakeBody": false,
    "mcp": null,
    "observed": {
-    "status": 0,
-    "at": "2026-09-14",
-    "note": "パス変数を埋める値が取れない"
+    "status": 200,
+    "at": "2026-09-27",
+    "keys": [
+     "assignments",
+     "conflicts",
+     "plan"
+    ]
    },
    "sig": "bff6a925a8e4"
   },
@@ -31846,9 +32795,17 @@
    "fakeBody": false,
    "mcp": null,
    "observed": {
-    "status": 0,
-    "at": "2026-09-14",
-    "note": "パス変数を埋める値が取れない"
+    "status": 200,
+    "at": "2026-09-27",
+    "keys": [
+     "after",
+     "before",
+     "changedAt",
+     "changedBy",
+     "id",
+     "planId",
+     "reason"
+    ]
    },
    "sig": "9d2a57c7ba7c"
   },
@@ -31905,8 +32862,22 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
-    "keys": []
+    "at": "2026-09-27",
+    "keys": [
+     "constraints",
+     "createdAt",
+     "facilityId",
+     "id",
+     "note",
+     "organizationId",
+     "preferredDays",
+     "status",
+     "submittedAt",
+     "targetMonth",
+     "unavailableDays",
+     "updatedAt",
+     "userId"
+    ]
    },
    "sig": "ff7ea61c945b"
   },
@@ -32001,7 +32972,7 @@
    "mcp": "shift_types_list",
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "breakMinutes",
      "category",
@@ -32121,7 +33092,7 @@
    "mcp": "staffing_requirements_list",
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": []
    },
    "sig": "7069751c6bef"
@@ -32202,7 +33173,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items",
      "nextCursor"
@@ -32285,7 +33256,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items"
     ]
@@ -32382,7 +33353,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items"
     ]
@@ -32449,7 +33420,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "createdAt",
      "sourceId",
@@ -32482,7 +33453,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "1a23e47248a5"
@@ -32616,7 +33587,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items"
     ]
@@ -32659,7 +33630,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "3f8dfb89c9e8"
@@ -32774,7 +33745,7 @@
    "mcp": "staffing_compliance",
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "41aaaf06bb65"
@@ -32802,7 +33773,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "entries"
     ],
@@ -32879,7 +33850,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "4a9ec7c0bf3b"
@@ -32944,7 +33915,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "5f2ae80ac332"
@@ -33002,7 +33973,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "3e908f6c0c9e"
@@ -33030,7 +34001,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "8b7dfc3d5cb6"
@@ -33081,7 +34052,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "1ef5ce4b6641"
@@ -33132,7 +34103,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "41093b7eeb72"
@@ -33183,7 +34154,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "8bfb93524fec"
@@ -33234,7 +34205,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "f3c3ebd4e03e"
@@ -33285,7 +34256,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "341f6be9b8c6"
@@ -33336,7 +34307,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "caa6ca8a2478"
@@ -33387,7 +34358,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "ae0bd69a5625"
@@ -33461,7 +34432,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "a59fdb10f026"
@@ -33512,7 +34483,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "42f81050e959"
@@ -33563,7 +34534,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "4356ae7a5c46"
@@ -33591,7 +34562,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "f3d11851d8b3"
@@ -34605,7 +35576,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "a4250661fe11"
@@ -34633,7 +35604,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "da6d6dd24636"
@@ -34714,7 +35685,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items"
     ]
@@ -34774,7 +35745,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "d1bc181d67eb"
@@ -34877,7 +35848,7 @@
    "mcp": "transport_plans_list",
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "createdAt",
      "createdBy",
@@ -34948,7 +35919,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "plan",
      "stops",
@@ -35092,7 +36063,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "facilityId",
      "joint",
@@ -35224,7 +36195,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "tripCount",
      "unassignedCount",
@@ -35355,7 +36326,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "seats",
      "suggestions",
@@ -35435,7 +36406,7 @@
    "mcp": "transport_vehicles_list",
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "capacity",
      "createdAt",
@@ -35506,7 +36477,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "capacity",
      "createdAt",
@@ -35660,7 +36631,7 @@
    "mcp": null,
    "observed": {
     "status": 400,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パラメータが要る: facilityId is required"
    },
    "sig": "f66b67e05773"
@@ -35695,7 +36666,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "e7ddc5c5a239"
@@ -35753,7 +36724,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "groups",
      "ok"
@@ -35814,7 +36785,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "d8ce68a87ad5"
@@ -35878,6 +36849,52 @@
    "fakeBody": false,
    "mcp": null,
    "sig": "3a157bd055ae"
+  },
+  {
+   "id": "get_api_user_id_maintenance_v1_unlinked_app_data",
+   "ns": "app",
+   "group": "userIdMaintenance",
+   "name": "getV1UnlinkedAppData",
+   "method": "GET",
+   "path": "/api/user-id-maintenance/v1/unlinked-app-data",
+   "summary": "利用者が紐づいていないアプリの記録を氏名でまとめ、候補の利用者を返す (書き込みなし)",
+   "tags": [
+    "利用者 ID の整備"
+   ],
+   "auth": "both",
+   "scope": "master-users:write",
+   "params": [],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "5c3b732bd78b"
+  },
+  {
+   "id": "post_api_user_id_maintenance_v1_unlinked_app_data_link",
+   "ns": "app",
+   "group": "userIdMaintenance",
+   "name": "postV1UnlinkedAppDataLink",
+   "method": "POST",
+   "path": "/api/user-id-maintenance/v1/unlinked-app-data/link",
+   "summary": "人が選んだ利用者に記録を紐づける (封筒の insuredNumber / masterUserId だけ)",
+   "tags": [
+    "利用者 ID の整備"
+   ],
+   "auth": "both",
+   "scope": "master-users:write",
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "74bc9adec89a"
   },
   {
    "id": "post_api_user_list_import_analyze",
@@ -35971,7 +36988,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "214ca98f50a6"
@@ -36029,7 +37046,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "e076be2256d1"
@@ -36124,7 +37141,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "2a2d7a3c6591"
@@ -36182,7 +37199,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items"
     ],
@@ -36255,7 +37272,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items"
     ],
@@ -36342,7 +37359,7 @@
    "mcp": null,
    "observed": {
     "status": 200,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "keys": [
      "items"
     ],
@@ -37352,6 +38369,105 @@
    "sig": "67222aed73c8"
   },
   {
+   "id": "get_api_welfare_equipment_v2_assignments",
+   "ns": "app",
+   "group": "welfareEquipment",
+   "name": "getV2Assignments",
+   "method": "GET",
+   "path": "/api/welfare-equipment/v2/assignments",
+   "summary": "福祉用具 v2: 利用者ごとの担当者の一覧 (主担当・共同担当)",
+   "tags": [
+    "福祉用具"
+   ],
+   "auth": "both",
+   "scope": "welfare-equipment:read",
+   "params": [],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "8dfe51d7f58f"
+  },
+  {
+   "id": "post_api_welfare_equipment_v2_assignments",
+   "ns": "app",
+   "group": "welfareEquipment",
+   "name": "postV2Assignments",
+   "method": "POST",
+   "path": "/api/welfare-equipment/v2/assignments",
+   "summary": "福祉用具 v2: 利用者 1 人の担当者を決める (無ければ作る。idempotencyKey 必須)",
+   "tags": [
+    "福祉用具"
+   ],
+   "auth": "both",
+   "scope": "welfare-equipment:write",
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "a6f2cd461a0a"
+  },
+  {
+   "id": "get_api_welfare_equipment_v2_assignments_assignmentId",
+   "ns": "app",
+   "group": "welfareEquipment",
+   "name": "getV2AssignmentsByAssignmentId",
+   "method": "GET",
+   "path": "/api/welfare-equipment/v2/assignments/{assignmentId}",
+   "summary": "福祉用具 v2: 担当者の詳細 (他事業所の行は 404)",
+   "tags": [
+    "福祉用具"
+   ],
+   "auth": "both",
+   "scope": "welfare-equipment:read",
+   "params": [
+    {
+     "name": "assignmentId",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "bb66f68eecbe"
+  },
+  {
+   "id": "post_api_welfare_equipment_v2_assignments_bulk",
+   "ns": "app",
+   "group": "welfareEquipment",
+   "name": "postV2AssignmentsBulk",
+   "method": "POST",
+   "path": "/api/welfare-equipment/v2/assignments/bulk",
+   "summary": "福祉用具 v2: 担当者をまとめて設定 (未設定のみ / 選んだ人すべて を明示)",
+   "tags": [
+    "福祉用具"
+   ],
+   "auth": "both",
+   "scope": "welfare-equipment:write",
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "ca899ee83c36"
+  },
+  {
    "id": "post_api_welfare_equipment_v2_audit_packs",
    "ns": "app",
    "group": "welfareEquipment",
@@ -38064,6 +39180,59 @@
    "sig": "9d4d83200e60"
   },
   {
+   "id": "get_api_welfare_equipment_v2_exports",
+   "ns": "app",
+   "group": "welfareEquipment",
+   "name": "getV2Exports",
+   "method": "GET",
+   "path": "/api/welfare-equipment/v2/exports",
+   "summary": "福祉用具 v2: 書き出せる種類と件数 (公表価格は選べる適用月つき)",
+   "tags": [
+    "福祉用具"
+   ],
+   "auth": "both",
+   "scope": "welfare-equipment:export",
+   "params": [],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "ce6fb8817f0e"
+  },
+  {
+   "id": "get_api_welfare_equipment_v2_exports_dataset",
+   "ns": "app",
+   "group": "welfareEquipment",
+   "name": "getV2ExportsByDataset",
+   "method": "GET",
+   "path": "/api/welfare-equipment/v2/exports/{dataset}",
+   "summary": "福祉用具 v2: 取込と同じ形での書き出し (商品マスター / 全国平均・上限 / 現用具。bundle は 3 つまとめて)",
+   "tags": [
+    "福祉用具"
+   ],
+   "auth": "both",
+   "scope": "welfare-equipment:export",
+   "params": [
+    {
+     "name": "dataset",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "494b7acef546"
+  },
+  {
    "id": "get_api_welfare_equipment_v2_form_renders",
    "ns": "app",
    "group": "welfareEquipment",
@@ -38366,6 +39535,66 @@
    "sig": "b39518f6a2bd"
   },
   {
+   "id": "get_api_welfare_equipment_v2_imports_importId_persons",
+   "ns": "app",
+   "group": "welfareEquipment",
+   "name": "getV2ImportsByImportIdPersons",
+   "method": "GET",
+   "path": "/api/welfare-equipment/v2/imports/{importId}/persons",
+   "summary": "福祉用具 v2: この取込で決まらない利用者 (寄せる / 新規登録 / 取り込まない を人が選ぶための一覧)",
+   "tags": [
+    "福祉用具"
+   ],
+   "auth": "both",
+   "scope": "welfare-equipment:read",
+   "params": [
+    {
+     "name": "importId",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "5ca36a62f1f1"
+  },
+  {
+   "id": "post_api_welfare_equipment_v2_imports_importId_prune_absent",
+   "ns": "app",
+   "group": "welfareEquipment",
+   "name": "postV2ImportsByImportIdPruneAbsent",
+   "method": "POST",
+   "path": "/api/welfare-equipment/v2/imports/{importId}/prune-absent",
+   "summary": "福祉用具 v2: この取込に無い移行行を数える (下見) / 合言葉つきで消す (保守)",
+   "tags": [
+    "福祉用具"
+   ],
+   "auth": "both",
+   "scope": "welfare-equipment:write",
+   "params": [
+    {
+     "name": "importId",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "284fe31e9754"
+  },
+  {
    "id": "post_api_welfare_equipment_v2_imports_preview",
    "ns": "app",
    "group": "welfareEquipment",
@@ -38387,6 +39616,52 @@
    "fakeBody": false,
    "mcp": null,
    "sig": "c621eaed5842"
+  },
+  {
+   "id": "post_api_welfare_equipment_v2_imports_reassign_person",
+   "ns": "app",
+   "group": "welfareEquipment",
+   "name": "postV2ImportsReassignPerson",
+   "method": "POST",
+   "path": "/api/welfare-equipment/v2/imports/reassign-person",
+   "summary": "福祉用具 v2: 本人 ID の付け替え (統合で消えた ID の記録を、人が指定した利用者へ。理由必須)",
+   "tags": [
+    "福祉用具"
+   ],
+   "auth": "both",
+   "scope": "welfare-equipment:write",
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "3867770ebcf3"
+  },
+  {
+   "id": "post_api_welfare_equipment_v2_imports_roster_repair",
+   "ns": "app",
+   "group": "welfareEquipment",
+   "name": "postV2ImportsRosterRepair",
+   "method": "POST",
+   "path": "/api/welfare-equipment/v2/imports/roster-repair",
+   "summary": "福祉用具 v2: 取込で登録した利用者をこの事業所の名簿 (割当) に載せ直す (保守)",
+   "tags": [
+    "福祉用具"
+   ],
+   "auth": "both",
+   "scope": "welfare-equipment:write",
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "d7bfb53acbda"
   },
   {
    "id": "get_api_welfare_equipment_v2_issues",
@@ -39547,6 +40822,36 @@
    "sig": "a13f66942a07"
   },
   {
+   "id": "patch_api_welfare_equipment_v2_placements_placementId",
+   "ns": "app",
+   "group": "welfareEquipment",
+   "name": "patchV2PlacementsByPlacementId",
+   "method": "PATCH",
+   "path": "/api/welfare-equipment/v2/placements/{placementId}",
+   "summary": "福祉用具 v2: 台帳 1 行の訂正 (移行した行の設置場所・数量・期間・月額。月額は結び付いた契約行にも書く)",
+   "tags": [
+    "福祉用具"
+   ],
+   "auth": "both",
+   "scope": "welfare-equipment:write",
+   "params": [
+    {
+     "name": "placementId",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "5a9df916f787"
+  },
+  {
    "id": "get_api_welfare_equipment_v2_placements_placementId_history",
    "ns": "app",
    "group": "welfareEquipment",
@@ -40229,6 +41534,29 @@
    "sig": "dcd0efed7b37"
   },
   {
+   "id": "post_api_welfare_equipment_v2_products_eligibility_from_usage",
+   "ns": "app",
+   "group": "welfareEquipment",
+   "name": "postV2ProductsEligibilityFromUsage",
+   "method": "POST",
+   "path": "/api/welfare-equipment/v2/products/eligibility-from-usage",
+   "summary": "福祉用具 v2: 取込実績と公表価格から、未確認の商品の保険対象を「対象」にする (保守)",
+   "tags": [
+    "福祉用具"
+   ],
+   "auth": "both",
+   "scope": "welfare-equipment:write",
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "de3c4dc2cf81"
+  },
+  {
    "id": "get_api_welfare_equipment_v2_proposals",
    "ns": "app",
    "group": "welfareEquipment",
@@ -40425,6 +41753,29 @@
    "fakeBody": false,
    "mcp": null,
    "sig": "220f69426889"
+  },
+  {
+   "id": "post_api_welfare_equipment_v2_reason_templates",
+   "ns": "app",
+   "group": "welfareEquipment",
+   "name": "postV2ReasonTemplates",
+   "method": "POST",
+   "path": "/api/welfare-equipment/v2/reason-templates",
+   "summary": "福祉用具 v2: 機種ごとの選定理由の雛形を手で登録する (現在の問題点 / 改善される点 / 選定理由)",
+   "tags": [
+    "福祉用具"
+   ],
+   "auth": "both",
+   "scope": "welfare-equipment:write",
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "47d7630b417d"
   },
   {
    "id": "post_api_welfare_equipment_v2_reason_templates_templateId_approve",
@@ -40773,7 +42124,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "64214600cc40"
@@ -40870,7 +42221,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "77132e1bf500"
@@ -40898,7 +42249,7 @@
    "mcp": null,
    "observed": {
     "status": 401,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "認証が必要です"
    },
    "sig": "1c22892c5cbc"
@@ -40949,7 +42300,7 @@
    "mcp": null,
    "observed": {
     "status": 405,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "この MCP サーバはサーバ発のストリームを持ちません。POST /mcp を使ってください。"
    },
    "sig": "0e8d5514287b"
@@ -41078,7 +42429,7 @@
    "mcp": null,
    "observed": {
     "status": 400,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パラメータが要る: "
    },
    "sig": "a20639c2b7f9"
@@ -41211,7 +42562,7 @@
    "mcp": null,
    "observed": {
     "status": 0,
-    "at": "2026-09-14",
+    "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
    "sig": "3047368499e9"

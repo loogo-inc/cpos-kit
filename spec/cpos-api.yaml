@@ -229,10 +229,12 @@ components:
     MasterUser:
       type: object
       required: [masterUserId, insuredNumber, name]
-      description: 一意キーは masterUserId (id という項目は無い。ステージングで確認)。実応答には address / gender / careManagerName / certificationStartDate / extras なども含まれる
+      description: |
+        一意キーは masterUserId (id という項目は無い。ステージングで確認)。実応答には address / gender / careManagerName / certificationStartDate / extras なども含まれる。
+        この応答に displayInsuredNumber は無い (帳票に出す番号は /api/platform/facilities/{facilityId}/users の FacilityUser にある)
       properties:
-        masterUserId: { type: string, description: 不変 ID }
-        insuredNumber: { type: string, description: 被保険者番号 }
+        masterUserId: { type: string, description: 不変 ID。利用者を指すキーはこれ }
+        insuredNumber: { type: string, description: 保存キー (被保険者番号)。番号が変わると変わり、番号の無い人は仮番号 (tmp-*) か masterUserId そのもの。キーにしない・そのまま帳票に出さない }
         name: { type: string }
         furigana: { type: string }
         birthDate: { type: string, format: date }
@@ -240,16 +242,42 @@ components:
         isActive: { type: boolean }
         status: { type: string }
         facilityIds: { type: array, items: { type: string }, description: 偽 CPOS のみ。本物は includeFacilities 指定時に付く }
+    FacilityUser:
+      type: object
+      required: [id, masterUserId, displayInsuredNumber, name]
+      description: アプリ向けの事業所の利用者 (2026-09-14 実測の項目)。担当ケアマネ・通所の曜日などが載ることもある (observed)
+      properties:
+        id: { type: string, description: 旧来のアプリ向けのキー (保存キーと同じ)。新しいアプリは masterUserId を使う }
+        insuredNumber: { type: [string, "null"], description: 保存キー (仮番号 tmp-* を含む) }
+        masterUserId: { type: [string, "null"], description: 不変 ID }
+        displayInsuredNumber: { type: [string, "null"], description: 帳票・請求に出してよい本物の番号。仮番号 (tmp-* / mu_*) の人は null }
+        name: { type: string }
+        furigana: { type: [string, "null"] }
+        careLevel: { type: [string, "null"] }
+        gender: { type: [string, "null"] }
+        birthDate: { type: [string, "null"] }
+        address: { type: [string, "null"] }
+        postalCode: { type: [string, "null"] }
+        phone: { type: [string, "null"] }
+        insurerNumber: { type: [string, "null"] }
+        certificationStartDate: { type: [string, "null"] }
+        certificationEndDate: { type: [string, "null"] }
+        careBurdenRatio: { type: [number, "null"] }
+        careBurdenRatioValidTo: { type: [string, "null"] }
+        extras: { type: object, additionalProperties: true }
     AppDataRecord:
       type: object
       required: [id, data, facilityId]
       description: |
         本物の応答 (ステージング、App Token、2026-09-08 に読み書きして確認): 組織単位 (scope: 'organization') の記録は facilityId が **空文字 ""** (null ではない)。
-        実応答には appId / resource / createdByName / confidential / ownerOnly / ownerUserId / date / insuredNumber / tags もあるが、ここでは約束しない (observed)。
+        実応答には appId / resource / createdByName / confidential / ownerOnly / ownerUserId / date / tags もあるが、ここでは約束しない (observed)。
+        封筒の利用者 (insuredNumber / masterUserId) は CPOS が本人に揃える欄で、利用者ごとの一覧・統合・番号変更の追随はここを見る (data の中は見ない)。
       properties:
         id: { type: string }
         organizationId: { type: string }
         facilityId: { type: string, description: 事業所 ID。組織単位の記録は "" }
+        insuredNumber: { type: [string, "null"], description: 封筒の利用者の保存キー。作成時に番号・masterUserId・過去の番号・仮番号のどれを送っても本人の今の保存キーに揃う (本人に着地しなければ送った値のまま)。紐づけていなければ null }
+        masterUserId: { type: [string, "null"], description: 封筒の利用者の不変 ID。保存時に CPOS が封筒の insuredNumber から引いて付ける (2026-09-26 から。それより前の CPOS では無い)。保存キーが mu_* なら名簿に居なくてもそれが入る。アプリの申告はそのまま入らない (2026-09-27 CPOS のコードと実測で確認) }
         createdBy: { type: string }
         status: { type: string }
         data: { type: object, additionalProperties: true }
@@ -324,7 +352,7 @@ paths:
         - name: query
           in: query
           schema: { type: string }
-          description: 名前・ふりがなの部分一致
+          description: 番号 (保存キー)・名前・ふりがなの部分一致
         - name: activeOnly
           in: query
           schema: { type: string, enum: ['true'] }
@@ -342,6 +370,61 @@ paths:
         '404':
           description: '存在しない事業所 ({ error: "facility <id> が見つかりません" })'
           content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
+  /api/platform/master-users/name-map:
+    get:
+      summary: 番号 → 氏名・masterUserId の対応表。過去の番号・仮番号も kind alias で載る (2026-09-14 実測の形)
+      description: 番号でしか利用者を持たないデータ (実績など) を本人 (masterUserId) に寄せるのに使う。scope master-users:read
+      security: [{ cookie: [] }, { appToken: [] }]
+      parameters:
+        - { name: facilityId, in: query, schema: { type: string } }
+        - { name: includeAliases, in: query, schema: { type: string, enum: ['false'] }, description: 'false で過去の番号・仮番号を載せない (既定は載せる)' }
+        - { name: includeInactive, in: query, schema: { type: string, enum: ['true'] } }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        masterUserId: { type: [string, "null"] }
+                        insuredNumber: { type: string, description: 引くときの番号 (今の番号か、過去の番号・仮番号) }
+                        name: { type: string }
+                        currentInsuredNumber: { type: string, description: 本人の今の保存キー }
+                        kind: { type: string, enum: [current, alias] }
+  /api/platform/master-users/{insuredNumber}:
+    get:
+      summary: 利用者 1 人。masterUserId・現在の番号・過去の番号・仮番号のどれでも引ける (2026-09-14 実測の形)
+      description: facilityId を付けると、その事業所の利用者でなければ 404。scope master-users:read
+      security: [{ cookie: [] }, { appToken: [] }]
+      parameters:
+        - { name: insuredNumber, in: path, required: true, schema: { type: string } }
+      responses:
+        '200':
+          content: { application/json: { schema: { $ref: '#/components/schemas/MasterUser' } } }
+        '404':
+          content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
+  /api/platform/facilities/{facilityId}/users:
+    get:
+      summary: アプリ向けの事業所の利用者一覧 (displayInsuredNumber が載る。2026-09-14 実測の形)
+      description: 認証だけでスコープは見ない。範囲外の事業所は 403 { ok false, error facility-access-denied }、無い事業所は 404。activeOnly の既定は稼働中だけ
+      security: [{ cookie: [] }, { appToken: [] }]
+      parameters:
+        - { name: facilityId, in: path, required: true, schema: { type: string } }
+        - { name: activeOnly, in: query, schema: { type: string, enum: ['false'] } }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok: { type: boolean, const: true }
+                  users: { type: array, items: { $ref: '#/components/schemas/FacilityUser' } }
   /api/platform/users:
     get:
       summary: 組織内のログインユーザー (職員のアカウント) の一覧。利用者ではない
@@ -367,6 +450,10 @@ paths:
           in: header
           required: false
           schema: { type: string }
+        - name: insuredNumber
+          in: query
+          schema: { type: string }
+          description: 封筒の利用者で絞る。番号・masterUserId・過去の番号・仮番号のどれでもよく、送った値・本人の今の保存キー・過去の番号・仮番号で引く (キーが変わる前の行も落ちない)。本人の mu は、送った値か保存キーが mu のときだけ引くキーに入る。封筒に利用者の無い行は当たらない (2026-09-27 実測)
       responses:
         '200':
           content:
@@ -385,6 +472,8 @@ paths:
               properties:
                 data: { type: object, additionalProperties: true }
                 facilityId: { type: string }
+                insuredNumber: { type: string, description: 封筒の利用者 (番号・masterUserId・過去の番号・仮番号のどれでも)。本人の今の保存キーに揃い、masterUserId が付く }
+                masterUserId: { type: string, description: insuredNumber が無いときだけ見る。本人に着地したときだけ封筒に付く (2026-09-26 から) }
       responses:
         '201':
           content: { application/json: { schema: { $ref: '#/components/schemas/AppDataRecord' } } }
@@ -412,9 +501,10 @@ paths:
           application/json:
             schema:
               type: object
-              required: [data]
               properties:
-                data: { type: object, additionalProperties: true }
+                data: { type: object, additionalProperties: true, description: 省けば今の data のまま (封筒だけ付け直すとき。2026-09-27 実測) }
+                insuredNumber: { type: [string, "null"], description: 送らなければ封筒の利用者はそのまま。送れば付け直す (別の人にしたら masterUserId も付け直す)。null は紐づけを外す。2026-09-26 より前の CPOS は PUT では保存キーに揃えずそのまま入れる }
+                masterUserId: { type: string, description: insuredNumber を送らないときだけ見る。本人に着地したときだけ付け替える (2026-09-26 から) }
       responses:
         '200':
           content: { application/json: { schema: { $ref: '#/components/schemas/AppDataRecord' } } }

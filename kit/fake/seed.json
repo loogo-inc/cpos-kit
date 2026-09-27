@@ -1,5 +1,5 @@
 {
-  "$comment": "KIT 模擬サーバの初期データ。すべて架空。項目名はステージングの実応答に合わせている (利用者は id ではなく masterUserId)。差し替えるときは同じ形で seed.json を用意して npx cpos-kit fake --seed <path>。 / 職員の profession と careServiceActuals はステージングで確認した項目名に合わせている shiftTypes / employees は 2026-09-14 のステージング実測の形 (値は見本)。",
+  "$comment": "KIT 模擬サーバの初期データ。すべて架空。項目名はステージングの実応答に合わせている (利用者は id ではなく masterUserId)。差し替えるときは同じ形で seed.json を用意して npx cpos-kit fake --seed <path>。 / 職員の profession と careServiceActuals はステージングで確認した項目名に合わせている shiftTypes / employees は 2026-09-14 のステージング実測の形 (値は見本)。 / 利用者の insuredNumber は保存キー (CPOS と同じ): 番号が変わった人 (mu_0021、旧番号は pastInsuredNumbers) と仮番号の人 (mu_0022、tmp-*) を入れてある。pastInsuredNumbers は模擬サーバだけが読む欄で、応答には出さない (本物は別名を master-users/{key} と name-map で引く)。",
   "organizationId": "org_demo",
   "facilities": [
     {
@@ -311,6 +311,35 @@
       "status": "active",
       "facilityIds": [
         "fac_momiji"
+      ]
+    },
+    {
+      "masterUserId": "mu_0021",
+      "insuredNumber": "0000000121",
+      "pastInsuredNumbers": [
+        "0000000021"
+      ],
+      "name": "森 和夫",
+      "furigana": "モリ カズオ",
+      "birthDate": "1941-06-02",
+      "careLevel": "要介護1",
+      "isActive": true,
+      "status": "active",
+      "facilityIds": [
+        "fac_sakura"
+      ]
+    },
+    {
+      "masterUserId": "mu_0022",
+      "insuredNumber": "tmp-k7Qm2xLp",
+      "name": "池田 ミツ",
+      "furigana": "イケダ ミツ",
+      "birthDate": "1936-12-24",
+      "careLevel": "要介護4",
+      "isActive": true,
+      "status": "active",
+      "facilityIds": [
+        "fac_sakura"
       ]
     }
   ],

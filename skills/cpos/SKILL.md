@@ -35,7 +35,10 @@ const users = await cpos.masterUsers.list({ facilityId });  // 利用者 = [{ ma
 - `facilityId` を省くと `CposClientError` になる (kit の方針。CPOS 本体は省略時に「許可された全事業所」を返すが、画面が事業所を持たない事故を防ぐため kit では必須)。
 - **`cpos.staffAccounts.list()` は職員のログインアカウント**で、利用者ではない。CPOS の API 名 (`/api/platform/users`) が紛らわしいので注意。
 - 画面に「どの事業所を見ているか」を必ず出す。切り替えは `facilities.list()` の結果から選ばせる。
-- 名前で探すなら `masterUsers.list({ facilityId, q: '佐藤' })`。
+- 名前で探すなら `masterUsers.list({ facilityId, q: '佐藤' })` (番号の部分一致でも当たる)。
+- **利用者は `masterUserId` で指す。** `insuredNumber` (被保険者番号) は CPOS の保存キーで**変わる** (仮番号 → 本番号、転居、訂正)。番号の無い人は仮番号 (`tmp-*`) か `masterUserId` そのものが入る。保存・突き合わせのキーにしない。
+- 帳票・画面に番号を出すなら `displayInsuredNumber(u)` (`import { displayInsuredNumber } from '@cpos/kit/client'`)。仮番号を本物の番号として出さない。`cpos.app.platform.getFacilitiesByFacilityIdUsers({ facilityId })` は CPOS が決めた `displayInsuredNumber` を載せて返す。
+- 番号 (過去の番号・仮番号を含む) や masterUserId から本人を引く: `cpos.app.platform.getMasterUsersByInsuredNumber({ insuredNumber: key })`。番号しか持たないデータ (実績 `care-service-actuals` など) は `cpos.app.platform.getMasterUsersNameMap({ facilityId })` (過去の番号・仮番号は `kind: 'alias'`) で `masterUserId` に寄せてから突き合わせる。今の番号との完全一致で結ばない。
 
 ## 2. AppData に保存する / 読む
 
@@ -43,20 +46,24 @@ manifest の `resources` に名前を宣言してから使う (例 `notes`)。**
 
 ```js
 const notes = cpos.appData('<appId>');
-const rec = await notes.create('notes', { userId: 'mu_0001', text: '玄関前で待つ' }, { facilityId });
-const all = await notes.list('notes', { facilityId });     // [{ id, data, createdAt, updatedAt, ... }]
-await notes.update('notes', rec.id, { ...rec.data, text: '裏口で待つ' }, { facilityId });
+const u = users[0];                                            // §1 の利用者
+const rec = await notes.create('notes', { masterUserId: u.masterUserId, text: '玄関前で待つ' }, { facilityId, user: u.masterUserId });
+const all = await notes.list('notes', { facilityId });        // [{ id, data, insuredNumber, masterUserId, createdAt, updatedAt, ... }]
+const hers = await notes.list('notes', { facilityId, user: u.masterUserId });   // その人の行だけ (番号が変わる前に作った行も)
+await notes.update('notes', rec.id, { ...rec.data, text: '裏口で待つ' }, { facilityId });   // 本人への紐づけはそのまま残る
 await notes.remove('notes', rec.id, { facilityId });
 ```
 
 - **必ず `{ facilityId }` を付ける。** わざと全事業所で共有するデータ (アプリの設定など) だけ `{ scope: 'organization' }` と明示する。どちらも無いと client が止める (付け忘れは別の事業所への漏えいになるため。CPOS 本体は許すが kit では止める)。
 - `data` の中身は自由 (JSON)。形はアプリの `docs/specs/<機能>/design.md` に書き、**manifest の `resources[].schema` にも宣言できる** (使えるのは type / properties / required / items / enum / additionalProperties / description / format(date, date-time) だけ。他のキーワードは登録で落ちる)。本物は既定で「報告のみ」だが、CPOS が `APP_DATA_SCHEMA_ENFORCE=true` にすると 400。KIT 模擬サーバは常に 400 にするので、宣言のずれは手元で分かる。
 - 個人情報を `data` に入れるときは最小限に。利用者は `masterUserId` (本物の一意キー。`id` という項目は無い) で参照し、名前を複製しない。
+- **利用者のデータは `{ user: masterUserId }` を付けて保存する。** 行が「封筒」の `insuredNumber` で本人に紐づく (CPOS が本人の今の保存キーに揃え、`masterUserId` を付ける)。CPOS の利用者ごとの画面・利用者の統合・番号変更の追随は封筒しか見ない (`data` の中は見えない)。自分のアプリが引くキーとして `data.masterUserId` も入れておく。`user` を付けずに作った古い行は、封筒に本人がいないので `list({ user })` には出ない。
 - 件数が多いなら `list('notes', { facilityId, paginated: true, limit: 100 })` → `{ items, nextCursor }`。
 - **「利用者 1 人に 1 件」のような約束は `upsertBy`** で守る。AppData に一意制約は無い。
   ```js
-  await notes.upsertBy('notes', 'masterUserId', { masterUserId, text }, { facilityId });   // あれば update、無ければ create
+  await notes.upsertBy('notes', 'masterUserId', { masterUserId, text }, { facilityId, user: masterUserId });   // あれば update、無ければ create
   // 戻り値は保存後のレコード。同じキーが複数あった (過去の重複) ときだけ duplicates: [id, ...] が付く。消すかは自分で決める
+  // user を付けると本人の行だけを CPOS 側で絞って探す。user を付ける前に作った行 (data.masterUserId だけの行) も拾って本人に紐づける
   ```
 
 ## 3. 起動時の疎通確認
@@ -64,7 +71,7 @@ await notes.remove('notes', rec.id, { facilityId });
 ```js
 try {
   const me = await cpos.platform.me();                       // { ok, token: { scopes, allowedFacilityIds } }
-  const cap = await cpos.platform.capabilities();            // { server: 'cpos', features: { appData: { attachments: true, ... }, ... } } この CPOS で有効な機能
+  const cap = await cpos.platform.capabilities();            // { server: 'cpos', features: { appData: { attachments: true, ... }, ... } } この CPOS で有効な機能。無い機能はキーごと無い (cap.features.appData?.attachments === true で見る)
   console.log('CPOS 接続 OK', me.token?.scopes);
 } catch (e) {
   if (e instanceof CposApiError) console.error(e.message, '\n→', e.hint);
@@ -81,6 +88,7 @@ App Token が無い状態でも起動はさせる (登録前は無いのが普�
 | 401 「認証が必要です」 | トークンが無い・無効 | `Authorization: Bearer cpos_app_...`。KIT 模擬サーバは接頭辞だけ見る |
 | `err.error` は日本語の文 | 本物はスラッグを返さない | 分岐は `err.status` と `err.requiredScope` で。文面を正規表現で当てにしない |
 | 403 (`requiredScope` 付き) | スコープ不足。本物の文面は「この API トークンにスコープ「x」がありません。…」 | manifest の `apiTokenScopes` に足し、再登録とトークン再発行 |
+| 403 (ステージングだけ。本番は通る) | アプリが持っているステージングの App Token が、発行した当時のスコープのまま | ステージングの `/app-tokens` で発行し直して入れ直す (`npx github:loogo-inc/cpos-kit connect`)。本番で発行しても届かない |
 | 403 (事業所) | 許可されていない事業所 | `facilities.list()` にある id を使う。fail-close は仕様 |
 | 404 「facility x が見つかりません」 | 存在しない事業所 | id の打ち間違い。`facilities.list()` で確認 |
 | 404 (HTML) | 本物に無いパス | `kit/api.d.ts` を grep、`npx github:loogo-inc/cpos-kit doctor` で kit と接続先の版を比べる |
@@ -95,7 +103,7 @@ App Token が無い状態でも起動はさせる (登録前は無いのが普�
 ### KIT 模擬サーバで開発する (模擬を選んだとき)
 
 ```
-npx github:loogo-inc/cpos-kit fake            # http://127.0.0.1:4300、架空の事業所 2 つ・利用者 20 人・ログイン用アカウント 3 つ
+npx github:loogo-inc/cpos-kit fake            # http://127.0.0.1:4300、架空の事業所 2 つ・利用者 22 人 (番号が変わった人・仮番号の人を含む)・ログイン用アカウント 3 つ
 ```
 
 - 偽ログイン: ブラウザで `http://127.0.0.1:4300/api/auth/login?next=<戻り先>` → 誰として入るか選ぶ。
@@ -120,8 +128,8 @@ npx github:loogo-inc/cpos-kit fake            # http://127.0.0.1:4300、架空�
 ```
 
 - `npx github:loogo-inc/cpos-kit validate` で形を確認する。
-- 公開 URL の直下 (`/cpos.manifest.json`) で配信する。トークンが無くても配信できること。**5 秒以内に応答すること** (CPOS の取込はリダイレクト込みで 5 秒固定。Cloud Run の min-instances 0 でコールドスタートすると落ちる)。
-- App Token を Secret Manager で受け取るなら `tokenDelivery.secretManager.secret` を宣言する。CPOS 側の一括運用 (`apps:fleet rotate`) が新トークンを新しい版として書き、貼り替えが要らなくなる。`apps:admin` は管理者の PAT 専用で manifest には書かない。
+- 公開 URL の直下 (`/cpos.manifest.json`) で配信する。トークンが無くても配信できること。**5 秒以内に応答すること** (CPOS の取込はリダイレクト込みで 5 秒固定。Cloud Run の min-instances 0 でコールドスタートすると落ちる)。登録のときだけでなく、`apps:fleet` の rotate のたびに取りに来る。落ちていると新しいスコープのトークンが出ない (古いトークンのまま)。
+- App Token を Secret Manager で受け取るなら `tokenDelivery.secretManager.secret` を宣言する。CPOS 側の一括運用 (`apps:fleet rotate`) が新トークンを新しい版として書き、貼り替えが要らなくなる。ステージングでは `<secret>-staging` に配られる (その secret の枠と権限が先に要る。ステージングの台帳は本番と別なので、スコープを足したら両方で回す)。`apps:admin` は管理者の PAT 専用で manifest には書かない。
 - 変えたら CPOS への再登録 (`register-from-url`) と App Token の再発行が要る。admin か app-publisher の人に頼む。**manager が発行するトークンは事業所限定 (allowedFacilityIds 必須) でワイルドカード不可。組織全体のトークンは admin だけ。** トークンは発行後 30 秒キャッシュされる (失効が他のインスタンスに効くまで最長 30 秒)。
 
 ## 6.5 アプリ登録とスコープ (ここで全員が詰まる)

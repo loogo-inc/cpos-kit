@@ -166,7 +166,7 @@ async function create() {
   // 既定は「この kit 自身がどこから来たか」から決める。決め打ちの GitHub URL にすると、
   // まだ push していない間は npm install が「repository does not exist」で落ちる (2026-09-13 に発生)。
   const kitDep = opt('--kit-dep') ?? defaultKitDep();
-  if (/^file:/.test(kitDep)) die('--kit-dep に file: は使えません', 'git 参照にしてください (github:loogo-inc/cpos-kit#semver:^0.1 か、手元なら git+file:///<kit の絶対パス>)');
+  if (/^file:/.test(kitDep)) die('--kit-dep に file: は使えません', `git 参照にしてください (github:loogo-inc/cpos-kit#semver:${kitRange()} か、手元なら git+file:///<kit の絶対パス>)`);
 
   const vars = {
     name,
@@ -276,11 +276,14 @@ async function tokenGuide(manifestPath, APP) {
   out('       a. 管理画面「アプリ」で、上の公開 URL を登録 (register-from-url)');
   out('       b. 管理画面「設定 → API トークン」(/app-tokens) で、appId "' + appId + '" の App Token を発行。スコープは:');
   for (const s of scopes) out('            - ' + s);
+  out('       ステージングにつなぐなら、登録も発行もステージングの CPOS で頼む (本番で発行しても、ステージングの台帳には届かない)');
   out('       c. 事業所を限定するなら allowedFacilityIds も指定してもらう (manager が発行する場合は必須。manager はワイルドカード (* や resource:*) のトークンを発行できない。組織全体のトークンは admin だけ)');
   out('  3. 受け取ったトークン (cpos_app_…) を、ローカルは .env の ' + app + '_CPOS_APP_TOKEN に、本番は Secret Manager に入れる。');
   out('     コード・リポジトリ・ブラウザ・ログには置かない。');
   out('  4. ' + app + '_CPOS_BASE_URL をステージングの URL にして npm start。起動時に platform.me() で疎通と権限を確かめる。');
-  out('  5. スコープ不足は 403 で「この API トークンにスコープ「x」がありません」と返る。manifest の apiTokenScopes に足して 2 をやり直す。');
+  out('  5. スコープ不足は 403 で「この API トークンにスコープ「x」がありません」と返る。manifest の apiTokenScopes に足し、');
+  out('     2b で発行し直してもらい、3 のとおり .env / Secret Manager に入れ直す (発行しただけではアプリに届かない)。');
+  out('     npm run verify:staging が通ってから、古いトークンを /app-tokens で失効してもらう (順番を逆にするとアプリが止まる)。');
   out('  6. 個人の権限で試すだけなら PAT (cpos_pat_…) でもよい。admin が「個人アクセストークン」で発行する。');
   out('');
   out('  あとで見るには: npx github:loogo-inc/cpos-kit token');
@@ -326,9 +329,15 @@ async function validate() {
 
 
 // この kit 自身の出どころから、生成するアプリが書く依存を決める。
-//   1. kit に git の remote (origin) があれば それ  → github:owner/repo#semver:^0.1
+//   1. kit に git の remote (origin) があれば それ  → github:owner/repo#semver:^<この kit の版> (0.x の間は ^0.<minor>。minor が上がると別系統)
 //   2. 無ければ 手元のリポジトリを git 参照で        → git+file:///<kitRoot>
 // どちらも「コミット済みの状態しか入らない」ので、配ったものと手元がずれない。
+// この kit の版に合う範囲。^0.1 と固定すると 0.2.0 を出しても新しいアプリに 0.1 系が入る
+function kitRange() {
+  const [maj, min] = String(pkg.version).split('.');
+  return maj === '0' ? `^0.${min}` : `^${maj}`;
+}
+
 function defaultKitDep() {
   // package.json の repository から決める。npx 経由だと kitRoot は npm のキャッシュ
   // (~/.npm/_npx/…) になり git リポジトリではないので、git remote では取れない。
@@ -336,7 +345,7 @@ function defaultKitDep() {
   try {
     const url = String(JSON.parse(readFileSync(resolve(kitRoot, 'package.json'), 'utf8')).repository?.url ?? '');
     const m = url.match(/github\.com[:/]([^/]+)\/(.+?)(?:\.git)?$/);
-    if (m) return `github:${m[1]}/${m[2]}#semver:^0.1`;
+    if (m) return `github:${m[1]}/${m[2]}#semver:${kitRange()}`;
   } catch { /* 無ければ下へ */ }
   // それも無ければ手元のリポジトリ。ただし npm のキャッシュを指してはいけない (すぐ消える)
   if (/[/\\](_npx|\.npm)[/\\]/.test(kitRoot)) {

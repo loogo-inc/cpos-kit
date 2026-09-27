@@ -39,7 +39,7 @@ try {
   const want = (manifest.apiTokenScopes ?? []).map((sc) => sc.replace(`app-data:${APP_ID}:`, `app-data:${appDataAppId}:`));
   const missing = want.filter((sc) => !has(sc));
   pass('platform.me', `authMethod=${me.authMethod} scopes=${scopes.length}`);
-  if (missing.length) fail('manifest の要求スコープ', new Error(`トークンに無い: ${missing.join(', ')} (CPOS 管理画面「設定 → API トークン」で付与)`));
+  if (missing.length) fail('manifest の要求スコープ', new Error(`トークンに無い: ${missing.join(', ')} (CPOS 管理画面「設定 → API トークン」で付与。新しいトークンを発行済みなら、アプリがまだ古いトークンを持っている: .env / Secret Manager を入れ直す)`));
   else pass('manifest の要求スコープ', `${want.length} 個すべてトークンにある`);
   if (appDataAppId !== APP_ID) console.log(`    (AppData は appId "${appDataAppId}" で確かめる: {{APP}}_APPDATA_APP_ID)`);
 

@@ -17,12 +17,115 @@ test('ソケット無しのKIT 模擬サーバを client に差し込める', as
   assert.equal(fake.state.requests.length, 5);
 });
 
-test('capabilities は本物と同じ形で返る', async () => {
+test('capabilities は本物と同じ形で返り、模擬サーバが持つ機能だけを載せる', async () => {
   const fake = createFakeCpos();
   const c = createCposClient({ baseUrl: fake.baseUrl, token: 'cpos_app_x', fetch: fake.fetch });
   const cap = await c.platform.capabilities();
   assert.equal(cap.server, 'cpos');
   assert.equal(cap.features.masterUsers.masterUserId, true);
+  assert.equal(cap.features.masterUsers.identifierAliases, true, '過去の番号・仮番号で引ける');
+  assert.equal(cap.features.appData.userRef, true, 'AppData の封筒の利用者');
+  // 本物の規約: 無い機能はキーごと無い (値は常に true)。模擬サーバに無いものを true と言わない
+  assert.equal(cap.features.masterUsers.merge, undefined);
+  assert.equal(cap.features.masterUsers.changeInsuredNumber, undefined);
+  assert.equal(cap.features.appData.attachments, undefined);
+  assert.equal(cap.features.careDocuments, undefined);
+  for (const group of Object.values(cap.features)) for (const v of Object.values(group)) assert.equal(v, true);
+});
+
+test('KIT 模擬サーバ: 利用者は masterUserId・現在の番号・過去の番号・仮番号のどれでも引ける (master-users/{key}・name-map)', async () => {
+  const fake = createFakeCpos();
+  const c = createCposClient({ baseUrl: fake.baseUrl, token: 'cpos_app_x', fetch: fake.fetch });
+  // seed: mu_0021 は番号が 0000000021 → 0000000121 に変わった人、mu_0022 は仮番号 (tmp-*) の人
+  for (const key of ['mu_0021', '0000000121', '0000000021']) {
+    const u = await c.app.platform.getMasterUsersByInsuredNumber({ insuredNumber: key });
+    assert.equal(u.masterUserId, 'mu_0021', key);
+    assert.equal(u.insuredNumber, '0000000121', '応答の insuredNumber は現在の保存キー');
+    assert.ok(!('pastInsuredNumbers' in u), '模擬サーバだけの欄は応答に出さない');
+  }
+  assert.equal((await c.app.platform.getMasterUsersByInsuredNumber({ insuredNumber: 'tmp-k7Qm2xLp' })).masterUserId, 'mu_0022');
+  await assert.rejects(c.app.platform.getMasterUsersByInsuredNumber({ insuredNumber: '0000009999' }), (e) => e.status === 404);
+  await assert.rejects(c.app.platform.getMasterUsersByInsuredNumber({ insuredNumber: 'mu_0013', facilityId: 'fac_sakura' }), (e) => e.status === 404, 'その事業所の利用者でなければ 404 (本物と同じ)');
+  // 番号 → 本人の対応表。過去の番号は kind: 'alias' で今の番号と mu に寄る
+  const map = await c.app.platform.getMasterUsersNameMap({ facilityId: 'fac_sakura' });
+  const alias = map.items.find((i) => i.insuredNumber === '0000000021');
+  assert.deepEqual(alias, { masterUserId: 'mu_0021', insuredNumber: '0000000021', name: alias.name, currentInsuredNumber: '0000000121', kind: 'alias' });
+  assert.ok(map.items.some((i) => i.insuredNumber === 'tmp-k7Qm2xLp' && i.kind === 'current' && i.masterUserId === 'mu_0022'));
+  assert.ok(!(await c.raw('GET', '/api/platform/master-users/name-map', { facilityId: 'fac_sakura', query: { includeAliases: 'false' } })).items.some((i) => i.kind === 'alias'));
+  // 一覧の q は本物と同じく番号にも当たる
+  assert.deepEqual((await c.masterUsers.list({ facilityId: 'fac_sakura', q: '0000000121' })).map((u) => u.masterUserId), ['mu_0021']);
+});
+
+test('KIT 模擬サーバ: displayInsuredNumber は platform/facilities/{id}/users に載り、仮番号の人は null (本物の形)', async () => {
+  const fake = createFakeCpos();
+  const c = createCposClient({ baseUrl: fake.baseUrl, token: 'cpos_app_x', fetch: fake.fetch });
+  const r = await c.app.platform.getFacilitiesByFacilityIdUsers({ facilityId: 'fac_sakura' });
+  assert.equal(r.ok, true);
+  for (const k of ['id', 'insuredNumber', 'masterUserId', 'displayInsuredNumber', 'name', 'furigana', 'careLevel', 'extras']) assert.ok(k in r.users[0], `項目 ${k} がある`);
+  const byMu = new Map(r.users.map((u) => [u.masterUserId, u]));
+  assert.equal(byMu.get('mu_0001').displayInsuredNumber, '0000000001');
+  assert.equal(byMu.get('mu_0021').displayInsuredNumber, '0000000121');
+  assert.equal(byMu.get('mu_0022').displayInsuredNumber, null, '仮番号は帳票に出さない');
+  assert.equal(byMu.get('mu_0022').insuredNumber, 'tmp-k7Qm2xLp');
+  const limited = createCposClient({ baseUrl: fake.baseUrl, token: 'cpos_app_limited', fetch: fake.fetch });
+  await assert.rejects(limited.app.platform.getFacilitiesByFacilityIdUsers({ facilityId: 'fac_momiji' }), (e) => e.status === 403 && e.error === 'facility-access-denied');
+});
+
+test('KIT 模擬サーバ: AppData の封筒の利用者は保存キーと masterUserId に揃い、一覧は本人の全キーで引ける', async () => {
+  const fake = createFakeCpos();
+  const c = createCposClient({ baseUrl: fake.baseUrl, token: 'cpos_app_x', fetch: fake.fetch });
+  const f = 'fac_sakura';
+  const post = (body) => c.app.appData.postByAppIdByResource({ appId: 'demo', resource: 'notes', facilityId: f, body: { facilityId: f, ...body } });
+  const byOld = await post({ data: { t: 1 }, insuredNumber: '0000000021' });
+  assert.equal(byOld.insuredNumber, '0000000121', '過去の番号で送っても今の保存キーに揃う');
+  assert.equal(byOld.masterUserId, 'mu_0021');
+  const byMu = await post({ data: { t: 2 }, insuredNumber: 'mu_0022' });
+  assert.deepEqual([byMu.insuredNumber, byMu.masterUserId], ['tmp-k7Qm2xLp', 'mu_0022']);
+  const muOnly = await post({ data: { t: 3 }, masterUserId: 'mu_0001' });
+  assert.deepEqual([muOnly.insuredNumber, muOnly.masterUserId], ['0000000001', 'mu_0001'], 'insuredNumber が無ければ masterUserId で本人を引く');
+  const unknown = await post({ data: { t: 4 }, insuredNumber: 'x-unknown' });
+  assert.deepEqual([unknown.insuredNumber, unknown.masterUserId], ['x-unknown', null], '本人に着地しなければ受け取った値のまま、mu は付けない');
+  const none = await post({ data: { t: 5 } });
+  assert.deepEqual([none.insuredNumber, none.masterUserId], [null, null]);
+  // 一覧: どのキーで引いても本人の行だけ
+  for (const key of ['0000000021', '0000000121', 'mu_0021']) {
+    const rows = await c.app.appData.getByAppIdByResource({ appId: 'demo', resource: 'notes', facilityId: f, insuredNumber: key });
+    assert.deepEqual(rows.map((r) => r.id), [byOld.id], key);
+  }
+  assert.equal((await c.app.appData.getByAppIdByResource({ appId: 'demo', resource: 'notes', facilityId: f })).length, 5, '絞らなければ全部');
+  // 更新: 送らなければ封筒はそのまま、送れば付け直す (mu も)、null は外す
+  const put = (id, body) => c.app.appData.putByAppIdByResourceById({ appId: 'demo', resource: 'notes', id, facilityId: f, body });
+  assert.equal((await put(byOld.id, { data: { t: 11 } })).masterUserId, 'mu_0021');
+  const moved = await put(byOld.id, { data: { t: 12 }, insuredNumber: '0000000002' });
+  assert.deepEqual([moved.insuredNumber, moved.masterUserId], ['0000000002', 'mu_0002']);
+  const cleared = await put(byOld.id, { data: { t: 13 }, insuredNumber: null });
+  assert.deepEqual([cleared.insuredNumber, cleared.masterUserId], [null, null]);
+});
+
+test('KIT 模擬サーバ: 保存時の付与と一覧のキーは本物と同じ (CPOS のコードと 2026-09-27 の実測)', async () => {
+  const fake = createFakeCpos();
+  const c = createCposClient({ baseUrl: fake.baseUrl, token: 'cpos_app_x', fetch: fake.fetch });
+  const f = 'fac_sakura';
+  const post = (body) => c.app.appData.postByAppIdByResource({ appId: 'demo', resource: 'notes', facilityId: f, body: { facilityId: f, ...body } });
+  const put = (id, body) => c.app.appData.putByAppIdByResourceById({ appId: 'demo', resource: 'notes', id, facilityId: f, body });
+  // 名簿に居ない mu_* でも、保存キーが mu なら本物は mu に入れる (保存時の付与)
+  const ghost = await post({ data: { t: 1 }, insuredNumber: 'mu_ghost01' });
+  assert.deepEqual([ghost.insuredNumber, ghost.masterUserId], ['mu_ghost01', 'mu_ghost01']);
+  const moved = await put(ghost.id, { insuredNumber: 'mu_ghost02' });
+  assert.deepEqual([moved.insuredNumber, moved.masterUserId], ['mu_ghost02', 'mu_ghost02'], 'mu_* への付け替えも付与が付け直す');
+  assert.deepEqual(moved.data, { t: 1 }, 'PUT は data を省ける (本物と同じ)');
+  // mu で送っても、着地すれば保存キー (番号) に揃い、番号でも mu でも引ける
+  const muKeyed = await post({ data: { t: 2 }, insuredNumber: 'mu_0001' });
+  assert.equal(muKeyed.insuredNumber, '0000000001');
+  for (const key of ['0000000001', 'mu_0001']) {
+    const rows = await c.app.appData.getByAppIdByResource({ appId: 'demo', resource: 'notes', facilityId: f, insuredNumber: key });
+    assert.deepEqual(rows.map((r) => r.id), [muKeyed.id], key);
+  }
+  // 番号で引くとき、本人の mu は引くキーに入らない (封筒が mu のまま残った行は番号では当たらない。本物と同じ)
+  const store = [...fake.state.appData.values()].find((m) => m.has(muKeyed.id));
+  store.get(muKeyed.id).insuredNumber = 'mu_0001';
+  assert.deepEqual((await c.app.appData.getByAppIdByResource({ appId: 'demo', resource: 'notes', facilityId: f, insuredNumber: '0000000001' })).map((r) => r.id), []);
+  assert.deepEqual((await c.app.appData.getByAppIdByResource({ appId: 'demo', resource: 'notes', facilityId: f, insuredNumber: 'mu_0001' })).map((r) => r.id), [muKeyed.id]);
 });
 
 test('ソケット無しでも 401 / 403 / 501 の hint は同じ', async () => {

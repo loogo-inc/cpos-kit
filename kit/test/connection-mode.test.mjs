@@ -6,6 +6,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawn, spawnSync } from 'node:child_process';
+import { createServer } from 'node:net';
 import { connectionMode } from '../client.js';
 
 
@@ -13,14 +14,16 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const cli = resolve(root, 'kit', 'bin', 'cpos-kit.mjs');
 const run = (cwd, ...a) => spawnSync(process.execPath, [cli, ...a], { cwd, encoding: 'utf8' });
 const linkKit = (dir) => { mkdirSync(join(dir, 'node_modules', '@cpos'), { recursive: true }); symlinkSync(root, join(dir, 'node_modules', '@cpos', 'kit')); };
-const devLog = (dir, ...extra) => new Promise((res) => {
-  const p = spawn(process.execPath, ['--env-file-if-exists=.env', 'dev.mjs', ...extra], { cwd: dir, env: { ...process.env, PORT: '0', FAKE_PORT: '4397' }, stdio: ['ignore', 'pipe', 'pipe'] });
+// 空いているポート。番号を固定すると、テストを同時に 2 本流したとき (別セッション・CI) にぶつかる
+const freePort = () => new Promise((res, rej) => { const s = createServer(); s.once('error', rej); s.listen(0, '127.0.0.1', () => { const { port } = s.address(); s.close(() => res(port)); }); });
+const devLog = async (dir, ...extra) => { const fakePort = await freePort(); return new Promise((res) => {
+  const p = spawn(process.execPath, ['--env-file-if-exists=.env', 'dev.mjs', ...extra], { cwd: dir, env: { ...process.env, PORT: '0', FAKE_PORT: String(fakePort) }, stdio: ['ignore', 'pipe', 'pipe'] });
   let out = '', settled = false; const timer = setTimeout(() => done('timeout'), 8000);
   const done = (code) => { if (settled) return; settled = true; clearTimeout(timer); try { p.kill('SIGKILL'); } catch {} res({ out, code }); };
   p.stdout.on('data', (d) => { out += d; if (/接続先:/.test(out) && /http:\/\/127\.0\.0\.1:\d+/.test(out.split('接続先:')[1] ?? '')) setTimeout(() => done(null), 200); });
   p.stderr.on('data', (d) => { out += d; });
   p.on('exit', (code) => done(code));
-});
+}); };
 
 test('connectionMode: https はステージング、127.0.0.1 / localhost は模擬、--mock は常に模擬、空は unset', () => {
   assert.equal(connectionMode({ baseUrl: 'https://cpos.example', argv: [] }), 'staging');
@@ -50,7 +53,7 @@ async function fakeProcess(port) {
 }
 
 test('create --url --token-file はステージングを .env に書く (疎通とスコープを確かめてから)。dev.mjs はモードを出す', async () => {
-  const fake = await fakeProcess(4398);
+  const fake = await fakeProcess(await freePort());
   try {
     const base = join(mkdtempSync(join(tmpdir(), 'cpos-kit-mode-')));
     const tf = join(base, 'tk.txt'); writeFileSync(tf, 'cpos_app_stagingtest\n');

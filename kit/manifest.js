@@ -60,6 +60,8 @@ function check(value, node, path, errors) {
   }
 }
 
+const SCOPE_CEILINGS = { jinji: ['employees:read', 'facilities:read', 'facility-staff:read'] };
+
 /**
  * @param {unknown} manifest
  * @returns {{ ok: boolean, errors: string[], warnings: string[] }}
@@ -83,6 +85,13 @@ export function validateManifest(manifest) {
     }
     if (Array.isArray(m.apiTokenScopes) && m.apiTokenScopes.includes('apps:admin')) {
       errors.push('apiTokenScopes の apps:admin は管理者の PAT 専用で、App Token には付けられません (CPOS は候補から除外する)。外してください');
+    }
+    // CPOS が appId ごとに持つ scope の上限 (2026-09-27 時点。OpenAPI に出ないので写しを持つ)。
+    // 上限の外は取込で黙って捨てられ、発行・編集は 400、発行済みのトークンでも効かない
+    const ceiling = typeof m.appId === 'string' ? SCOPE_CEILINGS[m.appId] : undefined;
+    if (ceiling && Array.isArray(m.apiTokenScopes)) {
+      const outside = m.apiTokenScopes.filter((s) => !ceiling.includes(s));
+      if (outside.length) warnings.push(`${m.appId} に付けられる scope は ${ceiling.join(', ')} だけです。CPOS は取込時に黙って捨てます (付けられないもの: ${outside.join(', ')})`);
     }
     if (m.isPublic === true) warnings.push('isPublic は初回登録時にだけ使われます。再取込では上書きされません (以後は CPOS 管理画面の設定が正)');
     if (Array.isArray(m.resources)) {

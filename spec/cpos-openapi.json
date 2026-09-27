@@ -4,13 +4,13 @@
   "title": "CPOS (Care Planning OS) API",
   "version": "1.0.0",
   "description": "CPOS の HTTP API (公式 OpenAPI の写し)。kit の client はこれから生成する。",
-  "x-cpos-revision": "00201-58l"
+  "x-cpos-revision": "00278-7tl"
  },
  "x-cpos-kit": {
   "version": "1.0.0",
-  "revision": "00201-58l",
-  "fetchedAt": "2026-09-14",
-  "operations": 1372,
+  "revision": "00278-7tl",
+  "fetchedAt": "2026-09-27",
+  "operations": 1418,
   "note": "公式 OpenAPI の写し。内部情報 (x-cpos-source 等) を落としてある。kit の保守者が生成器 (gen-api) で作る。手で編集しない"
  },
  "paths": {
@@ -79,6 +79,97 @@
      "readOnly": true,
      "phi": "none"
     }
+   }
+  },
+  "/api/auth/impersonation": {
+   "get": {
+    "operationId": "get_api_auth_impersonation",
+    "summary": "(台帳未記載)",
+    "tags": [
+     "未分類"
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     }
+    },
+    "security": [],
+    "x-cpos-auth": "unknown",
+    "x-cpos-scope": null
+   },
+   "post": {
+    "operationId": "post_api_auth_impersonation",
+    "summary": "(台帳未記載)",
+    "tags": [
+     "未分類"
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     }
+    },
+    "security": [],
+    "x-cpos-auth": "unknown",
+    "x-cpos-scope": null,
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": true
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "operationId": "delete_api_auth_impersonation",
+    "summary": "(台帳未記載)",
+    "tags": [
+     "未分類"
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     }
+    },
+    "security": [],
+    "x-cpos-auth": "unknown",
+    "x-cpos-scope": null
+   }
+  },
+  "/api/auth/impersonation/candidates": {
+   "get": {
+    "operationId": "get_api_auth_impersonation_candidates",
+    "summary": "(台帳未記載)",
+    "tags": [
+     "未分類"
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     }
+    },
+    "security": [],
+    "x-cpos-auth": "unknown",
+    "x-cpos-scope": null
    }
   },
   "/api/auth/login": {
@@ -2626,6 +2717,37 @@
     "x-cpos-scope": null
    }
   },
+  "/api/build-info": {
+   "get": {
+    "operationId": "get_api_build_info",
+    "summary": "いま動いている版 (設定画面の「ビルド版」)。コミット SHA を含むため認証が要る",
+    "tags": [
+     "ヘルスチェック"
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     }
+    },
+    "security": [
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "session",
+    "x-cpos-scope": null
+   }
+  },
   "/api/settings": {
    "get": {
     "operationId": "get_api_settings",
@@ -3295,6 +3417,44 @@
      }
     ],
     "x-cpos-auth": "session",
+    "x-cpos-scope": null,
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": true
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/chat/google": {
+   "post": {
+    "operationId": "post_api_chat_google",
+    "summary": "Google Chat アプリのイベント受け口 (Google の署名付き JWT で検証)",
+    "tags": [
+     "Google Chat"
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     }
+    },
+    "security": [],
+    "x-cpos-auth": "signed",
     "x-cpos-scope": null,
     "requestBody": {
      "required": false,
@@ -4605,6 +4765,80 @@
     ],
     "x-cpos-auth": "session",
     "x-cpos-scope": null
+   }
+  },
+  "/api/data-browser/exports": {
+   "post": {
+    "operationId": "post_api_data_browser_exports",
+    "summary": "データブラウザ: CSV エクスポートの記録 (監査ログ)",
+    "tags": [
+     "管理"
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     }
+    },
+    "security": [
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "session",
+    "x-cpos-scope": null,
+    "description": "CSV はブラウザ側で組み立てるため、画面がダウンロード直前に呼んで 「誰が・いつ・何を・何件」を監査ログ (data-browser.export) に残す。行の中身や条件の値は送らない。admin / manager のみ。includeUnscoped=true は super_admin のみ。",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "source": {
+          "type": "string",
+          "description": "table (DB タブ) か api (API タブ)"
+         },
+         "target": {
+          "type": "string",
+          "description": "コレクション名または operation id"
+         },
+         "rows": {
+          "type": "integer",
+          "description": "出力した行数"
+         },
+         "columns": {
+          "type": "integer",
+          "description": "出力した列数"
+         },
+         "filters": {
+          "type": "integer",
+          "description": "絞り込み条件の個数"
+         },
+         "includeUnscoped": {
+          "type": "boolean",
+          "description": "組織境界を外した閲覧だったか"
+         }
+        },
+        "required": [
+         "source",
+         "target",
+         "rows",
+         "columns"
+        ]
+       }
+      }
+     }
+    }
    }
   },
   "/api/system-settings": {
@@ -9518,6 +9752,58 @@
     }
    }
   },
+  "/api/welfare-equipment/v2/products/eligibility-from-usage": {
+   "post": {
+    "operationId": "post_api_welfare_equipment_v2_products_eligibility_from_usage",
+    "summary": "福祉用具 v2: 取込実績と公表価格から、未確認の商品の保険対象を「対象」にする (保守)",
+    "tags": [
+     "福祉用具"
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     }
+    },
+    "security": [
+     {
+      "bearerToken": [
+       "welfare-equipment:write"
+      ]
+     },
+     {
+      "oauth2": [
+       "welfare-equipment:write"
+      ]
+     },
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "bearer-or-session",
+    "x-cpos-scope": "welfare-equipment:write",
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": true
+       }
+      }
+     }
+    }
+   }
+  },
   "/api/welfare-equipment/v2/products/{productId}": {
    "get": {
     "operationId": "get_api_welfare_equipment_v2_products_productId",
@@ -9979,6 +10265,199 @@
     ],
     "x-cpos-auth": "bearer-or-session",
     "x-cpos-scope": "welfare-equipment:read",
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": true
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/welfare-equipment/v2/assignments": {
+   "get": {
+    "operationId": "get_api_welfare_equipment_v2_assignments",
+    "summary": "福祉用具 v2: 利用者ごとの担当者の一覧 (主担当・共同担当)",
+    "tags": [
+     "福祉用具"
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     }
+    },
+    "security": [
+     {
+      "bearerToken": [
+       "welfare-equipment:read"
+      ]
+     },
+     {
+      "oauth2": [
+       "welfare-equipment:read"
+      ]
+     },
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "bearer-or-session",
+    "x-cpos-scope": "welfare-equipment:read"
+   },
+   "post": {
+    "operationId": "post_api_welfare_equipment_v2_assignments",
+    "summary": "福祉用具 v2: 利用者 1 人の担当者を決める (無ければ作る。idempotencyKey 必須)",
+    "tags": [
+     "福祉用具"
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     }
+    },
+    "security": [
+     {
+      "bearerToken": [
+       "welfare-equipment:write"
+      ]
+     },
+     {
+      "oauth2": [
+       "welfare-equipment:write"
+      ]
+     },
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "bearer-or-session",
+    "x-cpos-scope": "welfare-equipment:write",
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": true
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/welfare-equipment/v2/assignments/{assignmentId}": {
+   "get": {
+    "operationId": "get_api_welfare_equipment_v2_assignments_assignmentId",
+    "summary": "福祉用具 v2: 担当者の詳細 (他事業所の行は 404)",
+    "tags": [
+     "福祉用具"
+    ],
+    "parameters": [
+     {
+      "name": "assignmentId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     }
+    },
+    "security": [
+     {
+      "bearerToken": [
+       "welfare-equipment:read"
+      ]
+     },
+     {
+      "oauth2": [
+       "welfare-equipment:read"
+      ]
+     },
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "bearer-or-session",
+    "x-cpos-scope": "welfare-equipment:read"
+   }
+  },
+  "/api/welfare-equipment/v2/assignments/bulk": {
+   "post": {
+    "operationId": "post_api_welfare_equipment_v2_assignments_bulk",
+    "summary": "福祉用具 v2: 担当者をまとめて設定 (未設定のみ / 選んだ人すべて を明示)",
+    "tags": [
+     "福祉用具"
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     }
+    },
+    "security": [
+     {
+      "bearerToken": [
+       "welfare-equipment:write"
+      ]
+     },
+     {
+      "oauth2": [
+       "welfare-equipment:write"
+      ]
+     },
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "bearer-or-session",
+    "x-cpos-scope": "welfare-equipment:write",
     "requestBody": {
      "required": false,
      "content": {
@@ -11509,6 +11988,67 @@
     ],
     "x-cpos-auth": "bearer-or-session",
     "x-cpos-scope": "welfare-equipment:read"
+   }
+  },
+  "/api/welfare-equipment/v2/placements/{placementId}": {
+   "patch": {
+    "operationId": "patch_api_welfare_equipment_v2_placements_placementId",
+    "summary": "福祉用具 v2: 台帳 1 行の訂正 (移行した行の設置場所・数量・期間・月額。月額は結び付いた契約行にも書く)",
+    "tags": [
+     "福祉用具"
+    ],
+    "parameters": [
+     {
+      "name": "placementId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     }
+    },
+    "security": [
+     {
+      "bearerToken": [
+       "welfare-equipment:write"
+      ]
+     },
+     {
+      "oauth2": [
+       "welfare-equipment:write"
+      ]
+     },
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "bearer-or-session",
+    "x-cpos-scope": "welfare-equipment:write",
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": true
+       }
+      }
+     }
+    }
    }
   },
   "/api/welfare-equipment/v2/placements/{placementId}/history": {
@@ -13698,6 +14238,58 @@
     "description": "物流作業と確認の実施回を 1 本の予定に束ねた読み取り専用の投影。訪問日が未定のものは期間の外として捨てず undated に分けて返し、担当が未割当のものも件数に必ず入れる。予定を決める書き込みは/logistics/:jobId/schedule と /monitorings/:sessionId/schedule が持つ。"
    }
   },
+  "/api/welfare-equipment/v2/imports/roster-repair": {
+   "post": {
+    "operationId": "post_api_welfare_equipment_v2_imports_roster_repair",
+    "summary": "福祉用具 v2: 取込で登録した利用者をこの事業所の名簿 (割当) に載せ直す (保守)",
+    "tags": [
+     "福祉用具"
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     }
+    },
+    "security": [
+     {
+      "bearerToken": [
+       "welfare-equipment:write"
+      ]
+     },
+     {
+      "oauth2": [
+       "welfare-equipment:write"
+      ]
+     },
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "bearer-or-session",
+    "x-cpos-scope": "welfare-equipment:write",
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": true
+       }
+      }
+     }
+    }
+   }
+  },
   "/api/welfare-equipment/v2/imports/preview": {
    "post": {
     "operationId": "post_api_welfare_equipment_v2_imports_preview",
@@ -13750,10 +14342,173 @@
     }
    }
   },
+  "/api/welfare-equipment/v2/imports/{importId}/persons": {
+   "get": {
+    "operationId": "get_api_welfare_equipment_v2_imports_importId_persons",
+    "summary": "福祉用具 v2: この取込で決まらない利用者 (寄せる / 新規登録 / 取り込まない を人が選ぶための一覧)",
+    "tags": [
+     "福祉用具"
+    ],
+    "parameters": [
+     {
+      "name": "importId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     }
+    },
+    "security": [
+     {
+      "bearerToken": [
+       "welfare-equipment:read"
+      ]
+     },
+     {
+      "oauth2": [
+       "welfare-equipment:read"
+      ]
+     },
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "bearer-or-session",
+    "x-cpos-scope": "welfare-equipment:read"
+   }
+  },
   "/api/welfare-equipment/v2/imports/{importId}/apply": {
    "post": {
     "operationId": "post_api_welfare_equipment_v2_imports_importId_apply",
     "summary": "福祉用具 v2: 取込の適用 (人の承認後。除外は理由つきで残す)",
+    "tags": [
+     "福祉用具"
+    ],
+    "parameters": [
+     {
+      "name": "importId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     }
+    },
+    "security": [
+     {
+      "bearerToken": [
+       "welfare-equipment:write"
+      ]
+     },
+     {
+      "oauth2": [
+       "welfare-equipment:write"
+      ]
+     },
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "bearer-or-session",
+    "x-cpos-scope": "welfare-equipment:write",
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": true
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/welfare-equipment/v2/imports/reassign-person": {
+   "post": {
+    "operationId": "post_api_welfare_equipment_v2_imports_reassign_person",
+    "summary": "福祉用具 v2: 本人 ID の付け替え (統合で消えた ID の記録を、人が指定した利用者へ。理由必須)",
+    "tags": [
+     "福祉用具"
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     }
+    },
+    "security": [
+     {
+      "bearerToken": [
+       "welfare-equipment:write"
+      ]
+     },
+     {
+      "oauth2": [
+       "welfare-equipment:write"
+      ]
+     },
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "bearer-or-session",
+    "x-cpos-scope": "welfare-equipment:write",
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": true
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/welfare-equipment/v2/imports/{importId}/prune-absent": {
+   "post": {
+    "operationId": "post_api_welfare_equipment_v2_imports_importId_prune_absent",
+    "summary": "福祉用具 v2: この取込に無い移行行を数える (下見) / 合言葉つきで消す (保守)",
     "tags": [
      "福祉用具"
     ],
@@ -15004,6 +15759,56 @@
     ],
     "x-cpos-auth": "bearer-or-session",
     "x-cpos-scope": "welfare-equipment:read"
+   },
+   "post": {
+    "operationId": "post_api_welfare_equipment_v2_reason_templates",
+    "summary": "福祉用具 v2: 機種ごとの選定理由の雛形を手で登録する (現在の問題点 / 改善される点 / 選定理由)",
+    "tags": [
+     "福祉用具"
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     }
+    },
+    "security": [
+     {
+      "bearerToken": [
+       "welfare-equipment:write"
+      ]
+     },
+     {
+      "oauth2": [
+       "welfare-equipment:write"
+      ]
+     },
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "bearer-or-session",
+    "x-cpos-scope": "welfare-equipment:write",
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": true
+       }
+      }
+     }
+    }
    }
   },
   "/api/welfare-equipment/v2/reason-templates/{templateId}/approve": {
@@ -15556,6 +16361,97 @@
     ],
     "x-cpos-auth": "bearer-or-session",
     "x-cpos-scope": "welfare-equipment:read"
+   }
+  },
+  "/api/welfare-equipment/v2/exports": {
+   "get": {
+    "operationId": "get_api_welfare_equipment_v2_exports",
+    "summary": "福祉用具 v2: 書き出せる種類と件数 (公表価格は選べる適用月つき)",
+    "tags": [
+     "福祉用具"
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     }
+    },
+    "security": [
+     {
+      "bearerToken": [
+       "welfare-equipment:export"
+      ]
+     },
+     {
+      "oauth2": [
+       "welfare-equipment:export"
+      ]
+     },
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "bearer-or-session",
+    "x-cpos-scope": "welfare-equipment:export"
+   }
+  },
+  "/api/welfare-equipment/v2/exports/{dataset}": {
+   "get": {
+    "operationId": "get_api_welfare_equipment_v2_exports_dataset",
+    "summary": "福祉用具 v2: 取込と同じ形での書き出し (商品マスター / 全国平均・上限 / 現用具。bundle は 3 つまとめて)",
+    "tags": [
+     "福祉用具"
+    ],
+    "parameters": [
+     {
+      "name": "dataset",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     }
+    },
+    "security": [
+     {
+      "bearerToken": [
+       "welfare-equipment:export"
+      ]
+     },
+     {
+      "oauth2": [
+       "welfare-equipment:export"
+      ]
+     },
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "bearer-or-session",
+    "x-cpos-scope": "welfare-equipment:export"
    }
   },
   "/api/welfare-equipment/v2/care-plans": {
@@ -19421,7 +20317,17 @@
     "tags": [
      "デバイス API"
     ],
-    "parameters": [],
+    "parameters": [
+     {
+      "name": "includeVoided",
+      "in": "query",
+      "required": false,
+      "description": "true で取消済み (recordStatus='voided') も返す (取消の取り消しの入口)。既定は落とす",
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ],
     "responses": {
      "200": {
       "description": "成功"
@@ -21481,6 +22387,48 @@
     }
    }
   },
+  "/api/app-data/lifecycle-health": {
+   "get": {
+    "operationId": "get_api_app_data_lifecycle_health",
+    "summary": "AppData lifecycle listener の失敗件数と直近の失敗 (診断)",
+    "tags": [
+     "アプリデータ"
+    ],
+    "parameters": [
+     {
+      "name": "all",
+      "in": "query",
+      "required": false,
+      "description": "true で全組織 (super_admin のみ)",
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     }
+    },
+    "security": [
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "session",
+    "x-cpos-scope": null,
+    "description": "submit / reopen / void / unvoid の listener (実績投影など) が 1 回の再試行後も失敗した件数、再試行で回復した件数、直近 50 件の失敗 (時刻・種別・app / resource / id・エラー文の先頭) を返す。記録本文は含まない。返すのは呼び出し元の組織ぶんだけ。admin のみ。all=true (全組織) は super_admin のみ。"
+   }
+  },
   "/api/app-data/{appId}/{resource}": {
    "get": {
     "operationId": "get_api_app_data_appId_resource",
@@ -22263,7 +23211,7 @@
       }
      },
      "400": {
-      "description": "入力が正しくない (本文の error に日本語の理由)"
+      "description": "reason 未指定 (unvoid のみ必須)。reasonCode=reason-required"
      },
      "401": {
       "description": "セッション Cookie または Bearer トークンが必要"
@@ -22275,7 +23223,7 @@
       "description": "存在しない / 境界の外"
      },
      "409": {
-      "description": "二重遷移 (already-submitted / not-submitted / already-voided)。reasonCode に理由が入る"
+      "description": "二重遷移 (already-submitted / not-submitted / already-voided / not-voided)。reasonCode に理由が入る"
      }
     },
     "security": [
@@ -22359,7 +23307,7 @@
       }
      },
      "400": {
-      "description": "入力が正しくない (本文の error に日本語の理由)"
+      "description": "reason 未指定 (unvoid のみ必須)。reasonCode=reason-required"
      },
      "401": {
       "description": "セッション Cookie または Bearer トークンが必要"
@@ -22371,7 +23319,7 @@
       "description": "存在しない / 境界の外"
      },
      "409": {
-      "description": "二重遷移 (already-submitted / not-submitted / already-voided)。reasonCode に理由が入る"
+      "description": "二重遷移 (already-submitted / not-submitted / already-voided / not-voided)。reasonCode に理由が入る"
      }
     },
     "security": [
@@ -22455,7 +23403,7 @@
       }
      },
      "400": {
-      "description": "入力が正しくない (本文の error に日本語の理由)"
+      "description": "reason 未指定 (unvoid のみ必須)。reasonCode=reason-required"
      },
      "401": {
       "description": "セッション Cookie または Bearer トークンが必要"
@@ -22467,7 +23415,7 @@
       "description": "存在しない / 境界の外"
      },
      "409": {
-      "description": "二重遷移 (already-submitted / not-submitted / already-voided)。reasonCode に理由が入る"
+      "description": "二重遷移 (already-submitted / not-submitted / already-voided / not-voided)。reasonCode に理由が入る"
      }
     },
     "security": [
@@ -22487,6 +23435,104 @@
     ],
     "x-cpos-auth": "bearer-or-session",
     "x-cpos-scope": "app-data:{appId}:write",
+    "description": "論理取消 (soft void)。レコードは消えず status='voided' になる。body の reason は記録に残る (voidReason)。",
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": true
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/app-data/{appId}/{resource}/{id}/unvoid": {
+   "post": {
+    "operationId": "post_api_app_data_appId_resource_id_unvoid",
+    "summary": "AppData レコードの取消を戻す",
+    "tags": [
+     "アプリデータ"
+    ],
+    "parameters": [
+     {
+      "name": "appId",
+      "in": "path",
+      "required": true,
+      "description": "アプリ ID (vns / record / staff-shift / jinji / careplan-ai / kasan / dayservice-transport ...)",
+      "schema": {
+       "type": "string"
+      },
+      "example": "vns"
+     },
+     {
+      "name": "resource",
+      "in": "path",
+      "required": true,
+      "description": "リソース名。一覧は GET /api/app-data/catalog",
+      "schema": {
+       "type": "string"
+      },
+      "example": "visit-records"
+     },
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "description": "レコード ID (作成時に採番される ad_*)",
+      "schema": {
+       "type": "string"
+      },
+      "example": "ad_0a1b2c3d4e5f6789"
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "遷移後のレコード (revision が 1 つ進む)",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/AppDataRecord"
+        }
+       }
+      }
+     },
+     "400": {
+      "description": "reason 未指定 (unvoid のみ必須)。reasonCode=reason-required"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     },
+     "404": {
+      "description": "存在しない / 境界の外"
+     },
+     "409": {
+      "description": "二重遷移 (already-submitted / not-submitted / already-voided / not-voided)。reasonCode に理由が入る"
+     }
+    },
+    "security": [
+     {
+      "bearerToken": [
+       "app-data:{appId}:write"
+      ]
+     },
+     {
+      "oauth2": [
+       "app-data:{appId}:write"
+      ]
+     },
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "bearer-or-session",
+    "x-cpos-scope": "app-data:{appId}:write",
+    "description": "取消済み (status='voided') のレコードを 'draft' に戻す。body の reason は必須 (unvoidReason として記録に残る)。取消済み以外に対しては 409 (reasonCode='not-voided')。確定済みへは直接戻さない — 取消で連動 void された実績は、記録を確定し直したときの submit 連動で作り直す。",
     "requestBody": {
      "required": false,
      "content": {
@@ -27467,7 +28513,7 @@
     ],
     "responses": {
      "200": {
-      "description": "成功"
+      "description": "取消後の記録 (recordStatus='voided' と voidedAt/By/ByName/voidReason)。取消済みへの再取消は冪等"
      },
      "400": {
       "description": "入力が正しくない (本文の error に日本語の理由)"
@@ -27477,6 +28523,9 @@
      },
      "403": {
       "description": "権限またはスコープが足りない"
+     },
+     "404": {
+      "description": "存在しない / 別組織・別事業所の記録"
      }
     },
     "security": [
@@ -27495,7 +28544,168 @@
      }
     ],
     "x-cpos-auth": "bearer-or-session",
-    "x-cpos-scope": "care-records:write"
+    "x-cpos-scope": "care-records:write",
+    "description": "recordStatus='voided' を立てるソフト削除。誰が・いつ・なぜ (voidedAt/By/ByName/voidReason) を残し、POST /:id/unvoid で戻せる。既定の一覧からは消える (includeVoided=true で見える)。"
+   }
+  },
+  "/api/device/records/{id}/classify": {
+   "post": {
+    "operationId": "post_api_device_records_id_classify",
+    "summary": "未分類の記録を利用者に分類する",
+    "tags": [
+     "デバイス API"
+    ],
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "分類後の記録 (insuredNumber / masterUserId / userName が付き、isUnclassified=false)。同じ人への再送も 200"
+     },
+     "400": {
+      "description": "分類先の指定が無い / 施設に割当の無い利用者 (REASSIGN_TARGET_NOT_IN_FACILITY)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     },
+     "404": {
+      "description": "記録が無い / 分類先の利用者が見つからない (REASSIGN_TARGET_NOT_FOUND)"
+     },
+     "409": {
+      "description": "既に別の利用者に分類済み (ALREADY_CLASSIFIED)"
+     }
+    },
+    "security": [
+     {
+      "bearerToken": [
+       "care-records:write"
+      ]
+     },
+     {
+      "oauth2": [
+       "care-records:write"
+      ]
+     },
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "bearer-or-session",
+    "x-cpos-scope": "care-records:write",
+    "description": "利用者を特定できずに保存された記録 (isUnclassified) に本人を付け、未分類の印を外す。本文・重要度は変えない。分類先は mu 優先: masterUserId → userId (mu_ のとき) → insuredNumber (現番号・旧番号・仮番号のどれでも)。施設割当の検査・変更履歴・タイムライン反映は PUT /:id (付け替え) と同じ。監査 care-record.reassign-user と care-record.classify。",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "masterUserId": {
+          "type": "string",
+          "description": "分類先の mu (優先)"
+         },
+         "userId": {
+          "type": "string",
+          "description": "分類先。mu_ で始まるときだけ使う (記録アプリの利用者 id)"
+         },
+         "insuredNumber": {
+          "type": "string",
+          "description": "分類先の番号 (mu が無いとき)"
+         },
+         "facilityId": {
+          "type": "string"
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/device/records/{id}/unvoid": {
+   "post": {
+    "operationId": "post_api_device_records_id_unvoid",
+    "summary": "記録の取消を戻す (voided → draft)",
+    "tags": [
+     "デバイス API"
+    ],
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "戻した記録 (recordStatus='draft'。取消のスタンプは残り、unvoidedAt/By/ByName/unvoidReason が付く)"
+     },
+     "400": {
+      "description": "reason 未指定 / 空。error.code=reason-required"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     },
+     "404": {
+      "description": "存在しない / 別組織・別事業所の記録"
+     },
+     "409": {
+      "description": "取消済みではない。error.code=not-voided (error.recordStatus に現在の状態)"
+     }
+    },
+    "security": [
+     {
+      "bearerToken": [
+       "care-records:write"
+      ]
+     },
+     {
+      "oauth2": [
+       "care-records:write"
+      ]
+     },
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "bearer-or-session",
+    "x-cpos-scope": "care-records:write",
+    "description": "取消済み (recordStatus='voided') の記録を draft に戻す。理由 (body.reason) は必須。取消のスタンプ (voidedAt/By/ByName/voidReason) は残したまま unvoidedAt/By/ByName/unvoidReason を付ける。戻り先は確定済みではなく draft (戻した記録は人が確定し直す)。監査 care-record.unvoid。",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "required": [
+         "reason"
+        ],
+        "properties": {
+         "reason": {
+          "type": "string",
+          "description": "取消を戻す理由 (必須。trim して 1000 文字で切り詰め、unvoidReason として記録に残る)"
+         }
+        }
+       }
+      }
+     }
+    }
    }
   },
   "/api/device/records/batch-sync": {
@@ -28258,6 +29468,82 @@
        "schema": {
         "type": "object",
         "additionalProperties": true
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/master-users/{insuredNumber}/geocode": {
+   "post": {
+    "operationId": "post_api_master_users_insuredNumber_geocode",
+    "summary": "利用者の住所から座標を付ける (geoSource='manual' は force なしでは 409)",
+    "tags": [
+     "利用者マスタ"
+    ],
+    "parameters": [
+     {
+      "name": "insuredNumber",
+      "in": "path",
+      "required": true,
+      "description": "被保険者番号 / 不変 ID (mu_*) / 仮 ID (tmp-*)",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "{ user, geocoded: true }"
+     },
+     "400": {
+      "description": "no-address"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     },
+     "404": {
+      "description": "利用者が無い / not-found (住所から特定できない)"
+     },
+     "409": {
+      "description": "manual-coordinates"
+     },
+     "501": {
+      "description": "geocoder-not-configured"
+     }
+    },
+    "security": [
+     {
+      "bearerToken": [
+       "master-users:write"
+      ]
+     },
+     {
+      "oauth2": [
+       "master-users:write"
+      ]
+     },
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "bearer-or-session",
+    "x-cpos-scope": "master-users:write",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "force": {
+          "type": "boolean",
+          "description": "手動座標も上書きする"
+         }
+        }
        }
       }
      }
@@ -29712,6 +30998,58 @@
        "schema": {
         "type": "object",
         "additionalProperties": true
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/master-users/assignments/dedupe": {
+   "post": {
+    "operationId": "post_api_master_users_assignments_dedupe",
+    "summary": "利用者マスタ: 事業所アサインの重複整理 (同じ本人 x 同じ事業所の行を 1 件にまとめる)",
+    "tags": [
+     "利用者マスタ"
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     }
+    },
+    "security": [
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "session",
+    "x-cpos-scope": null,
+    "description": "同じ本人 x 同じ事業所のアサインが 2 件以上あるものを、項目の多い行を残して 1 件にまとめる。残す行に無い項目だけ消す行から補い、上書きはしない。サービス種別が食い違う行は触らず conflicts で返す。dryRun (既定 true) は計画だけを返す。admin のみ。実行は監査ログ (master-user.assignment.dedupe) に残る。",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "dryRun": {
+          "type": "boolean",
+          "description": "false で実際に統合する (既定 true)"
+         },
+         "facilityId": {
+          "type": "string",
+          "description": "この事業所のアサインだけを対象にする (省略で全事業所)"
+         }
+        }
        }
       }
      }
@@ -31317,7 +32655,7 @@
     ],
     "responses": {
      "200": {
-      "description": "items: 要約の配列。includeData=true なら各要素に data が入る。id が careplan: で始まる要素の data は V4 CarePlanBundle。"
+      "description": "items: 要約の配列。includeData=true なら各要素に data が入る。id が careplan: で始まる要素の data は V4 CarePlanBundle。 要約の targetMonth は帳票が何月分か (YYYY-MM。data.targetMonth、無ければ旧報告書の reportYear/reportMonth。明示が無ければ null)。"
      },
      "400": {
       "description": "入力が正しくない (本文の error に日本語の理由)"
@@ -31938,6 +33276,58 @@
       }
      }
     ],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     }
+    },
+    "security": [
+     {
+      "bearerToken": [
+       "care-documents:approve"
+      ]
+     },
+     {
+      "oauth2": [
+       "care-documents:approve"
+      ]
+     },
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "bearer-or-session",
+    "x-cpos-scope": "care-documents:approve",
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": true
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/care-documents/v1/maintenance/backfill-master-user-id": {
+   "post": {
+    "operationId": "post_api_care_documents_v1_maintenance_backfill_master_user_id",
+    "summary": "masterUserId 未付与の業務文書に本人の不変 ID を付ける (保守。被保険者番号 → 氏名の順で名簿から引く。dryRun 既定)",
+    "tags": [
+     "業務ドキュメント"
+    ],
+    "parameters": [],
     "responses": {
      "200": {
       "description": "成功"
@@ -36009,6 +37399,47 @@
     }
    }
   },
+  "/api/care-service-actuals/v1/metrics.csv": {
+   "get": {
+    "operationId": "get_api_care_service_actuals_v1_metrics_csv",
+    "summary": "月次の実績指標を CSV で (人事考課アプリの月次KPI取込用。事業所・月が必須)",
+    "tags": [
+     "サービス実績"
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     }
+    },
+    "security": [
+     {
+      "bearerToken": [
+       "care-service-actuals:read"
+      ]
+     },
+     {
+      "oauth2": [
+       "care-service-actuals:read"
+      ]
+     },
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "bearer-or-session",
+    "x-cpos-scope": "care-service-actuals:read"
+   }
+  },
   "/api/care-service-actuals/v1/metrics": {
    "get": {
     "operationId": "get_api_care_service_actuals_v1_metrics",
@@ -39905,6 +41336,99 @@
     ],
     "x-cpos-auth": "bearer-or-session",
     "x-cpos-scope": "migration-jobs:write",
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": true
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/user-id-maintenance/v1/unlinked-app-data": {
+   "get": {
+    "operationId": "get_api_user_id_maintenance_v1_unlinked_app_data",
+    "summary": "利用者が紐づいていないアプリの記録を氏名でまとめ、候補の利用者を返す (書き込みなし)",
+    "tags": [
+     "利用者 ID の整備"
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     }
+    },
+    "security": [
+     {
+      "bearerToken": [
+       "master-users:write"
+      ]
+     },
+     {
+      "oauth2": [
+       "master-users:write"
+      ]
+     },
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "bearer-or-session",
+    "x-cpos-scope": "master-users:write"
+   }
+  },
+  "/api/user-id-maintenance/v1/unlinked-app-data/link": {
+   "post": {
+    "operationId": "post_api_user_id_maintenance_v1_unlinked_app_data_link",
+    "summary": "人が選んだ利用者に記録を紐づける (封筒の insuredNumber / masterUserId だけ)",
+    "tags": [
+     "利用者 ID の整備"
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     }
+    },
+    "security": [
+     {
+      "bearerToken": [
+       "master-users:write"
+      ]
+     },
+     {
+      "oauth2": [
+       "master-users:write"
+      ]
+     },
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "bearer-or-session",
+    "x-cpos-scope": "master-users:write",
     "requestBody": {
      "required": false,
      "content": {
@@ -48698,10 +50222,58 @@
     "x-cpos-scope": null
    }
   },
+  "/api/platform/facility-assignments/membership/{userId}/{facilityId}": {
+   "delete": {
+    "operationId": "delete_api_platform_facility_assignments_membership_userId_facilityId",
+    "summary": "この人をこの事業所の所属から外す (ユーザーの facilityIds から削除 + 対応する明細も削除)",
+    "tags": [
+     "Platform: facility-assignments"
+    ],
+    "parameters": [
+     {
+      "name": "userId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "facilityId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     }
+    },
+    "security": [
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "session",
+    "x-cpos-scope": null
+   }
+  },
   "/api/platform/facility-assignments/users": {
    "post": {
     "operationId": "post_api_platform_facility_assignments_users",
-    "summary": "user 割当 upsert",
+    "summary": "user 割当 upsert (ユーザーの所属 facilityIds にも書き戻す)",
     "tags": [
      "Platform: facility-assignments"
     ],
@@ -48820,6 +50392,48 @@
     ],
     "x-cpos-auth": "session",
     "x-cpos-scope": null
+   }
+  },
+  "/api/platform/facility-assignments/backfill-user-facilities": {
+   "post": {
+    "operationId": "post_api_platform_facility_assignments_backfill_user_facilities",
+    "summary": "旧「事業所アクセス」の割当から、ユーザーの所属 (facilityIds) を埋め戻す (移行・修復用)。足すだけで所属からは何も消さない。dryRun=true (既定) は差分のみ返す",
+    "tags": [
+     "Platform: facility-assignments"
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     }
+    },
+    "security": [
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "session",
+    "x-cpos-scope": null,
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": true
+       }
+      }
+     }
+    }
    }
   },
   "/api/platform/facility-assignments/groups/{id}": {
@@ -49661,7 +51275,17 @@
     "tags": [
      "介護記録"
     ],
-    "parameters": [],
+    "parameters": [
+     {
+      "name": "includeVoided",
+      "in": "query",
+      "required": false,
+      "description": "true で取消済み (recordStatus='voided') も返す (取消の取り消しの入口)。既定は落とす",
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ],
     "responses": {
      "200": {
       "description": "成功"
@@ -51384,11 +53008,48 @@
   "/api/care-records/v1/records/updates": {
    "get": {
     "operationId": "get_api_care_records_v1_records_updates",
-    "summary": "差分同期 (since=ISO)",
+    "summary": "差分同期 (since 以降の更新を updatedAt 順にページで返す。取消・削除は removed[])",
     "tags": [
      "介護記録"
     ],
-    "parameters": [],
+    "parameters": [
+     {
+      "name": "facilityId",
+      "in": "query",
+      "required": false,
+      "description": "事業所 ID (X-Cpos-Facility-Id ヘッダでも可)",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "since",
+      "in": "query",
+      "required": false,
+      "description": "ISO 8601。省略で全件 (初回同期)",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "description": "1〜1000 (既定 500)",
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
+      "name": "cursor",
+      "in": "query",
+      "required": false,
+      "description": "前ページの nextCursor (不透明トークン)",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
     "responses": {
      "200": {
       "description": "成功"
@@ -51648,7 +53309,7 @@
    },
    "delete": {
     "operationId": "delete_api_care_records_v1_records_id",
-    "summary": "記録を 1 件削除",
+    "summary": "記録を取消 (物理削除せず voided にする)",
     "tags": [
      "介護記録"
     ],
@@ -51664,7 +53325,7 @@
     ],
     "responses": {
      "200": {
-      "description": "成功"
+      "description": "取消後の記録 (recordStatus='voided' と voidedAt/By/ByName/voidReason)。取消済みへの再取消は冪等"
      },
      "400": {
       "description": "入力が正しくない (本文の error に日本語の理由)"
@@ -51674,6 +53335,9 @@
      },
      "403": {
       "description": "権限またはスコープが足りない"
+     },
+     "404": {
+      "description": "存在しない / 別組織・別事業所の記録"
      }
     },
     "security": [
@@ -51692,7 +53356,168 @@
      }
     ],
     "x-cpos-auth": "bearer-or-session",
-    "x-cpos-scope": "care-records:write"
+    "x-cpos-scope": "care-records:write",
+    "description": "recordStatus='voided' を立てるソフト削除。誰が・いつ・なぜ (voidedAt/By/ByName/voidReason) を残し、POST /:id/unvoid で戻せる。既定の一覧からは消える (includeVoided=true で見える)。"
+   }
+  },
+  "/api/care-records/v1/records/{id}/classify": {
+   "post": {
+    "operationId": "post_api_care_records_v1_records_id_classify",
+    "summary": "未分類の記録を利用者に分類する",
+    "tags": [
+     "介護記録"
+    ],
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "分類後の記録 (insuredNumber / masterUserId / userName が付き、isUnclassified=false)。同じ人への再送も 200"
+     },
+     "400": {
+      "description": "分類先の指定が無い / 施設に割当の無い利用者 (REASSIGN_TARGET_NOT_IN_FACILITY)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     },
+     "404": {
+      "description": "記録が無い / 分類先の利用者が見つからない (REASSIGN_TARGET_NOT_FOUND)"
+     },
+     "409": {
+      "description": "既に別の利用者に分類済み (ALREADY_CLASSIFIED)"
+     }
+    },
+    "security": [
+     {
+      "bearerToken": [
+       "care-records:write"
+      ]
+     },
+     {
+      "oauth2": [
+       "care-records:write"
+      ]
+     },
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "bearer-or-session",
+    "x-cpos-scope": "care-records:write",
+    "description": "利用者を特定できずに保存された記録 (isUnclassified) に本人を付け、未分類の印を外す。本文・重要度は変えない。分類先は mu 優先: masterUserId → userId (mu_ のとき) → insuredNumber (現番号・旧番号・仮番号のどれでも)。施設割当の検査・変更履歴・タイムライン反映は PUT /:id (付け替え) と同じ。監査 care-record.reassign-user と care-record.classify。",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "masterUserId": {
+          "type": "string",
+          "description": "分類先の mu (優先)"
+         },
+         "userId": {
+          "type": "string",
+          "description": "分類先。mu_ で始まるときだけ使う (記録アプリの利用者 id)"
+         },
+         "insuredNumber": {
+          "type": "string",
+          "description": "分類先の番号 (mu が無いとき)"
+         },
+         "facilityId": {
+          "type": "string"
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/care-records/v1/records/{id}/unvoid": {
+   "post": {
+    "operationId": "post_api_care_records_v1_records_id_unvoid",
+    "summary": "記録の取消を戻す (voided → draft)",
+    "tags": [
+     "介護記録"
+    ],
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "戻した記録 (recordStatus='draft'。取消のスタンプは残り、unvoidedAt/By/ByName/unvoidReason が付く)"
+     },
+     "400": {
+      "description": "reason 未指定 / 空。error.code=reason-required"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     },
+     "404": {
+      "description": "存在しない / 別組織・別事業所の記録"
+     },
+     "409": {
+      "description": "取消済みではない。error.code=not-voided (error.recordStatus に現在の状態)"
+     }
+    },
+    "security": [
+     {
+      "bearerToken": [
+       "care-records:write"
+      ]
+     },
+     {
+      "oauth2": [
+       "care-records:write"
+      ]
+     },
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "bearer-or-session",
+    "x-cpos-scope": "care-records:write",
+    "description": "取消済み (recordStatus='voided') の記録を draft に戻す。理由 (body.reason) は必須。取消のスタンプ (voidedAt/By/ByName/voidReason) は残したまま unvoidedAt/By/ByName/unvoidReason を付ける。戻り先は確定済みではなく draft (戻した記録は人が確定し直す)。監査 care-record.unvoid。",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "required": [
+         "reason"
+        ],
+        "properties": {
+         "reason": {
+          "type": "string",
+          "description": "取消を戻す理由 (必須。trim して 1000 文字で切り詰め、unvoidReason として記録に残る)"
+         }
+        }
+       }
+      }
+     }
+    }
    }
   },
   "/api/care-records/v1/records/batch-sync": {
@@ -52327,6 +54152,48 @@
     "x-cpos-scope": null
    }
   },
+  "/api/maintenance/purge-user-test-data": {
+   "post": {
+    "operationId": "post_api_maintenance_purge_user_test_data",
+    "summary": "保守: テスト利用者の試験データを片付ける (super_admin 専用・既定は dry-run・要実行理由)",
+    "tags": [
+     "保守"
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     }
+    },
+    "security": [
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "session",
+    "x-cpos-scope": null,
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": true
+       }
+      }
+     }
+    }
+   }
+  },
   "/api/record-app/bootstrap": {
    "get": {
     "operationId": "get_api_record_app_bootstrap",
@@ -52427,7 +54294,26 @@
     "tags": [
      "記録アプリ facade"
     ],
-    "parameters": [],
+    "parameters": [
+     {
+      "name": "includeVoided",
+      "in": "query",
+      "required": false,
+      "description": "true で取消済み (recordStatus='voided') も返す (取消の取り消しの入口)。既定は落とす",
+      "schema": {
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "isUnclassified",
+      "in": "query",
+      "required": false,
+      "description": "true でこの事業所の未分類 (利用者を特定できずに保存された記録) だけを期間を問わず返す (過去記録の「未分類」タブ)。他の絞り込みは使わない。取消済みは出さない",
+      "schema": {
+       "type": "boolean"
+      }
+     }
+    ],
     "responses": {
      "200": {
       "description": "成功"
@@ -54410,7 +56296,7 @@
    },
    "delete": {
     "operationId": "delete_api_record_app_records_id",
-    "summary": "記録を 1 件削除",
+    "summary": "記録を取消 (物理削除せず voided にする)",
     "tags": [
      "記録アプリ facade"
     ],
@@ -54426,7 +56312,7 @@
     ],
     "responses": {
      "200": {
-      "description": "成功"
+      "description": "取消後の記録 (recordStatus='voided' と voidedAt/By/ByName/voidReason)。取消済みへの再取消は冪等"
      },
      "400": {
       "description": "入力が正しくない (本文の error に日本語の理由)"
@@ -54436,6 +56322,9 @@
      },
      "403": {
       "description": "権限またはスコープが足りない"
+     },
+     "404": {
+      "description": "存在しない / 別組織・別事業所の記録"
      }
     },
     "security": [
@@ -54454,7 +56343,168 @@
      }
     ],
     "x-cpos-auth": "bearer-or-session",
-    "x-cpos-scope": "care-records:write"
+    "x-cpos-scope": "care-records:write",
+    "description": "recordStatus='voided' を立てるソフト削除。誰が・いつ・なぜ (voidedAt/By/ByName/voidReason) を残し、POST /:id/unvoid で戻せる。既定の一覧からは消える (includeVoided=true で見える)。"
+   }
+  },
+  "/api/record-app/records/{id}/classify": {
+   "post": {
+    "operationId": "post_api_record_app_records_id_classify",
+    "summary": "未分類の記録を利用者に分類する",
+    "tags": [
+     "記録アプリ facade"
+    ],
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "分類後の記録 (insuredNumber / masterUserId / userName が付き、isUnclassified=false)。同じ人への再送も 200"
+     },
+     "400": {
+      "description": "分類先の指定が無い / 施設に割当の無い利用者 (REASSIGN_TARGET_NOT_IN_FACILITY)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     },
+     "404": {
+      "description": "記録が無い / 分類先の利用者が見つからない (REASSIGN_TARGET_NOT_FOUND)"
+     },
+     "409": {
+      "description": "既に別の利用者に分類済み (ALREADY_CLASSIFIED)"
+     }
+    },
+    "security": [
+     {
+      "bearerToken": [
+       "care-records:write"
+      ]
+     },
+     {
+      "oauth2": [
+       "care-records:write"
+      ]
+     },
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "bearer-or-session",
+    "x-cpos-scope": "care-records:write",
+    "description": "利用者を特定できずに保存された記録 (isUnclassified) に本人を付け、未分類の印を外す。本文・重要度は変えない。分類先は mu 優先: masterUserId → userId (mu_ のとき) → insuredNumber (現番号・旧番号・仮番号のどれでも)。施設割当の検査・変更履歴・タイムライン反映は PUT /:id (付け替え) と同じ。監査 care-record.reassign-user と care-record.classify。",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "masterUserId": {
+          "type": "string",
+          "description": "分類先の mu (優先)"
+         },
+         "userId": {
+          "type": "string",
+          "description": "分類先。mu_ で始まるときだけ使う (記録アプリの利用者 id)"
+         },
+         "insuredNumber": {
+          "type": "string",
+          "description": "分類先の番号 (mu が無いとき)"
+         },
+         "facilityId": {
+          "type": "string"
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/record-app/records/{id}/unvoid": {
+   "post": {
+    "operationId": "post_api_record_app_records_id_unvoid",
+    "summary": "記録の取消を戻す (voided → draft)",
+    "tags": [
+     "記録アプリ facade"
+    ],
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "戻した記録 (recordStatus='draft'。取消のスタンプは残り、unvoidedAt/By/ByName/unvoidReason が付く)"
+     },
+     "400": {
+      "description": "reason 未指定 / 空。error.code=reason-required"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     },
+     "404": {
+      "description": "存在しない / 別組織・別事業所の記録"
+     },
+     "409": {
+      "description": "取消済みではない。error.code=not-voided (error.recordStatus に現在の状態)"
+     }
+    },
+    "security": [
+     {
+      "bearerToken": [
+       "care-records:write"
+      ]
+     },
+     {
+      "oauth2": [
+       "care-records:write"
+      ]
+     },
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "bearer-or-session",
+    "x-cpos-scope": "care-records:write",
+    "description": "取消済み (recordStatus='voided') の記録を draft に戻す。理由 (body.reason) は必須。取消のスタンプ (voidedAt/By/ByName/voidReason) は残したまま unvoidedAt/By/ByName/unvoidReason を付ける。戻り先は確定済みではなく draft (戻した記録は人が確定し直す)。監査 care-record.unvoid。",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "required": [
+         "reason"
+        ],
+        "properties": {
+         "reason": {
+          "type": "string",
+          "description": "取消を戻す理由 (必須。trim して 1000 文字で切り詰め、unvoidReason として記録に残る)"
+         }
+        }
+       }
+      }
+     }
+    }
    }
   },
   "/api/record-app/records/batch-sync": {
@@ -56376,7 +58426,7 @@
   "/api/apps/fleet": {
    "get": {
     "operationId": "get_api_apps_fleet",
-    "summary": "登録アプリの棚卸し (manifest が要るスコープと有効トークンの不足、配信先の有無)",
+    "summary": "登録アプリの棚卸し (manifest が要るスコープと有効トークンの不足、配信先の有無)。既定で manifest を取り直す (?verify=false で登録の保存値のみ)",
     "tags": [
      "登録アプリ"
     ],
@@ -56469,7 +58519,7 @@
   "/api/apps/{id}/tokens/rotate": {
    "post": {
     "operationId": "post_api_apps_id_tokens_rotate",
-    "summary": "1 アプリの App Token を発行し直して配る (dryRun 可)",
+    "summary": "1 アプリの App Token を発行し直して配る (dryRun 可)。manifest を確かめられなければ 422 で断る",
     "tags": [
      "登録アプリ"
     ],
@@ -56530,7 +58580,7 @@
   "/api/apps/fleet/rotate-tokens": {
    "post": {
     "operationId": "post_api_apps_fleet_rotate_tokens",
-    "summary": "不足のあるアプリの App Token を発行し直し、Secret Manager に配って旧トークンを猶予付きで失効 (dryRun 可)",
+    "summary": "不足のあるアプリの App Token を発行し直し、Secret Manager に配って旧トークンを猶予付きで失効 (dryRun 可)。manifest を確かめられないアプリは発行しない",
     "tags": [
      "登録アプリ"
     ],
@@ -57330,6 +59380,55 @@
     ],
     "x-cpos-auth": "bearer-or-session",
     "x-cpos-scope": null
+   },
+   "put": {
+    "operationId": "put_api_apps_id_scopes",
+    "summary": "必要 API Token scopes を直す (dryRun=true で差分だけ)。manifest を取れないアプリ用",
+    "tags": [
+     "登録アプリ"
+    ],
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     }
+    },
+    "security": [
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "session",
+    "x-cpos-scope": null,
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": true
+       }
+      }
+     }
+    }
    }
   },
   "/api/apps/{id}/diagnostics": {
@@ -62944,6 +65043,81 @@
     }
    }
   },
+  "/api/facilities/{id}/geocode": {
+   "post": {
+    "operationId": "post_api_facilities_id_geocode",
+    "summary": "事業所の住所から座標を付ける (geoSource='manual' は force なしでは 409)",
+    "tags": [
+     "事業所"
+    ],
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "{ facility, geocoded: true }"
+     },
+     "400": {
+      "description": "no-address"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     },
+     "404": {
+      "description": "事業所が無い / not-found (住所から特定できない)"
+     },
+     "409": {
+      "description": "manual-coordinates"
+     },
+     "501": {
+      "description": "geocoder-not-configured"
+     }
+    },
+    "security": [
+     {
+      "bearerToken": [
+       "facilities:write"
+      ]
+     },
+     {
+      "oauth2": [
+       "facilities:write"
+      ]
+     },
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "bearer-or-session",
+    "x-cpos-scope": "facilities:write",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "force": {
+          "type": "boolean",
+          "description": "手動座標も上書きする"
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  },
   "/api/facilities/{id}/delete-preview": {
    "post": {
     "operationId": "post_api_facilities_id_delete_preview",
@@ -63982,6 +66156,67 @@
     }
    }
   },
+  "/api/facilities/{facilityId}/staff/sync-names-from-users": {
+   "post": {
+    "operationId": "post_api_facilities_facilityId_staff_sync_names_from_users",
+    "summary": "従業員 (AuthUser) の氏名 → 事業所スタッフの氏名 を一括で揃える (既存の不一致の修復用)。対象は本人と確定できる行 (userId / employeeId / 本人の有資格者 id) だけで、氏名だけが一致する行は触らない。旧姓は aliases に残す。dryRun=true (既定) は差分のみ返す",
+    "tags": [
+     "事業所"
+    ],
+    "parameters": [
+     {
+      "name": "facilityId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     }
+    },
+    "security": [
+     {
+      "bearerToken": [
+       "facility-staff:write"
+      ]
+     },
+     {
+      "oauth2": [
+       "facility-staff:write"
+      ]
+     },
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "bearer-or-session",
+    "x-cpos-scope": "facility-staff:write",
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": true
+       }
+      }
+     }
+    }
+   }
+  },
   "/api/facilities/{facilityId}/care-manager-links": {
    "get": {
     "operationId": "get_api_facilities_facilityId_care_manager_links",
@@ -64715,6 +66950,21 @@
            "unknown"
           ]
          },
+         "stage": {
+          "type": [
+           "string",
+           "null"
+          ],
+          "enum": [
+           "lead",
+           "contacted",
+           "proposing",
+           "referring",
+           "dormant",
+           null
+          ],
+          "description": "この活動の時点での営業先の段階 (見込み / 接触済み / 提案中 / 紹介あり / 休眠)。省略なら段階を動かさない"
+         },
          "nextAction": {
           "type": [
            "string",
@@ -64826,6 +67076,290 @@
     "x-cpos-scope": "sales:read",
     "x-mcp": {
      "name": "sales_activities_summary",
+     "readOnly": true,
+     "phi": "none"
+    }
+   }
+  },
+  "/api/platform/sales/pipeline": {
+   "get": {
+    "operationId": "get_api_platform_sales_pipeline",
+    "summary": "営業パイプライン (営業先ごとの現在ステージ・次にすること・期限超過)",
+    "tags": [
+     "Platform: 営業管理"
+    ],
+    "parameters": [
+     {
+      "name": "facilityId",
+      "in": "query",
+      "required": false,
+      "description": "事業所 ID (省略時は組織全体)",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "today",
+      "in": "query",
+      "required": false,
+      "description": "期限超過の基準日 YYYY-MM-DD (省略時は JST の今日)",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "stages (lead / contacted / proposing / referring / dormant の順)",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "properties": {
+          "stages": {
+           "type": "array",
+           "items": {
+            "type": "object",
+            "properties": {
+             "stage": {
+              "type": "string"
+             },
+             "label": {
+              "type": "string"
+             },
+             "count": {
+              "type": "integer"
+             },
+             "partners": {
+              "type": "array",
+              "items": {
+               "type": "object",
+               "properties": {
+                "partnerOrganizationId": {
+                 "type": "string"
+                },
+                "partnerName": {
+                 "type": "string"
+                },
+                "currentStage": {
+                 "type": "string"
+                },
+                "lastActivityDate": {
+                 "type": "string"
+                },
+                "lastStaffName": {
+                 "type": "string"
+                },
+                "nextAction": {
+                 "type": [
+                  "string",
+                  "null"
+                 ]
+                },
+                "nextActionDueDate": {
+                 "type": [
+                  "string",
+                  "null"
+                 ]
+                },
+                "overdue": {
+                 "type": "boolean"
+                },
+                "activityCount": {
+                 "type": "integer"
+                }
+               }
+              }
+             }
+            }
+           }
+          },
+          "today": {
+           "type": "string"
+          },
+          "generatedAt": {
+           "type": "string"
+          },
+          "truncated": {
+           "type": "boolean"
+          }
+         }
+        }
+       }
+      }
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     }
+    },
+    "security": [
+     {
+      "bearerToken": [
+       "sales:read"
+      ]
+     },
+     {
+      "oauth2": [
+       "sales:read"
+      ]
+     },
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "bearer-or-session",
+    "x-cpos-scope": "sales:read",
+    "description": "取りやめを除いた活動のうち、いちばん新しいステージ付きの活動で営業先の現在ステージを決める。ステージの無い先は lead。営業先名はマスタが引ければマスタ、無ければ控え。",
+    "x-mcp": {
+     "name": "sales_pipeline",
+     "readOnly": true,
+     "phi": "none"
+    }
+   }
+  },
+  "/api/platform/sales/referral-outcomes": {
+   "get": {
+    "operationId": "get_api_platform_sales_referral_outcomes",
+    "summary": "紹介元別の受付・契約実績 (月別。利用者の氏名・番号は含まない)",
+    "tags": [
+     "Platform: 営業管理"
+    ],
+    "parameters": [
+     {
+      "name": "facilityId",
+      "in": "query",
+      "required": true,
+      "description": "事業所 ID (必須)",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "from",
+      "in": "query",
+      "required": false,
+      "description": "開始月 YYYY-MM (省略時は to の 5 か月前)",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "to",
+      "in": "query",
+      "required": false,
+      "description": "終了月 YYYY-MM (省略時は今月)",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "sources (受付件数の多い順)",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "properties": {
+          "from": {
+           "type": "string"
+          },
+          "to": {
+           "type": "string"
+          },
+          "sources": {
+           "type": "array",
+           "items": {
+            "type": "object",
+            "properties": {
+             "referralSourceType": {
+              "type": [
+               "string",
+               "null"
+              ]
+             },
+             "referralSourceName": {
+              "type": [
+               "string",
+               "null"
+              ]
+             },
+             "partnerOrganizationId": {
+              "type": [
+               "string",
+               "null"
+              ]
+             },
+             "months": {
+              "type": "object",
+              "additionalProperties": {
+               "type": "object",
+               "properties": {
+                "intakes": {
+                 "type": "integer"
+                },
+                "contracted": {
+                 "type": "integer"
+                }
+               }
+              }
+             },
+             "totalIntakes": {
+              "type": "integer"
+             },
+             "totalContracted": {
+              "type": "integer"
+             }
+            }
+           }
+          },
+          "totalIntakes": {
+           "type": "integer"
+          },
+          "totalContracted": {
+           "type": "integer"
+          }
+         }
+        }
+       }
+      }
+     },
+     "400": {
+      "description": "facilityId 無し / from・to の形式不正"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     }
+    },
+    "security": [
+     {
+      "bearerToken": [
+       "sales:read"
+      ]
+     },
+     {
+      "oauth2": [
+       "sales:read"
+      ]
+     },
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "bearer-or-session",
+    "x-cpos-scope": "sales:read",
+    "description": "受付シートの紹介元区分 (referralSourceType) と紹介元名 (referralSourceName) でまとめ、月ごとの受付件数と契約件数を返す。契約 = 受付の状態が accepted (受入決定) または converted (利用者化済み)。draft は数えない。紹介元名が外部関係先マスタと一致すれば partnerOrganizationId を付ける。",
+    "x-mcp": {
+     "name": "sales_referral_outcomes",
      "readOnly": true,
      "phi": "none"
     }
@@ -64994,6 +67528,345 @@
     "x-cpos-scope": "sales:write"
    }
   },
+  "/api/platform/geo/travel-matrix": {
+   "post": {
+    "operationId": "post_api_platform_geo_travel_matrix",
+    "summary": "所要時間・距離の行列 (OSRM。未設定・障害時は概算に縮退)",
+    "tags": [
+     "Platform: Geo"
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "行列",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "properties": {
+          "durationsSec": {
+           "type": "array",
+           "items": {
+            "type": "array",
+            "items": {
+             "type": "number"
+            }
+           }
+          },
+          "distancesM": {
+           "type": "array",
+           "items": {
+            "type": "array",
+            "items": {
+             "type": "number"
+            }
+           }
+          },
+          "source": {
+           "type": "string",
+           "enum": [
+            "osrm",
+            "estimate"
+           ]
+          },
+          "mode": {
+           "type": "string"
+          }
+         }
+        }
+       }
+      }
+     },
+     "400": {
+      "description": "invalid-point / invalid-input"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     },
+     "413": {
+      "description": "too-many-points (片側 30 地点まで)"
+     }
+    },
+    "security": [
+     {
+      "bearerToken": [
+       "geo:read"
+      ]
+     },
+     {
+      "oauth2": [
+       "geo:read"
+      ]
+     },
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "bearer-or-session",
+    "x-cpos-scope": "geo:read",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "required": [
+         "origins"
+        ],
+        "properties": {
+         "origins": {
+          "type": "array",
+          "maxItems": 30,
+          "items": {
+           "type": "object",
+           "properties": {
+            "lat": {
+             "type": "number"
+            },
+            "lng": {
+             "type": "number"
+            }
+           },
+           "required": [
+            "lat",
+            "lng"
+           ]
+          }
+         },
+         "destinations": {
+          "type": "array",
+          "maxItems": 30,
+          "items": {
+           "type": "object",
+           "properties": {
+            "lat": {
+             "type": "number"
+            },
+            "lng": {
+             "type": "number"
+            }
+           },
+           "required": [
+            "lat",
+            "lng"
+           ]
+          }
+         },
+         "mode": {
+          "type": "string",
+          "enum": [
+           "driving",
+           "cycling",
+           "walking"
+          ],
+          "description": "既定 driving"
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/platform/geo/geocode": {
+   "post": {
+    "operationId": "post_api_platform_geo_geocode",
+    "summary": "住所→座標 (Nominatim / Google。住所はログに残さない)",
+    "tags": [
+     "Platform: Geo"
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "座標",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "properties": {
+          "lat": {
+           "type": "number"
+          },
+          "lng": {
+           "type": "number"
+          },
+          "provider": {
+           "type": "string",
+           "enum": [
+            "nominatim",
+            "google"
+           ]
+          },
+          "normalizedAddress": {
+           "type": "string"
+          }
+         }
+        }
+       }
+      }
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     },
+     "404": {
+      "description": "not-found (住所から特定できない)"
+     },
+     "501": {
+      "description": "geocoder-not-configured (GEOCODER_PROVIDER=off)"
+     },
+     "503": {
+      "description": "rate-limited"
+     }
+    },
+    "security": [
+     {
+      "bearerToken": [
+       "geo:read"
+      ]
+     },
+     {
+      "oauth2": [
+       "geo:read"
+      ]
+     },
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "bearer-or-session",
+    "x-cpos-scope": "geo:read",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "required": [
+         "address"
+        ],
+        "properties": {
+         "address": {
+          "type": "string",
+          "maxLength": 300
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/platform/geo/geocode-missing": {
+   "post": {
+    "operationId": "post_api_platform_geo_geocode_missing",
+    "summary": "事業所の利用者のうち座標が無い人にまとめて座標を付ける (手動座標は飛ばす)",
+    "tags": [
+     "Platform: Geo"
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "件数",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "properties": {
+          "attempted": {
+           "type": "integer"
+          },
+          "geocoded": {
+           "type": "integer"
+          },
+          "notFound": {
+           "type": "integer"
+          },
+          "failed": {
+           "type": "integer"
+          },
+          "remaining": {
+           "type": "integer"
+          },
+          "stopped": {
+           "type": [
+            "string",
+            "null"
+           ],
+           "enum": [
+            "rate-limited",
+            "geocoder-not-configured",
+            null
+           ]
+          }
+         }
+        }
+       }
+      }
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     },
+     "501": {
+      "description": "geocoder-not-configured"
+     }
+    },
+    "security": [
+     {
+      "bearerToken": [
+       "master-users:write"
+      ]
+     },
+     {
+      "oauth2": [
+       "master-users:write"
+      ]
+     },
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "bearer-or-session",
+    "x-cpos-scope": "master-users:write",
+    "description": "住所があって座標が無い有効な利用者 (割当が有効なもの) を limit 件まで順に引く。Nominatim 公開インスタンスは 1 req/秒なので 50 件で約 1 分かかる。残りは remaining で返すので、繰り返し呼ぶ。",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "required": [
+         "facilityId"
+        ],
+        "properties": {
+         "facilityId": {
+          "type": "string"
+         },
+         "limit": {
+          "type": "integer",
+          "description": "既定 50、最大 100"
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  },
   "/api/platform/email/send": {
    "post": {
     "operationId": "post_api_platform_email_send",
@@ -65033,6 +67906,58 @@
     ],
     "x-cpos-auth": "bearer-or-session",
     "x-cpos-scope": "notifications:send",
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": true
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/platform/audit-events": {
+   "post": {
+    "operationId": "post_api_platform_audit_events",
+    "summary": "監査ログ: アプリからの申告 (自前セッションのアプリのなりすまし開始・停止)",
+    "tags": [
+     "監査ログ"
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     }
+    },
+    "security": [
+     {
+      "bearerToken": [
+       "audit-events:write"
+      ]
+     },
+     {
+      "oauth2": [
+       "audit-events:write"
+      ]
+     },
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "bearer-or-session",
+    "x-cpos-scope": "audit-events:write",
     "requestBody": {
      "required": false,
      "content": {
@@ -66650,7 +69575,8 @@
        "ask-ai": "デバイス API: askの登録・実行 (ask)",
        "filing:read": "filing:read",
        "filing:write": "filing:write",
-       "apps:admin": "登録アプリの棚卸し (manifest が要るスコープと有効トークンの不足、配信先の有無)",
+       "apps:admin": "登録アプリの棚卸し (manifest が要るスコープと有効トークンの不足、配信先の有無)。既定で manifest を取り直す (?verify=false で登録の保存値のみ)",
+       "audit-events:write": "監査ログ: アプリからの申告 (自前セッションのアプリのなりすまし開始・停止)",
        "pdf:render:write": "HTML から PDF を生成",
        "office:render:write": "Office 文書 (docx / xlsx) を PDF などに変換",
        "alerts:read": "アラートの一覧",
@@ -66712,6 +69638,8 @@
        "external-partners:write": "(VNS 互換入力)",
        "sales:read": "営業活動の一覧 (営業先・営業者・予定日・結果)",
        "sales:write": "営業活動を登録",
+       "geo:read": "所要時間・距離の行列 (OSRM。未設定・障害時は概算に縮退)",
+       "master-users:write": "利用者の住所から座標を付ける (geoSource='manual' は force なしでは 409)",
        "notifications:send": "メールを送信 (Gmail 経由。App Token)",
        "life:read": "尺度の定義 (spec から導出。画面はここから入力欄を作る)",
        "organizations:provision": "===================== POST /organizations (払い出し) =====================",

@@ -25,6 +25,14 @@ import { fetchFromHandler } from '@cpos/kit/fake';
 const APP_ID = '{{appId}}';
 const RESOURCE = 'notes'; // cpos.manifest.json の resources に宣言してある名前
 
+// CPOS と同じ形の /api/health (CPOS の docs/APP_HEALTH.md)。デプロイの後に「どの版が配信されているか」を確かめる口。
+// revision は Cloud Run のリビジョン名 (それ以外では null)。コミットの SHA は載せない
+function health() {
+  const e = String(process.env.APP_ENV ?? '').trim().toLowerCase();
+  const appEnv = e === 'production' || e === 'prod' ? 'production' : e === 'staging' || e === 'stg' ? 'staging' : 'unknown';
+  return { status: 'ok', app: APP_ID, appEnv, revision: process.env.K_REVISION?.trim() || null, timestamp: new Date().toISOString() };
+}
+
 export function createApp({ cposBaseUrl, cposToken, defaultFacilityId, cposFetch, appDataAppId }) {
   // cposFetch: テストでソケット無しのKIT 模擬サーバ(createFakeCpos().fetch) を差し込む。省略時は本物の fetch。
   const cpos = createCposClient({ baseUrl: cposBaseUrl, token: tokenResolver({ file: process.env.{{APP}}_CPOS_APP_TOKEN_FILE, fallback: () => cposToken }) /* ファイル (Secret Manager の mount) があれば 60 秒ごとに読み直す。トークン入替に追随 */, clientName: `${APP_ID}/0.1.0`, fetch: cposFetch });
@@ -45,6 +53,13 @@ export function createApp({ cposBaseUrl, cposToken, defaultFacilityId, cposFetch
     return { facility, facilities };
   }
 
+  // 渡された masterUserId が、その事業所の利用者か確かめる。よその事業所の人・存在しない人の
+  // メモを作らない (CPOS は受け取った利用者の参照を、本人に着地しなくてもそのまま行に付けてしまう)。
+  async function userInFacility(facilityId, masterUserId) {
+    if (typeof masterUserId !== 'string' || !masterUserId) return false;
+    return (await cpos.masterUsers.list({ facilityId })).some((u) => u.masterUserId === masterUserId);
+  }
+
   async function readJson(req) {
     const chunks = [];
     for await (const c of req) chunks.push(c);
@@ -62,7 +77,7 @@ export function createApp({ cposBaseUrl, cposToken, defaultFacilityId, cposFetch
     };
     try {
       if (req.method === 'GET' && url.pathname === '/cpos.manifest.json') return send(200, manifest);
-      if (req.method === 'GET' && url.pathname === '/api/health') return send(200, { ok: true });
+      if (req.method === 'GET' && url.pathname === '/api/health') return send(200, health());
       if (req.method === 'GET' && url.pathname === '/api/facilities') {
         return send(200, (await cpos.facilities.list()).map((f) => ({ id: f.id, name: f.name })));
       }
@@ -79,7 +94,9 @@ export function createApp({ cposBaseUrl, cposToken, defaultFacilityId, cposFetch
         if (body.__invalid) return send(400, { ok: false, error: 'JSON として読めません' });
         if (!body.masterUserId || typeof body.text !== 'string') return send(400, { ok: false, error: 'masterUserId と text が必要です' });
         const { facility } = await resolveFacility(body.facilityId);
-        const rec = await notes.upsertBy(RESOURCE, 'masterUserId', { masterUserId: body.masterUserId, text: body.text.slice(0, 500) }, { facilityId: facility.id });
+        if (!(await userInFacility(facility.id, body.masterUserId))) return send(400, { ok: false, error: 'この事業所の利用者に masterUserId が見つかりません' });
+        // user: 行を本人に紐づける (CPOS の利用者ごとの画面・統合・番号変更の追随は、data の中ではなくこちらを見る)
+        const rec = await notes.upsertBy(RESOURCE, 'masterUserId', { masterUserId: body.masterUserId, text: body.text.slice(0, 500) }, { facilityId: facility.id, user: body.masterUserId });
         return send(201, rec);
       }
       // 1 件 / 変更 / 取り消し。保存できるものは直せるようにする (現場で決めっぱなしは使えない)
@@ -123,7 +140,9 @@ export function createApp({ cposBaseUrl, cposToken, defaultFacilityId, cposFetch
         for await (const c of req) chunks.push(c);
         const form = new URLSearchParams(Buffer.concat(chunks).toString('utf8'));
         const { facility } = await resolveFacility(form.get('facilityId'));
-        await notes.upsertBy(RESOURCE, 'masterUserId', { masterUserId: form.get('masterUserId'), text: (form.get('text') ?? '').slice(0, 500) }, { facilityId: facility.id });
+        const masterUserId = form.get('masterUserId') ?? '';
+        if (!(await userInFacility(facility.id, masterUserId))) return send(400, { ok: false, error: 'この事業所の利用者に masterUserId が見つかりません' });
+        await notes.upsertBy(RESOURCE, 'masterUserId', { masterUserId, text: (form.get('text') ?? '').slice(0, 500) }, { facilityId: facility.id, user: masterUserId });
         res.writeHead(303, { Location: `/?facilityId=${encodeURIComponent(facility.id)}` });
         return res.end();
       }

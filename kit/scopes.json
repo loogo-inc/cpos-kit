@@ -1,9 +1,9 @@
 {
  "generatedFrom": {
   "version": "1.0.0",
-  "revision": "00201-58l",
-  "fetchedAt": "2026-09-14",
-  "operations": 1372
+  "revision": "00278-7tl",
+  "fetchedAt": "2026-09-27",
+  "operations": 1418
  },
  "note": "CPOS が知る全スコープ (OpenAPI の oauth2 scopes) と、それを要求する operation の数。{appId} を含むものは雛形 (appId を入れて使う)。生成物。手で編集しない",
  "scopes": [
@@ -114,7 +114,7 @@
    "template": true,
    "known": true,
    "adminOnly": false,
-   "operations": 9,
+   "operations": 10,
    "ns": [
     "app"
    ],
@@ -244,6 +244,19 @@
     "POST /api/device/audio-notes/v1",
     "POST /api/device/audio-notes/v1/{id}/cancel",
     "POST /api/device/audio-notes/v1/{id}/run"
+   ]
+  },
+  {
+   "name": "audit-events:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 1,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/platform/audit-events"
    ]
   },
   {
@@ -389,7 +402,7 @@
    "template": false,
    "known": true,
    "adminOnly": false,
-   "operations": 4,
+   "operations": 5,
    "ns": [
     "app"
    ],
@@ -532,7 +545,7 @@
    "template": false,
    "known": true,
    "adminOnly": false,
-   "operations": 67,
+   "operations": 73,
    "ns": [
     "app",
     "session"
@@ -659,7 +672,7 @@
    "template": false,
    "known": true,
    "adminOnly": false,
-   "operations": 5,
+   "operations": 6,
    "ns": [
     "app"
    ],
@@ -782,7 +795,7 @@
    "template": false,
    "known": true,
    "adminOnly": false,
-   "operations": 6,
+   "operations": 7,
    "ns": [
     "app"
    ],
@@ -924,7 +937,7 @@
    "template": false,
    "known": true,
    "adminOnly": false,
-   "operations": 7,
+   "operations": 8,
    "ns": [
     "app"
    ],
@@ -1120,6 +1133,20 @@
    ],
    "examples": [
     "GET /api/platform/fte"
+   ]
+  },
+  {
+   "name": "geo:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 2,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/platform/geo/geocode",
+    "POST /api/platform/geo/travel-matrix"
    ]
   },
   {
@@ -1381,6 +1408,21 @@
    ]
   },
   {
+   "name": "master-users:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 4,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/master-users/{insuredNumber}/geocode",
+    "POST /api/platform/geo/geocode-missing",
+    "GET /api/user-id-maintenance/v1/unlinked-app-data"
+   ]
+  },
+  {
    "name": "migration-jobs:read",
    "template": false,
    "known": true,
@@ -1636,7 +1678,7 @@
    "template": false,
    "known": true,
    "adminOnly": false,
-   "operations": 3,
+   "operations": 5,
    "ns": [
     "app"
    ],
@@ -2075,13 +2117,14 @@
    "template": false,
    "known": true,
    "adminOnly": false,
-   "operations": 2,
+   "operations": 4,
    "ns": [
     "app"
    ],
    "examples": [
     "POST /api/welfare-equipment/v2/audit-packs",
-    "POST /api/welfare-equipment/v2/form-templates/{templateId}/render"
+    "GET /api/welfare-equipment/v2/exports",
+    "GET /api/welfare-equipment/v2/exports/{dataset}"
    ]
   },
   {
@@ -2175,7 +2218,7 @@
    "template": false,
    "known": true,
    "adminOnly": false,
-   "operations": 60,
+   "operations": 63,
    "ns": [
     "app"
    ],
@@ -2219,7 +2262,7 @@
    "template": false,
    "known": true,
    "adminOnly": false,
-   "operations": 56,
+   "operations": 64,
    "ns": [
     "app"
    ],

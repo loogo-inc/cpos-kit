@@ -1,16 +1,16 @@
 // 生成物。kit の保守者が生成器 (gen-api) で spec/cpos-openapi.json から作る。手で編集しない。
-// 生成元: CPOS OpenAPI 1.0.0 / revision 00201-58l / 2026-09-14 / 1372 operations
+// 生成元: CPOS OpenAPI 1.0.0 / revision 00278-7tl / 2026-09-27 / 1418 operations
 
 export interface CposApi_app {
   alerts: {
     /** アラートの一覧
-     * GET /api/alerts / scope alerts:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: alertType, appId, createdAt, data, dueDate, facilityId, id, insuredNumber, message, organizationId, severity, status … / 模擬サーバ: 無し (501) */
+     * GET /api/alerts / scope alerts:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: alertType, appId, createdAt, data, dueDate, facilityId, id, insuredNumber, message, organizationId, severity, status … / 模擬サーバ: 無し (501) */
     get(args?: { facilityId?: string; status?: string; severity?: string; alertType?: string; appId?: string; insuredNumber?: string; since?: string; limit?: number; targetResource?: string; targetId?: string }): Promise<unknown>;
     /** 新規作成 (重複防止: 同じ
      * POST /api/alerts / scope alerts:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     post(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** アラート: 1 件取得 (:id)
-     * GET /api/alerts/{id} / scope alerts:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: alertType, appId, createdAt, data, dueDate, facilityId, id, insuredNumber, message, organizationId, severity, status … / 模擬サーバ: 無し (501) */
+     * GET /api/alerts/{id} / scope alerts:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: alertType, appId, createdAt, data, dueDate, facilityId, id, insuredNumber, message, organizationId, severity, status … / 模擬サーバ: 無し (501) */
     getById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 確認済みへ
      * POST /api/alerts/{id}/acknowledge / scope alerts:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -25,7 +25,7 @@ export interface CposApi_app {
      * POST /api/alerts/bulk / scope alerts:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postBulk(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 詳細検索 (複数値・期間・部分一致・並替・ページング)
-     * GET /api/alerts/search / scope alerts:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: items, limit, offset, scanCap, total, truncated / 模擬サーバ: 無し (501) */
+     * GET /api/alerts/search / scope alerts:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items, limit, offset, scanCap, total, truncated / 模擬サーバ: 無し (501) */
     getSearch(args?: { facilityId?: string }): Promise<unknown>;
   };
   androidApp: {
@@ -97,6 +97,9 @@ export interface CposApi_app {
     /** AppData レコードを提出 (ライフサイクル)
      * POST /api/app-data/{appId}/{resource}/{id}/submit / scope app-data:{appId}:write / 認証 both / 応答の形あり / 模擬サーバ: 無し (501) */
     postByAppIdByResourceByIdSubmit(args: { appId: string; resource: string; id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** AppData レコードの取消を戻す
+     * POST /api/app-data/{appId}/{resource}/{id}/unvoid / scope app-data:{appId}:write / 認証 both / 応答の形あり / 模擬サーバ: 無し (501) */
+    postByAppIdByResourceByIdUnvoid(args: { appId: string; resource: string; id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** AppData レコードを無効にする
      * POST /api/app-data/{appId}/{resource}/{id}/void / scope app-data:{appId}:write / 認証 both / 応答の形あり / 模擬サーバ: 無し (501) */
     postByAppIdByResourceByIdVoid(args: { appId: string; resource: string; id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
@@ -107,7 +110,7 @@ export interface CposApi_app {
      * POST /api/app-data/{appId}/{resource}/analyze-free-text / scope app-data:{appId}:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postByAppIdByResourceAnalyzeFreeText(args: { appId: string; resource: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 添付の上限 (サイズ・枚数・許可 MIME) の設定
-     * GET /api/app-data/attachments/config / 認証 both / 実測 200 (2026-09-14) 応答の項目: allowedMimeTypes, jsonBodyLimit, maxAttachmentsPerRecord, maxBinaryBytes, recommendedClientMaxBytes, signedUploadSupported / 模擬サーバ: あり */
+     * GET /api/app-data/attachments/config / 認証 both / 実測 200 (2026-09-27) 応答の項目: allowedMimeTypes, jsonBodyLimit, maxAttachmentsPerRecord, maxBinaryBytes, recommendedClientMaxBytes, signedUploadSupported / 模擬サーバ: あり */
     getAttachmentsConfig(args?: { facilityId?: string }): Promise<unknown>;
     /** AppData のリソース台帳 (どのアプリに何のリソースがあるか)
      * GET /api/app-data/catalog / scope apps:read / 認証 both / 応答の形あり / 模擬サーバ: 無し (501) */
@@ -138,16 +141,16 @@ export interface CposApi_app {
      * POST /api/apps/{appId}/ai/document-uploads/{uploadId}/parts / scope apps:{appId}:ai:run / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postByAppIdAiDocumentUploadsByUploadIdParts(args: { appId: string; uploadId: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** ワークフロー対応のリスト（status フィルタ対応）
-     * GET /api/apps/{appId}/bootstrap / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 404 (2026-09-14) app-not-found / 模擬サーバ: 無し (501) */
+     * GET /api/apps/{appId}/bootstrap / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 404 (2026-09-27) app-not-found / 模擬サーバ: 無し (501) */
     getByAppIdBootstrap(args: { appId: string; facilityId?: string }): Promise<unknown>;
     /** ============================ GET /:appId/connect ============================
-     * GET /api/apps/{appId}/connect / 認証 both / 実測 200 (2026-09-14) だが 0 件で項目名は未確認 (推測しない) / 模擬サーバ: 無し (501) */
+     * GET /api/apps/{appId}/connect / 認証 both / 実測 200 (2026-09-27) だが 0 件で項目名は未確認 (推測しない) / 模擬サーバ: 無し (501) */
     getByAppIdConnect(args: { appId: string; facilityId?: string }): Promise<unknown>;
     /** 新規登録（draft）
      * POST /api/apps/{appId}/session/exchange / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postByAppIdSessionExchange(args: { appId: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** ワークフロー対応のリスト（status フィルタ対応）
-     * GET /api/apps/{appId}/sheet-mappings / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/apps/{appId}/sheet-mappings / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getByAppIdSheetMappings(args: { appId: string; facilityId?: string }): Promise<unknown>;
     /** 新規登録（draft）
      * POST /api/apps/{appId}/sheet-mappings / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -159,27 +162,27 @@ export interface CposApi_app {
      * DELETE /api/apps/{appId}/sheet-mappings/{id} / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     deleteByAppIdSheetMappingsById(args: { appId: string; id: string; facilityId?: string }): Promise<unknown>;
     /** ワークフロー対応のリスト（status フィルタ対応）
-     * GET /api/apps/{appId}/sheet-sync/jobs / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/apps/{appId}/sheet-sync/jobs / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getByAppIdSheetSyncJobs(args: { appId: string; facilityId?: string }): Promise<unknown>;
     /** シート同期ジョブを 1 件取得
-     * GET /api/apps/{appId}/sheet-sync/jobs/{id} / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/apps/{appId}/sheet-sync/jobs/{id} / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getByAppIdSheetSyncJobsById(args: { appId: string; id: string; facilityId?: string }): Promise<unknown>;
     /** 新規登録（draft）
      * POST /api/apps/{appId}/sheet-sync/run / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postByAppIdSheetSyncRun(args: { appId: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** アプリの権限宣言から API トークンのスコープを生成
-     * GET /api/apps/{id}/scopes / 認証 both / 実測 200 (2026-09-14) 応答の項目: appId, scopes / 模擬サーバ: 無し (501) */
+     * GET /api/apps/{id}/scopes / 認証 both / 実測 200 (2026-09-27) 応答の項目: appId, scopes / 模擬サーバ: 無し (501) */
     getByIdScopes(args: { id: string; facilityId?: string }): Promise<unknown>;
-    /** 1 アプリの App Token を発行し直して配る (dryRun 可)
+    /** 1 アプリの App Token を発行し直して配る (dryRun 可)。manifest を確かめられなければ 422 で断る
      * POST /api/apps/{id}/tokens/rotate / scope apps:admin / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postByIdTokensRotate(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** ワークフロー対応のリスト（status フィルタ対応）
      * GET /api/apps/available / scope apps:{appId}:ai:run / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     getAvailable(args?: { facilityId?: string }): Promise<unknown>;
-    /** 登録アプリの棚卸し (manifest が要るスコープと有効トークンの不足、配信先の有無)
+    /** 登録アプリの棚卸し (manifest が要るスコープと有効トークンの不足、配信先の有無)。既定で manifest を取り直す (?verify=false で登録の保存値のみ)
      * GET /api/apps/fleet / scope apps:admin / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     getFleet(args?: { facilityId?: string }): Promise<unknown>;
-    /** 不足のあるアプリの App Token を発行し直し、Secret Manager に配って旧トークンを猶予付きで失効 (dryRun 可)
+    /** 不足のあるアプリの App Token を発行し直し、Secret Manager に配って旧トークンを猶予付きで失効 (dryRun 可)。manifest を確かめられないアプリは発行しない
      * POST /api/apps/fleet/rotate-tokens / scope apps:admin / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postFleetRotateTokens(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 全アプリの cpos.manifest.json を取り直して登録を更新 (dryRun 可)
@@ -188,19 +191,31 @@ export interface CposApi_app {
   };
   auth: {
     /** 認証: 設定の取得 (config)
-     * GET /api/auth/config / 認証 none / 実測 200 (2026-09-14) 応答の項目: appUrl, configured, loginPath / 模擬サーバ: 無し (501) */
+     * GET /api/auth/config / 認証 none / 実測 200 (2026-09-27) 応答の項目: appUrl, configured, loginPath / 模擬サーバ: 無し (501) */
     getConfig(args?: { facilityId?: string }): Promise<unknown>;
     /** (台帳未記載)
-     * GET /api/auth/google / 認証 none / 実測 200 (2026-09-14) だが 0 件で項目名は未確認 (推測しない) / 模擬サーバ: 無し (501) */
+     * GET /api/auth/google / 認証 none / 実測 200 (2026-09-27) だが 0 件で項目名は未確認 (推測しない) / 模擬サーバ: 無し (501) */
     getGoogle(args?: { facilityId?: string }): Promise<unknown>;
     /** (台帳未記載)
-     * GET /api/auth/google/callback / 認証 none / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 400 (2026-09-14) パラメータが要る: missing code / 模擬サーバ: 無し (501) */
+     * GET /api/auth/google/callback / 認証 none / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 400 (2026-09-27) パラメータが要る: missing code / 模擬サーバ: 無し (501) */
     getGoogleCallback(args?: { facilityId?: string }): Promise<unknown>;
     /** (台帳未記載)
-     * GET /api/auth/login / 認証 none / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 400 (2026-09-14) パラメータが要る: {"code":"INVALID_NEXT","message":"next が指定されていません"} / 模擬サーバ: 無し (501) */
+     * GET /api/auth/impersonation / 認証 none / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getImpersonation(args?: { facilityId?: string }): Promise<unknown>;
+    /** (台帳未記載)
+     * POST /api/auth/impersonation / 認証 none / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postImpersonation(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** (台帳未記載)
+     * DELETE /api/auth/impersonation / 認証 none / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    deleteImpersonation(args?: { facilityId?: string }): Promise<unknown>;
+    /** (台帳未記載)
+     * GET /api/auth/impersonation/candidates / 認証 none / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getImpersonationCandidates(args?: { facilityId?: string }): Promise<unknown>;
+    /** (台帳未記載)
+     * GET /api/auth/login / 認証 none / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 400 (2026-09-27) パラメータが要る: {"code":"INVALID_NEXT","message":"next が指定されていません"} / 模擬サーバ: 無し (501) */
     getLogin(args?: { facilityId?: string }): Promise<unknown>;
     /** (台帳未記載)
-     * GET /api/auth/logout / 認証 none / 実測 200 (2026-09-14) だが 0 件で項目名は未確認 (推測しない) / 模擬サーバ: 無し (501) */
+     * GET /api/auth/logout / 認証 none / 実測 200 (2026-09-27) だが 0 件で項目名は未確認 (推測しない) / 模擬サーバ: 無し (501) */
     getLogout(args?: { facilityId?: string }): Promise<unknown>;
     /** (台帳未記載)
      * POST /api/auth/logout / 認証 none / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -212,12 +227,12 @@ export interface CposApi_app {
      * POST /api/auth/operator/clear / 認証 none / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postOperatorClear(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** (台帳未記載)
-     * GET /api/auth/return / 認証 none / 実測 200 (2026-09-14) だが 0 件で項目名は未確認 (推測しない) / 模擬サーバ: 無し (501) */
+     * GET /api/auth/return / 認証 none / 実測 200 (2026-09-27) だが 0 件で項目名は未確認 (推測しない) / 模擬サーバ: 無し (501) */
     getReturn(args?: { facilityId?: string }): Promise<unknown>;
   };
   billingMasters: {
     /** … program=kaigo に固定
-     * GET /api/billing-masters/area-rates / scope billing-masters:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: items / 模擬サーバ: 無し (501) */
+     * GET /api/billing-masters/area-rates / scope billing-masters:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items / 模擬サーバ: 無し (501) */
     getAreaRates(args?: { facilityId?: string }): Promise<unknown>;
     /** PUT /area-rates/:id  DELETE /area-rates/:id
      * POST /api/billing-masters/area-rates / scope billing-masters:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -238,19 +253,19 @@ export interface CposApi_app {
      * POST /api/billing-masters/area-rates/import-csv/preview / scope billing-masters:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postAreaRatesImportCsvPreview(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** /area-rates/export.csv
-     * GET /api/billing-masters/area-rates/template.csv / scope billing-masters:read / 認証 both / 実測 200 (2026-09-14) だが 0 件で項目名は未確認 (推測しない) / 模擬サーバ: 無し (501) */
+     * GET /api/billing-masters/area-rates/template.csv / scope billing-masters:read / 認証 both / 実測 200 (2026-09-27) だが 0 件で項目名は未確認 (推測しない) / 模擬サーバ: 無し (501) */
     getAreaRatesTemplateCsv(args?: { facilityId?: string }): Promise<unknown>;
     /** 医療保険の地域加算率
-     * GET /api/billing-masters/iryou/area-rates / scope billing-masters:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: items / 模擬サーバ: 無し (501) */
+     * GET /api/billing-masters/iryou/area-rates / scope billing-masters:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items / 模擬サーバ: 無し (501) */
     getIryouAreaRates(args?: { facilityId?: string }): Promise<unknown>;
     /** 医療保険 (訪問看護療養費) のコード表
-     * GET /api/billing-masters/iryou/service-codes / scope billing-masters:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: items, version / 模擬サーバ: 無し (501) */
+     * GET /api/billing-masters/iryou/service-codes / scope billing-masters:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items, version / 模擬サーバ: 無し (501) */
     getIryouServiceCodes(args?: { facilityId?: string }): Promise<unknown>;
     /** … program=kaigo に固定
-     * GET /api/billing-masters/kaigo/area-rates / scope billing-masters:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: items / 模擬サーバ: 無し (501) */
+     * GET /api/billing-masters/kaigo/area-rates / scope billing-masters:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items / 模擬サーバ: 無し (501) */
     getKaigoAreaRates(args?: { facilityId?: string }): Promise<unknown>;
     /** 介護保険のサービスコード表
-     * GET /api/billing-masters/kaigo/service-codes / scope billing-masters:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: items, version / 模擬サーバ: 無し (501) */
+     * GET /api/billing-masters/kaigo/service-codes / scope billing-masters:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items, version / 模擬サーバ: 無し (501) */
     getKaigoServiceCodes(args?: { facilityId?: string }): Promise<unknown>;
     /** 1 件作成
      * POST /api/billing-masters/service-codes / scope billing-masters:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -274,24 +289,24 @@ export interface CposApi_app {
      * POST /api/billing-masters/service-codes/import-seed / scope billing-masters:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postServiceCodesImportSeed(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 登録総数 (全期間・全版・保険区分別)。一覧 API は表示用に limit が掛かるため、 一括取込が全件入ったかの確認はこちらを使う (Firestore は集計 count で安価)。
-     * GET /api/billing-masters/service-codes/stats / scope billing-masters:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: areaRates, byProgram, total / 模擬サーバ: 無し (501) */
+     * GET /api/billing-masters/service-codes/stats / scope billing-masters:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: areaRates, byProgram, total / 模擬サーバ: 無し (501) */
     getServiceCodesStats(args?: { facilityId?: string }): Promise<unknown>;
     /** /service-codes/export.csv
-     * GET /api/billing-masters/service-codes/template.csv / scope billing-masters:read / 認証 both / 実測 200 (2026-09-14) だが 0 件で項目名は未確認 (推測しない) / 模擬サーバ: 無し (501) */
+     * GET /api/billing-masters/service-codes/template.csv / scope billing-masters:read / 認証 both / 実測 200 (2026-09-27) だが 0 件で項目名は未確認 (推測しない) / 模擬サーバ: 無し (501) */
     getServiceCodesTemplateCsv(args?: { facilityId?: string }): Promise<unknown>;
     /** … program=shougai に固定
-     * GET /api/billing-masters/shougai/area-rates / scope billing-masters:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: items / 模擬サーバ: 無し (501) */
+     * GET /api/billing-masters/shougai/area-rates / scope billing-masters:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items / 模擬サーバ: 無し (501) */
     getShougaiAreaRates(args?: { facilityId?: string }): Promise<unknown>;
     /** 障害福祉サービスのコード表
-     * GET /api/billing-masters/shougai/service-codes / scope billing-masters:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 500 (2026-09-14) JSON ではない / 模擬サーバ: 無し (501) */
+     * GET /api/billing-masters/shougai/service-codes / scope billing-masters:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 500 (2026-09-27) JSON ではない / 模擬サーバ: 無し (501) */
     getShougaiServiceCodes(args?: { facilityId?: string }): Promise<unknown>;
     /** 請求マスタの版
-     * GET /api/billing-masters/version / scope billing-masters:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: checkedAt, version / 模擬サーバ: 無し (501) */
+     * GET /api/billing-masters/version / scope billing-masters:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: checkedAt, version / 模擬サーバ: 無し (501) */
     getVersion(args?: { facilityId?: string }): Promise<unknown>;
   };
   careBillingContexts: {
     /** 請求コンテキスト (利用者 × 月の請求条件) の一覧
-     * GET /api/care-billing-contexts/v1 / scope care-claim-candidates:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: items / 模擬サーバ: 無し (501) */
+     * GET /api/care-billing-contexts/v1 / scope care-claim-candidates:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items / 模擬サーバ: 無し (501) */
     getV1(args?: { facilityId?: string }): Promise<unknown>;
     /** 請求コンテキストを 1 件登録・更新
      * PUT /api/care-billing-contexts/v1/{id} / scope care-claim-candidates:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -302,10 +317,10 @@ export interface CposApi_app {
   };
   careBillingPlans: {
     /** 請求予定 (利用者ごとの算定予定コード) の一覧
-     * GET /api/care-billing-plans/v1 / scope care-claim-candidates:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: items / 模擬サーバ: 無し (501) */
+     * GET /api/care-billing-plans/v1 / scope care-claim-candidates:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items / 模擬サーバ: 無し (501) */
     getV1(args?: { facilityId?: string }): Promise<unknown>;
     /** 1 件
-     * GET /api/care-billing-plans/v1/{id} / scope care-claim-candidates:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/care-billing-plans/v1/{id} / scope care-claim-candidates:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getV1ById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 1 件 upsert
      * PUT /api/care-billing-plans/v1/{id} / scope care-claim-candidates:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -316,10 +331,10 @@ export interface CposApi_app {
   };
   careClaimCandidates: {
     /** 請求候補の一覧 (事業所・提供月で絞る)
-     * GET /api/care-claim-candidates/v1 / scope care-claim-candidates:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: items / 模擬サーバ: 無し (501) */
+     * GET /api/care-claim-candidates/v1 / scope care-claim-candidates:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items / 模擬サーバ: 無し (501) */
     getV1(args?: { facilityId?: string }): Promise<unknown>;
     /** 請求候補を 1 件取得
-     * GET /api/care-claim-candidates/v1/{id} / scope care-claim-candidates:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/care-claim-candidates/v1/{id} / scope care-claim-candidates:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getV1ById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 請求候補を削除 (管理操作)
      * DELETE /api/care-claim-candidates/v1/{id} / scope care-claim-candidates:delete / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -345,13 +360,13 @@ export interface CposApi_app {
   };
   careDocuments: {
     /** 業務文書の一覧 (種類・利用者・状態で絞る)
-     * GET /api/care-documents/v1 / scope care-documents:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: items / 模擬サーバ: 無し (501) */
+     * GET /api/care-documents/v1 / scope care-documents:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items / 模擬サーバ: 無し (501) */
     getV1(args?: { insuredNumber?: string; facilityId?: string; documentType?: string; documentSubType?: string; serviceDomain?: string; templateKey?: string; status?: string; canonicalOnly?: boolean; includeCarePlans?: boolean; includeData?: boolean; from?: string; to?: string; query?: string; limit?: number }): Promise<unknown>;
     /** 業務文書を作成 (下書き)
      * POST /api/care-documents/v1 / scope care-documents:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV1(args: { body: unknown; facilityId?: string }): Promise<unknown>;
     /** 業務文書を 1 件取得
-     * GET /api/care-documents/v1/{id} / scope care-documents:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: data, documentDate, documentType, id, insuredNumber, organizationId, serviceDomain, source, status, summary, title, updatedAt / 模擬サーバ: 無し (501) */
+     * GET /api/care-documents/v1/{id} / scope care-documents:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: data, documentDate, documentType, id, insuredNumber, organizationId, serviceDomain, source, status, summary, title, updatedAt / 模擬サーバ: 無し (501) */
     getV1ById(args: { id: string; view?: string; facilityId?: string }): Promise<unknown>;
     /** 業務文書を更新
      * PUT /api/care-documents/v1/{id} / scope care-documents:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -387,7 +402,7 @@ export interface CposApi_app {
      * GET /api/care-documents/v1/{id}/export.xlsx / scope care-documents:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     getV1ByIdExportXlsx(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 保存済み 原本/生成物 を取得する (sourceFiles/generatedFiles の fileId)。 - memory/取得可能な store: 実体バイナリを返す - Drive 等 (Google の配信ホスト) で storageUrl が絶対 URL: そこへ redirect する。 storag
-     * GET /api/care-documents/v1/{id}/files/{fileId} / scope care-documents:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/care-documents/v1/{id}/files/{fileId} / scope care-documents:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getV1ByIdFilesByFileId(args: { id: string; fileId: string; facilityId?: string }): Promise<unknown>;
     /** 業務文書を正本として確定
      * POST /api/care-documents/v1/{id}/mark-canonical / scope care-documents:approve / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -423,16 +438,19 @@ export interface CposApi_app {
      * POST /api/care-documents/v1/import-file / scope care-documents:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV1ImportFile(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 法令項目レジストリ (GET /v1/:id より前に宣言して :id に食われないこと)
-     * GET /api/care-documents/v1/legal-profiles / scope care-documents:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: items / 模擬サーバ: 無し (501) */
+     * GET /api/care-documents/v1/legal-profiles / scope care-documents:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items / 模擬サーバ: 無し (501) */
     getV1LegalProfiles(args?: { facilityId?: string }): Promise<unknown>;
     /** 法令項目レジストリを 1 件取得
-     * GET /api/care-documents/v1/legal-profiles/{key} / scope care-documents:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/care-documents/v1/legal-profiles/{key} / scope care-documents:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getV1LegalProfilesByKey(args: { key: string; facilityId?: string }): Promise<unknown>;
+    /** masterUserId 未付与の業務文書に本人の不変 ID を付ける (保守。被保険者番号 → 氏名の順で名簿から引く。dryRun 既定)
+     * POST /api/care-documents/v1/maintenance/backfill-master-user-id / scope care-documents:approve / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV1MaintenanceBackfillMasterUserId(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 文書テンプレートの一覧
-     * GET /api/care-documents/v1/templates / scope care-documents:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: items / 模擬サーバ: 無し (501) */
+     * GET /api/care-documents/v1/templates / scope care-documents:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items / 模擬サーバ: 無し (501) */
     getV1Templates(args?: { facilityId?: string }): Promise<unknown>;
     /** 文書テンプレートを 1 件取得
-     * GET /api/care-documents/v1/templates/{templateId} / scope care-documents:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: createdAt, documentType, facilityId, fieldMappings, fields, id, isActive, layout, name, organizationId, serviceDomain, templateKey … / 模擬サーバ: 無し (501) */
+     * GET /api/care-documents/v1/templates/{templateId} / scope care-documents:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: createdAt, documentType, facilityId, fieldMappings, fields, id, isActive, layout, name, organizationId, serviceDomain, templateKey … / 模擬サーバ: 無し (501) */
     getV1TemplatesByTemplateId(args: { templateId: string; facilityId?: string }): Promise<unknown>;
   };
   careRecords: {
@@ -498,22 +516,28 @@ export interface CposApi_app {
     deleteV1RecordTypes(args?: { facilityId?: string }): Promise<unknown>;
     /** 記録の一覧 (利用者・種類・期間で絞る)
      * GET /api/care-records/v1/records / scope care-records:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
-    getV1Records(args?: { facilityId?: string }): Promise<unknown>;
+    getV1Records(args?: { includeVoided?: boolean; facilityId?: string }): Promise<unknown>;
     /** 記録を 1 件保存
      * POST /api/care-records/v1/records / scope care-records:write / 認証 none / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV1Records(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** (フル編集)
      * PUT /api/care-records/v1/records/{id} / scope care-records:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     putV1RecordsById(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
-    /** 記録を 1 件削除
+    /** 記録を取消 (物理削除せず voided にする)
      * DELETE /api/care-records/v1/records/{id} / scope care-records:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     deleteV1RecordsById(args: { id: string; facilityId?: string }): Promise<unknown>;
+    /** 未分類の記録を利用者に分類する
+     * POST /api/care-records/v1/records/{id}/classify / scope care-records:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV1RecordsByIdClassify(args: { id: string; body: unknown; facilityId?: string }): Promise<unknown>;
     /** recordTypes 更新
      * PATCH /api/care-records/v1/records/{id}/flags / scope care-records:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     patchV1RecordsByIdFlags(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 重要度更新
      * PATCH /api/care-records/v1/records/{id}/importance / scope care-records:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     patchV1RecordsByIdImportance(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 記録の取消を戻す (voided → draft)
+     * POST /api/care-records/v1/records/{id}/unvoid / scope care-records:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV1RecordsByIdUnvoid(args: { id: string; body: unknown; facilityId?: string }): Promise<unknown>;
     /** 記録の添付一覧 (署名 URL は返さない)
      * GET /api/care-records/v1/records/{recordId}/attachments / scope care-records:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     getV1RecordsByRecordIdAttachments(args: { recordId: string; facilityId?: string }): Promise<unknown>;
@@ -550,9 +574,9 @@ export interface CposApi_app {
     /** 記録タイプ一覧
      * GET /api/care-records/v1/records/record-types / scope care-records:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     getV1RecordsRecordTypes(args?: { facilityId?: string }): Promise<unknown>;
-    /** 差分同期 (since=ISO)
+    /** 差分同期 (since 以降の更新を updatedAt 順にページで返す。取消・削除は removed[])
      * GET /api/care-records/v1/records/updates / scope care-records:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
-    getV1RecordsUpdates(args?: { facilityId?: string }): Promise<unknown>;
+    getV1RecordsUpdates(args?: { facilityId?: string; since?: string; limit?: number; cursor?: string }): Promise<unknown>;
     /** 利用者一覧 (master + assignment)
      * GET /api/care-records/v1/records/users / scope care-records:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     getV1RecordsUsers(args?: { facilityId?: string }): Promise<unknown>;
@@ -613,13 +637,13 @@ export interface CposApi_app {
   };
   careScheduleExceptions: {
     /** 予定の例外 (休み・振替) の一覧
-     * GET /api/care-schedule-exceptions / scope care-schedule-exceptions:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: items / 模擬サーバ: 無し (501) */
+     * GET /api/care-schedule-exceptions / scope care-schedule-exceptions:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items / 模擬サーバ: 無し (501) */
     get(args?: { facilityId?: string }): Promise<unknown>;
     /** 予定の例外を登録
      * POST /api/care-schedule-exceptions / scope care-schedule-exceptions:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     post(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 予定の例外を 1 件取得
-     * GET /api/care-schedule-exceptions/{id} / scope care-schedule-exceptions:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/care-schedule-exceptions/{id} / scope care-schedule-exceptions:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 予定の例外を更新
      * PUT /api/care-schedule-exceptions/{id} / scope care-schedule-exceptions:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -633,13 +657,13 @@ export interface CposApi_app {
   };
   careSchedules: {
     /** ケアスケジュール (基本予定) の一覧
-     * GET /api/care-schedules / scope care-schedules:read / 認証 both / facilityId 必須 / 実測 200 (2026-09-14) 応答の項目: items / 模擬サーバ: 無し (501) */
+     * GET /api/care-schedules / scope care-schedules:read / 認証 both / facilityId 必須 / 実測 200 (2026-09-27) 応答の項目: items / 模擬サーバ: 無し (501) */
     get(args: { facilityId: string; insuredNumber?: string; serviceDomain?: string; serviceType?: string; status?: string; activeOn?: string; limit?: number }): Promise<unknown>;
     /** ケアスケジュールを登録
      * POST /api/care-schedules / scope care-schedules:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     post(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** ケアスケジュールを 1 件
-     * GET /api/care-schedules/{id} / scope care-schedules:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/care-schedules/{id} / scope care-schedules:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** ケアスケジュールを更新
      * PUT /api/care-schedules/{id} / scope care-schedules:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -663,24 +687,24 @@ export interface CposApi_app {
      * POST /api/care-schedules/check-conflicts / scope care-schedules:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postCheckConflicts(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** ケアスケジュールを期間に展開した発生日 (最大 90 日)
-     * GET /api/care-schedules/occurrences / scope care-schedules:read / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 400 (2026-09-14) パラメータが要る: dateFrom / dateTo (YYYY-MM-DD) が必要です / 模擬サーバ: あり */
+     * GET /api/care-schedules/occurrences / scope care-schedules:read / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 400 (2026-09-27) パラメータが要る: dateFrom / dateTo (YYYY-MM-DD) が必要です / 模擬サーバ: あり */
     getOccurrences(args: { facilityId: string; dateFrom: string; dateTo: string; insuredNumber?: string; staffId?: string; assignedStaffId?: string; serviceDomain?: string; includeSkipped?: boolean }): Promise<unknown>;
     /** 基本スケジュールと実績の突合 (予定どおりか)
-     * GET /api/care-schedules/reconciliation / scope care-schedules:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: date, items, unscheduledActuals / 模擬サーバ: 無し (501) */
+     * GET /api/care-schedules/reconciliation / scope care-schedules:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: date, items, unscheduledActuals / 模擬サーバ: 無し (501) */
     getReconciliation(args?: { facilityId?: string }): Promise<unknown>;
     /** 今日 (指定日) の予定
-     * GET /api/care-schedules/today / scope care-schedules:read / 認証 both / facilityId 必須 / 実測 200 (2026-09-14) 応答の項目: date, items / 模擬サーバ: 無し (501) */
+     * GET /api/care-schedules/today / scope care-schedules:read / 認証 both / facilityId 必須 / 実測 200 (2026-09-27) 応答の項目: date, items / 模擬サーバ: 無し (501) */
     getToday(args: { facilityId: string; date?: string; insuredNumber?: string; serviceDomain?: string }): Promise<unknown>;
   };
   careServiceActuals: {
     /** サービス実績の一覧 (事業所・月・利用者で絞る)
-     * GET /api/care-service-actuals/v1 / scope care-service-actuals:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: items / 模擬サーバ: あり */
+     * GET /api/care-service-actuals/v1 / scope care-service-actuals:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items / 模擬サーバ: あり */
     getV1(args?: { facilityId?: string }): Promise<unknown>;
     /** サービス実績を手入力で作成
      * POST /api/care-service-actuals/v1 / scope care-service-actuals:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV1(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** サービス実績を 1 件取得
-     * GET /api/care-service-actuals/v1/{id} / scope care-service-actuals:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/care-service-actuals/v1/{id} / scope care-service-actuals:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getV1ById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** サービス実績を更新
      * PUT /api/care-service-actuals/v1/{id} / scope care-service-actuals:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -710,14 +734,22 @@ export interface CposApi_app {
      * POST /api/care-service-actuals/v1/from-schedule / scope care-service-actuals:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV1FromSchedule(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 月次の実績指標 (運営会議用。事業所・月で集計)
-     * GET /api/care-service-actuals/v1/metrics / scope care-service-actuals:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: dateFrom, dateTo, facilityId, metrics, month, ok / 模擬サーバ: 無し (501) */
+     * GET /api/care-service-actuals/v1/metrics / scope care-service-actuals:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: dateFrom, dateTo, facilityId, metrics, month, ok / 模擬サーバ: 無し (501) */
     getV1Metrics(args?: { facilityId?: string }): Promise<unknown>;
+    /** 月次の実績指標を CSV で (人事考課アプリの月次KPI取込用。事業所・月が必須)
+     * GET /api/care-service-actuals/v1/metrics.csv / scope care-service-actuals:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getV1MetricsCsv(args?: { facilityId?: string }): Promise<unknown>;
     /** 月次締めの状況 (件数のみ。確定はしない)
-     * GET /api/care-service-actuals/v1/monthly-close / scope care-service-actuals:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 400 (2026-09-14) パラメータが要る: serviceMonth (YYYY-MM) が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/care-service-actuals/v1/monthly-close / scope care-service-actuals:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 400 (2026-09-27) パラメータが要る: serviceMonth (YYYY-MM) が必要です / 模擬サーバ: 無し (501) */
     getV1MonthlyClose(args?: { facilityId?: string }): Promise<unknown>;
     /** 日次管理ボード (予定と実績の突合。金額・氏名は返さない)
-     * GET /api/care-service-actuals/v1/operations-board / scope care-service-actuals:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 400 (2026-09-14) パラメータが要る: date (YYYY-MM-DD) が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/care-service-actuals/v1/operations-board / scope care-service-actuals:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 400 (2026-09-27) パラメータが要る: date (YYYY-MM-DD) が必要です / 模擬サーバ: 無し (501) */
     getV1OperationsBoard(args?: { facilityId?: string }): Promise<unknown>;
+  };
+  chat: {
+    /** Google Chat アプリのイベント受け口 (Google の署名付き JWT で検証)
+     * POST /api/chat/google / 認証 none / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postGoogle(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
   };
   device: {
     /** 音声メモジョブの一覧
@@ -747,12 +779,18 @@ export interface CposApi_app {
     /** 記録を取消 (物理削除せず voided にする)
      * DELETE /api/device/records/{id} / scope care-records:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     deleteRecordsById(args: { id: string; facilityId?: string }): Promise<unknown>;
+    /** 未分類の記録を利用者に分類する
+     * POST /api/device/records/{id}/classify / scope care-records:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postRecordsByIdClassify(args: { id: string; body: unknown; facilityId?: string }): Promise<unknown>;
     /** recordTypes 更新
      * PATCH /api/device/records/{id}/flags / scope care-records:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     patchRecordsByIdFlags(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 重要度更新
      * PATCH /api/device/records/{id}/importance / scope care-records:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     patchRecordsByIdImportance(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 記録の取消を戻す (voided → draft)
+     * POST /api/device/records/{id}/unvoid / scope care-records:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postRecordsByIdUnvoid(args: { id: string; body: unknown; facilityId?: string }): Promise<unknown>;
     /** 全件 (today/yesterday/week 等)
      * GET /api/device/records/all / scope care-records:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     getRecordsAll(args?: { facilityId?: string }): Promise<unknown>;
@@ -813,7 +851,7 @@ export interface CposApi_app {
   };
   facilities: {
     /** 事業所の一覧
-     * GET /api/facilities / scope facilities:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: address, areaGrade, businessNumber, careplanFiling, createdAt, facilityCategoryCode, fax, id, isActive, name, nameKana, organizationId … / 模擬サーバ: 無し (501) */
+     * GET /api/facilities / scope facilities:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: address, areaGrade, businessNumber, careplanFiling, createdAt, facilityCategoryCode, fax, id, isActive, name, nameKana, organizationId … / 模擬サーバ: 無し (501) */
     get(args?: { facilityId?: string }): Promise<unknown>;
     /** 事業所を登録
      * POST /api/facilities / scope facilities:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -822,7 +860,7 @@ export interface CposApi_app {
      * GET /api/facilities/{facilityId}/bath-schedule / scope facility-modules:write / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     getByFacilityIdBathSchedule(args: { facilityId: string }): Promise<unknown>;
     /** 入浴予定を 1 週分
-     * GET /api/facilities/{facilityId}/bath-schedule/{weekStart} / scope facilities:read / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/facilities/{facilityId}/bath-schedule/{weekStart} / scope facilities:read / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getByFacilityIdBathScheduleByWeekStart(args: { facilityId: string; weekStart: string }): Promise<unknown>;
     /** 入浴予定を保存
      * PUT /api/facilities/{facilityId}/bath-schedule/{weekStart} / scope facility-modules:write / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -834,7 +872,7 @@ export interface CposApi_app {
      * GET /api/facilities/{facilityId}/business-diary / scope facility-users:import / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     getByFacilityIdBusinessDiary(args: { facilityId: string }): Promise<unknown>;
     /** 業務日誌を 1 日分
-     * GET /api/facilities/{facilityId}/business-diary/{date} / scope facilities:read / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/facilities/{facilityId}/business-diary/{date} / scope facilities:read / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getByFacilityIdBusinessDiaryByDate(args: { facilityId: string; date: string }): Promise<unknown>;
     /** upsert
      * PUT /api/facilities/{facilityId}/business-diary/{date} / scope facility-modules:write / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -846,7 +884,7 @@ export interface CposApi_app {
      * POST /api/facilities/{facilityId}/business-diary/{date}/finalize / scope facility-modules:write / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postByFacilityIdBusinessDiaryByDateFinalize(args: { facilityId: string; date: string; body?: unknown }): Promise<unknown>;
     /** 利用者と担当ケアマネの紐付け一覧
-     * GET /api/facilities/{facilityId}/care-manager-links / scope facility-users:read / 認証 both / facilityId 必須 / 実測 200 (2026-09-14) 応答の項目: careManagerCount, includedAllProfessions, items, ok, summary / 模擬サーバ: 無し (501) */
+     * GET /api/facilities/{facilityId}/care-manager-links / scope facility-users:read / 認証 both / facilityId 必須 / 実測 200 (2026-09-27) 応答の項目: careManagerCount, includedAllProfessions, items, ok, summary / 模擬サーバ: 無し (501) */
     getByFacilityIdCareManagerLinks(args: { facilityId: string }): Promise<unknown>;
     /** 利用者と担当ケアマネの紐付けを反映
      * POST /api/facilities/{facilityId}/care-manager-links/apply / scope facility-users:write / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -867,13 +905,13 @@ export interface CposApi_app {
      * DELETE /api/facilities/{facilityId}/handover/{date}/records/{recordId} / scope facility-handover:write / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     deleteByFacilityIdHandoverByDateRecordsByRecordId(args: { facilityId: string; date: string; recordId: string }): Promise<unknown>;
     /** 受付 (インテーク) の一覧
-     * GET /api/facilities/{facilityId}/intakes / scope facility-intakes:read / 認証 both / facilityId 必須 / 実測 200 (2026-09-14) 応答の項目: count, items / 模擬サーバ: 無し (501) */
+     * GET /api/facilities/{facilityId}/intakes / scope facility-intakes:read / 認証 both / facilityId 必須 / 実測 200 (2026-09-27) 応答の項目: count, items / 模擬サーバ: 無し (501) */
     getByFacilityIdIntakes(args: { facilityId: string }): Promise<unknown>;
     /** 受付を登録
      * POST /api/facilities/{facilityId}/intakes / scope facility-intakes:write / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postByFacilityIdIntakes(args: { facilityId: string; body?: unknown }): Promise<unknown>;
     /** 受付を 1 件
-     * GET /api/facilities/{facilityId}/intakes/{id} / scope facility-intakes:read / 認証 both / facilityId 必須 / 実測 200 (2026-09-14) 応答の項目: convertedAt, createdAt, createdBy, createdByName, createdMasterUserInsuredNumber, facilityId, firstVisitPlannedAt, id, linkedInsuredNumber, organizationId, receivedAt, rejectedAt … / 模擬サーバ: 無し (501) */
+     * GET /api/facilities/{facilityId}/intakes/{id} / scope facility-intakes:read / 認証 both / facilityId 必須 / 実測 200 (2026-09-27) 応答の項目: convertedAt, createdAt, createdBy, createdByName, createdMasterUserInsuredNumber, facilityId, firstVisitPlannedAt, id, linkedInsuredNumber, organizationId, receivedAt, rejectedAt … / 模擬サーバ: 無し (501) */
     getByFacilityIdIntakesById(args: { facilityId: string; id: string }): Promise<unknown>;
     /** 受付を更新
      * PUT /api/facilities/{facilityId}/intakes/{id} / scope facility-intakes:write / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -897,7 +935,7 @@ export interface CposApi_app {
      * POST /api/facilities/{facilityId}/intakes/{id}/transfer-converted / scope facility-intakes:write / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postByFacilityIdIntakesByIdTransferConverted(args: { facilityId: string; id: string; body?: unknown }): Promise<unknown>;
     /** 受付フォームの事前入力値 (既存マスタから)
-     * GET /api/facilities/{facilityId}/intakes/prefill / scope facility-intakes:read / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 400 (2026-09-14) パラメータが要る: templateId が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/facilities/{facilityId}/intakes/prefill / scope facility-intakes:read / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 400 (2026-09-27) パラメータが要る: templateId が必要です / 模擬サーバ: 無し (501) */
     getByFacilityIdIntakesPrefill(args: { facilityId: string }): Promise<unknown>;
     /** 受付をまとめて別の事業所へ回す
      * POST /api/facilities/{facilityId}/intakes/transfer-bulk / scope facility-intakes:write / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -912,13 +950,13 @@ export interface CposApi_app {
      * POST /api/facilities/{facilityId}/spreadsheet-import / scope spreadsheet-import:write / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postByFacilityIdSpreadsheetImport(args: { facilityId: string; body?: unknown }): Promise<unknown>;
     /** 事業所の職員一覧
-     * GET /api/facilities/{facilityId}/staff / scope facility-staff:read / 認証 both / facilityId 必須 / 実測 200 (2026-09-14) 応答の項目: items, staff / 模擬サーバ: あり */
+     * GET /api/facilities/{facilityId}/staff / scope facility-staff:read / 認証 both / facilityId 必須 / 実測 200 (2026-09-27) 応答の項目: items, staff / 模擬サーバ: あり */
     getByFacilityIdStaff(args: { facilityId: string }): Promise<unknown>;
     /** 職員を登録
      * POST /api/facilities/{facilityId}/staff / scope facility-staff:write / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postByFacilityIdStaff(args: { facilityId: string; body?: unknown }): Promise<unknown>;
     /** 職員を 1 件
-     * GET /api/facilities/{facilityId}/staff/{id} / scope facility-staff:read / 認証 both / facilityId 必須 / 実測 200 (2026-09-14) 応答の項目: aliases, createdAt, createdBy, displayName, displayOrder, email, employeeId, facilityId, id, name, nameKana, normalizedNameKey … / 模擬サーバ: あり */
+     * GET /api/facilities/{facilityId}/staff/{id} / scope facility-staff:read / 認証 both / facilityId 必須 / 実測 200 (2026-09-27) 応答の項目: aliases, createdAt, createdBy, displayName, displayOrder, email, employeeId, facilityId, id, name, nameKana, normalizedNameKey … / 模擬サーバ: あり */
     getByFacilityIdStaffById(args: { facilityId: string; id: string }): Promise<unknown>;
     /** 職員を更新
      * PUT /api/facilities/{facilityId}/staff/{id} / scope facility-staff:write / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -941,8 +979,11 @@ export interface CposApi_app {
     /** QualifiedPerson (有資格者名簿 SoT) → FacilityStaff の一括同期 (管理画面ボタン経由。初期移行・修復用)。有資格者の facilityIds に対象 facility が含まれ、active な人を FacilityStaff に upsert する。突合は qualifiedPe
      * POST /api/facilities/{facilityId}/staff/sync-from-qualified-persons / scope facility-staff:write / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postByFacilityIdStaffSyncFromQualifiedPersons(args: { facilityId: string; body?: unknown }): Promise<unknown>;
+    /** 従業員 (AuthUser) の氏名 → 事業所スタッフの氏名 を一括で揃える (既存の不一致の修復用)。対象は本人と確定できる行 (userId / employeeId / 本人の有資格者 id) だけで、氏名だけが一致する行は触らない。旧姓は aliases に残す。dryRun=true (既定) は差分のみ返す
+     * POST /api/facilities/{facilityId}/staff/sync-names-from-users / scope facility-staff:write / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postByFacilityIdStaffSyncNamesFromUsers(args: { facilityId: string; body?: unknown }): Promise<unknown>;
     /** 事業所の利用者一覧 (マスタ + 追加項目 + 利用契約)
-     * GET /api/facilities/{facilityId}/users / scope facility-users:read / 認証 both / facilityId 必須 / 実測 200 (2026-09-14) 応答の項目: count, items / 模擬サーバ: 無し (501) */
+     * GET /api/facilities/{facilityId}/users / scope facility-users:read / 認証 both / facilityId 必須 / 実測 200 (2026-09-27) 応答の項目: count, items / 模擬サーバ: 無し (501) */
     getByFacilityIdUsers(args: { facilityId: string }): Promise<unknown>;
     /** 事業所に利用者を登録 (既存マスタの紐付け or 新規)
      * POST /api/facilities/{facilityId}/users / scope facility-users:write / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -951,7 +992,7 @@ export interface CposApi_app {
      * PUT /api/facilities/{facilityId}/users/{insuredNumber} / scope facility-users:write / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     putByFacilityIdUsersByInsuredNumber(args: { facilityId: string; insuredNumber: string; body?: unknown }): Promise<unknown>;
     /** 利用者の追加項目 (事業所ごと)
-     * GET /api/facilities/{facilityId}/users/{insuredNumber}/extras / scope facility-users:read / 認証 both / facilityId 必須 / 実測 200 (2026-09-14) 応答の項目: createdAt, extras, facilityId, id, insuredNumber, lastRawRow, organizationId, updatedAt / 模擬サーバ: 無し (501) */
+     * GET /api/facilities/{facilityId}/users/{insuredNumber}/extras / scope facility-users:read / 認証 both / facilityId 必須 / 実測 200 (2026-09-27) 応答の項目: createdAt, extras, facilityId, id, insuredNumber, lastRawRow, organizationId, updatedAt / 模擬サーバ: 無し (501) */
     getByFacilityIdUsersByInsuredNumberExtras(args: { facilityId: string; insuredNumber: string }): Promise<unknown>;
     /** 利用者の追加項目を保存
      * PUT /api/facilities/{facilityId}/users/{insuredNumber}/extras / scope facility-users:write / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -990,7 +1031,7 @@ export interface CposApi_app {
      * GET /api/facilities/{facilityId}/weekly-schedule / scope facility-modules:write / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     getByFacilityIdWeeklySchedule(args: { facilityId: string }): Promise<unknown>;
     /** 週間予定を 1 週分
-     * GET /api/facilities/{facilityId}/weekly-schedule/{weekStart} / scope facilities:read / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/facilities/{facilityId}/weekly-schedule/{weekStart} / scope facilities:read / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getByFacilityIdWeeklyScheduleByWeekStart(args: { facilityId: string; weekStart: string }): Promise<unknown>;
     /** 週間予定を保存
      * PUT /api/facilities/{facilityId}/weekly-schedule/{weekStart} / scope facility-modules:write / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -1002,7 +1043,7 @@ export interface CposApi_app {
      * POST /api/facilities/{facilityId}/weekly-schedule/{weekStart}/finalize / scope facility-modules:write / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postByFacilityIdWeeklyScheduleByWeekStartFinalize(args: { facilityId: string; weekStart: string; body?: unknown }): Promise<unknown>;
     /** 事業所を 1 件
-     * GET /api/facilities/{id} / scope facilities:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: address, areaGrade, businessNumber, careplanFiling, createdAt, facilityCategoryCode, fax, id, isActive, name, nameKana, organizationId … / 模擬サーバ: 無し (501) */
+     * GET /api/facilities/{id} / scope facilities:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: address, areaGrade, businessNumber, careplanFiling, createdAt, facilityCategoryCode, fax, id, isActive, name, nameKana, organizationId … / 模擬サーバ: 無し (501) */
     getById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 事業所を更新
      * PUT /api/facilities/{id} / scope facilities:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -1011,7 +1052,7 @@ export interface CposApi_app {
      * DELETE /api/facilities/{id} / scope facilities:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     deleteById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 事業所の請求設定
-     * GET /api/facilities/{id}/billing-settings / scope facilities:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: areaGrade, billingEnrollment, facilityId, facilityStandards, treatmentImprovementAddon / 模擬サーバ: 無し (501) */
+     * GET /api/facilities/{id}/billing-settings / scope facilities:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: areaGrade, billingEnrollment, facilityId, facilityStandards, treatmentImprovementAddon / 模擬サーバ: 無し (501) */
     getByIdBillingSettings(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 事業所の請求設定を保存
      * PUT /api/facilities/{id}/billing-settings / scope facilities:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -1020,11 +1061,14 @@ export interface CposApi_app {
      * POST /api/facilities/{id}/delete-preview / scope facilities:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postByIdDeletePreview(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 設定の検証: ヘッダ行を実際に読み、列マッピングの解決状況を返す。 OAuth セッションが必要 (Google Sheets を読むため)。
-     * GET /api/facilities/{id}/diagnose / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 503 (2026-09-14) / 模擬サーバ: 無し (501) */
+     * GET /api/facilities/{id}/diagnose / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 503 (2026-09-27) / 模擬サーバ: 無し (501) */
     getByIdDiagnose(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 従業員一覧 (FacilityConfig.employees が設定されていれば Sheet から)
-     * GET /api/facilities/{id}/employees / 認証 both / 実測 200 (2026-09-14) 応答の項目: items, reason / 模擬サーバ: 無し (501) */
+     * GET /api/facilities/{id}/employees / 認証 both / 実測 200 (2026-09-27) 応答の項目: items, reason / 模擬サーバ: 無し (501) */
     getByIdEmployees(args: { id: string; facilityId?: string }): Promise<unknown>;
+    /** 事業所の住所から座標を付ける (geoSource='manual' は force なしでは 409)
+     * POST /api/facilities/{id}/geocode / scope facilities:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postByIdGeocode(args: { id: string; body: unknown; facilityId?: string }): Promise<unknown>;
     /** 利用者 CSV 一括インポート。CSV (UTF-8、BOM 可) のヘッダ行を見て、 「氏名」「フリガナ」など FacilityConfig.users.columns で定義された列を 利用者シートに upsert する。 body: { csv: string, hasHeader?: boolean (defa
      * POST /api/facilities/{id}/import-csv / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postByIdImportCsv(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
@@ -1035,7 +1079,7 @@ export interface CposApi_app {
      * POST /api/facilities/{id}/import-pdf / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postByIdImportPdf(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 利用者フォルダのスキャン: 施設の userFolders.rootFolderId 配下を walk して `頭文字_氏名様` パターンに合致する全フォルダを利用者一覧として返す。 query: ?detect=true で各フォルダ内の careplan.json の有無も判定 (重い)。 ?root=<folde
-     * GET /api/facilities/{id}/scan-users / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 503 (2026-09-14) OAuth セッションなし / 模擬サーバ: 無し (501) */
+     * GET /api/facilities/{id}/scan-users / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 503 (2026-09-27) OAuth セッションなし / 模擬サーバ: 無し (501) */
     getByIdScanUsers(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** @deprecated 利用者フォルダはシステム全体で共通のため、同期もシステム単位で 実行すべき。後継: POST /api/master-users/sync-from-folders 互換のため残しているが、UI からは外している。新規利用は推奨しない。 利用者フォルダから利用者マスタを生成・更新する。 scan
      * POST /api/facilities/{id}/sync-users-from-folders / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -1049,10 +1093,10 @@ export interface CposApi_app {
   };
   facilityFinancials: {
     /** … 人件費率 (super_admin 限定)
-     * GET /api/facility-financials/labor-cost-ratio / scope facilities:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/facility-financials/labor-cost-ratio / scope facilities:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getLaborCostRatio(args?: { facilityId?: string }): Promise<unknown>;
     /** … 月次売上高の一覧 (admin/manager/staff)
-     * GET /api/facility-financials/revenue / scope facilities:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: items / 模擬サーバ: 無し (501) */
+     * GET /api/facility-financials/revenue / scope facilities:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items / 模擬サーバ: 無し (501) */
     getRevenue(args?: { facilityId?: string }): Promise<unknown>;
     /** 事業所の月次売上を登録・更新
      * PUT /api/facility-financials/revenue/{facilityId}/{serviceMonth} / scope facilities:write / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -1074,13 +1118,13 @@ export interface CposApi_app {
   };
   formTemplates: {
     /** フォームテンプレートの一覧 (用途・事業所で絞る)
-     * GET /api/form-templates / scope form-templates:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: allowedServiceTypeCodes, createdAt, facilityId, fields, grid, id, isActive, name, optionSets, organizationId, purpose, updatedAt … / 模擬サーバ: 無し (501) */
+     * GET /api/form-templates / scope form-templates:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: allowedServiceTypeCodes, createdAt, facilityId, fields, grid, id, isActive, name, optionSets, organizationId, purpose, updatedAt … / 模擬サーバ: 無し (501) */
     get(args?: { facilityId?: string }): Promise<unknown>;
     /** フォームテンプレートを作成
      * POST /api/form-templates / scope form-templates:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     post(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** フォームテンプレートを 1 件取得
-     * GET /api/form-templates/{id} / scope form-templates:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: allowedServiceTypeCodes, createdAt, facilityId, fields, grid, id, isActive, name, optionSets, organizationId, purpose, updatedAt … / 模擬サーバ: 無し (501) */
+     * GET /api/form-templates/{id} / scope form-templates:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: allowedServiceTypeCodes, createdAt, facilityId, fields, grid, id, isActive, name, optionSets, organizationId, purpose, updatedAt … / 模擬サーバ: 無し (501) */
     getById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** フォームテンプレートを更新
      * PUT /api/form-templates/{id} / scope form-templates:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -1100,7 +1144,7 @@ export interface CposApi_app {
   };
   health: {
     /** 生存確認
-     * GET /api/health / 認証 none / 実測 200 (2026-09-14) 応答の項目: status, timestamp / 模擬サーバ: 無し (501) */
+     * GET /api/health / 認証 none / 実測 200 (2026-09-27) 応答の項目: app, appEnv, revision, status, timestamp / 模擬サーバ: 無し (501) */
     get(args?: { facilityId?: string }): Promise<unknown>;
   };
   help: {
@@ -1110,13 +1154,13 @@ export interface CposApi_app {
   };
   incidents: {
     /** list (facilityId/from/to/severity/status/
-     * GET /api/incidents / scope incidents:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: items / 模擬サーバ: 無し (501) */
+     * GET /api/incidents / scope incidents:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items / 模擬サーバ: 無し (501) */
     get(args?: { facilityId?: string }): Promise<unknown>;
     /** create (native only)
      * POST /api/incidents / scope incidents:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     post(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** single record
-     * GET /api/incidents/{id} / scope incidents:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/incidents/{id} / scope incidents:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** update (native only)
      * PUT /api/incidents/{id} / scope incidents:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -1127,21 +1171,21 @@ export interface CposApi_app {
   };
   kasan: {
     /** 加算分析の元データ
-     * GET /api/kasan/v1/analysis-source / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 400 (2026-09-14) パラメータが要る: facilityId が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/kasan/v1/analysis-source / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 400 (2026-09-27) パラメータが要る: facilityId が必要です / 模擬サーバ: 無し (501) */
     getV1AnalysisSource(args?: { facilityId?: string }): Promise<unknown>;
     /** 加算マネージャの起動情報
-     * GET /api/kasan/v1/bootstrap / 認証 both / 実測 200 (2026-09-14) 応答の項目: connected, cpos, facilities, features, organization, user / 模擬サーバ: 無し (501) */
+     * GET /api/kasan/v1/bootstrap / 認証 both / 実測 200 (2026-09-27) 応答の項目: connected, cpos, facilities, features, organization, user / 模擬サーバ: 無し (501) */
     getV1Bootstrap(args?: { facilityId?: string }): Promise<unknown>;
     /** 事業所の月次の加算算定状況
-     * GET /api/kasan/v1/facilities/{facilityId}/monthly-status / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 400 (2026-09-14) パラメータが要る: serviceMonth は YYYY-MM 形式 / 模擬サーバ: 無し (501) */
+     * GET /api/kasan/v1/facilities/{facilityId}/monthly-status / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 400 (2026-09-27) パラメータが要る: serviceMonth は YYYY-MM 形式 / 模擬サーバ: 無し (501) */
     getV1FacilitiesByFacilityIdMonthlyStatus(args: { facilityId: string }): Promise<unknown>;
   };
   life: {
     /** 提出 CSV 用の行 (既存 /v1/exports に渡す形)
-     * GET /api/life/assessment-rows / scope life:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 400 (2026-09-14) パラメータが要る: facilityId が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/life/assessment-rows / scope life:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 400 (2026-09-27) パラメータが要る: facilityId が必要です / 模擬サーバ: 無し (501) */
     getAssessmentRows(args?: { facilityId?: string }): Promise<unknown>;
     /** LIFE 評価の一覧
-     * GET /api/life/assessments / scope life:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: assessments / 模擬サーバ: 無し (501) */
+     * GET /api/life/assessments / scope life:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: assessments / 模擬サーバ: 無し (501) */
     getAssessments(args?: { facilityId?: string }): Promise<unknown>;
     /** LIFE 評価を登録・更新
      * PUT /api/life/assessments / scope life:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -1153,7 +1197,7 @@ export interface CposApi_app {
      * POST /api/life/barthel-draft / scope life:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postBarthelDraft(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** LIFE フィードバック (取込済み) の一覧
-     * GET /api/life/feedbacks / scope life:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: feedbacks / 模擬サーバ: 無し (501) */
+     * GET /api/life/feedbacks / scope life:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: feedbacks / 模擬サーバ: 無し (501) */
     getFeedbacks(args?: { facilityId?: string }): Promise<unknown>;
     /** LIFE フィードバックを登録
      * PUT /api/life/feedbacks / scope life:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -1162,10 +1206,10 @@ export interface CposApi_app {
      * DELETE /api/life/feedbacks/{id} / scope life:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     deleteFeedbacksById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** LIFE フィードバックの元ファイル
-     * GET /api/life/feedbacks/{id}/file / scope life:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/life/feedbacks/{id}/file / scope life:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getFeedbacksByIdFile(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 尺度の定義 (spec から導出。画面はここから入力欄を作る)
-     * GET /api/life/meta / scope life:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: interfaceName, note, numericItems, scales / 模擬サーバ: 無し (501) */
+     * GET /api/life/meta / scope life:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: interfaceName, note, numericItems, scales / 模擬サーバ: 無し (501) */
     getMeta(args?: { facilityId?: string }): Promise<unknown>;
   };
   ltcWeb: {
@@ -1248,9 +1292,14 @@ export interface CposApi_app {
      * POST /api/ltc-web/settings/{facilityId}/test-connection / scope ltc-web:settings:write / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postSettingsByFacilityIdTestConnection(args: { facilityId: string; body?: unknown }): Promise<unknown>;
   };
+  masterUsers: {
+    /** 利用者の住所から座標を付ける (geoSource='manual' は force なしでは 409)
+     * POST /api/master-users/{insuredNumber}/geocode / scope master-users:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postByInsuredNumberGeocode(args: { insuredNumber: string; body: unknown; facilityId?: string }): Promise<unknown>;
+  };
   mcp: {
     /** MCP: サーバ発ストリームは非対応 (405)
-     * GET /mcp / 認証 none / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 405 (2026-09-14) この MCP サーバはサーバ発のストリームを持ちません。POST /mcp を使ってください。 / 模擬サーバ: 無し (501) */
+     * GET /mcp / 認証 none / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 405 (2026-09-27) この MCP サーバはサーバ発のストリームを持ちません。POST /mcp を使ってください。 / 模擬サーバ: 無し (501) */
     get(args?: { facilityId?: string }): Promise<unknown>;
     /** MCP (Model Context Protocol) の JSON-RPC 入口
      * POST /mcp / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -1308,7 +1357,7 @@ export interface CposApi_app {
   };
   openapiJson: {
     /** OpenAPI 3.1 文書 (起動中のサーバのルートから生成)
-     * GET /api/openapi.json / 認証 both / 実測 200 (2026-09-14) 応答の項目: components, info, openapi, paths, servers, tags, x-cpos-route-count, x-cpos-undocumented / 模擬サーバ: 無し (501) */
+     * GET /api/openapi.json / 認証 both / 実測 200 (2026-09-27) 応答の項目: components, info, openapi, paths, servers, tags, x-cpos-route-count, x-cpos-undocumented / 模擬サーバ: 無し (501) */
     get(args?: { facilityId?: string }): Promise<unknown>;
   };
   pdf: {
@@ -1326,17 +1375,20 @@ export interface CposApi_app {
     /** 登録アプリの情報を 1 件取得
      * GET /api/platform/apps/{appId} / scope apps:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     getAppsByAppId(args: { appId: string; facilityId?: string }): Promise<unknown>;
+    /** 監査ログ: アプリからの申告 (自前セッションのアプリのなりすまし開始・停止)
+     * POST /api/platform/audit-events / scope audit-events:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postAuditEvents(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 給付管理の集計
      * GET /api/platform/benefits/summary / scope benefits:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     getBenefitsSummary(args?: { facilityId?: string; serviceMonth?: string }): Promise<unknown>;
     /** currentUser + 事業所 + 有効設定
-     * GET /api/platform/bootstrap / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/platform/bootstrap / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getBootstrap(args?: { facilityId?: string }): Promise<unknown>;
     /** 請求の集計 (匿名化。件数・金額)
      * GET /api/platform/claims/summary / scope claims:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     getClaimsSummary(args?: { facilityId?: string; serviceMonth?: string }): Promise<unknown>;
     /** 有効設定 (kind 別)
-     * GET /api/platform/effective-settings / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/platform/effective-settings / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getEffectiveSettings(args?: { facilityId?: string }): Promise<unknown>;
     /** メールを送信 (Gmail 経由。App Token)
      * POST /api/platform/email/send / scope notifications:send / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -1351,41 +1403,50 @@ export interface CposApi_app {
      * PATCH /api/platform/employees/{authUserId}/hrm / scope employees:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     patchEmployeesByAuthUserIdHrm(args: { authUserId: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 居宅介護支援事業所・ケアマネの一覧
-     * GET /api/platform/external-partners/care-managers / scope external-partners:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: internalCount, items / 模擬サーバ: 無し (501) */
+     * GET /api/platform/external-partners/care-managers / scope external-partners:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: internalCount, items / 模擬サーバ: 無し (501) */
     getExternalPartnersCareManagers(args?: { facilityId?: string }): Promise<unknown>;
     /** (VNS 互換入力)
      * POST /api/platform/external-partners/care-managers / scope external-partners:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postExternalPartnersCareManagers(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 医療機関・主治医の一覧
-     * GET /api/platform/external-partners/medical-providers / scope external-partners:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: items / 模擬サーバ: 無し (501) */
+     * GET /api/platform/external-partners/medical-providers / scope external-partners:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items / 模擬サーバ: 無し (501) */
     getExternalPartnersMedicalProviders(args?: { facilityId?: string }): Promise<unknown>;
     /** (VNS 互換入力)
      * POST /api/platform/external-partners/medical-providers / scope external-partners:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postExternalPartnersMedicalProviders(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 外部関係先 (医療機関・居宅介護支援事業所) の検索
-     * GET /api/platform/external-partners/search / scope external-partners:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: items / 模擬サーバ: 無し (501) */
+     * GET /api/platform/external-partners/search / scope external-partners:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items / 模擬サーバ: 無し (501) */
     getExternalPartnersSearch(args?: { query?: string; kind?: string; activeOnly?: boolean; facilityId?: string }): Promise<unknown>;
     /** 事業所の一覧
-     * GET /api/platform/facilities / scope facilities:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: address, areaGrade, businessNumber, createdAt, facilityCategoryCode, fax, id, isActive, name, nameKana, organizationId, phone … / 模擬サーバ: あり */
+     * GET /api/platform/facilities / scope facilities:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: address, areaGrade, businessNumber, createdAt, facilityCategoryCode, fax, id, isActive, name, nameKana, organizationId, phone … / 模擬サーバ: あり */
     getFacilities(args?: { facilityId?: string }): Promise<unknown>;
     /** 事業所の利用者一覧 (アプリ向けの簡易形)
-     * GET /api/platform/facilities/{facilityId}/users / 認証 both / facilityId 必須 / 実測 200 (2026-09-14) 応答の項目: ok, users / 模擬サーバ: 無し (501) */
+     * GET /api/platform/facilities/{facilityId}/users / 認証 both / facilityId 必須 / 実測 200 (2026-09-27) 応答の項目: ok, users / 模擬サーバ: あり */
     getFacilitiesByFacilityIdUsers(args: { facilityId: string }): Promise<unknown>;
     /** 事業所を 1 件
-     * GET /api/platform/facilities/{id} / scope facilities:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: address, areaGrade, businessNumber, createdAt, facilityCategoryCode, fax, id, isActive, name, nameKana, organizationId, phone … / 模擬サーバ: 無し (501) */
+     * GET /api/platform/facilities/{id} / scope facilities:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: address, areaGrade, businessNumber, createdAt, facilityCategoryCode, fax, id, isActive, name, nameKana, organizationId, phone … / 模擬サーバ: 無し (501) */
     getFacilitiesById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 利用可能事業所
      * GET /api/platform/facility-context / scope platform:pii:scan / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     getFacilityContext(args?: { facilityId?: string }): Promise<unknown>;
     /** 事業所の職員一覧 (担当者列の正)
-     * GET /api/platform/facility-staff / scope facility-staff:read / 認証 both / facilityId 必須 / 実測 200 (2026-09-14) 応答の項目: items, staff / 模擬サーバ: あり */
+     * GET /api/platform/facility-staff / scope facility-staff:read / 認証 both / facilityId 必須 / 実測 200 (2026-09-27) 応答の項目: items, staff / 模擬サーバ: あり */
     getFacilityStaff(args: { facilityId: string; activeOnly?: boolean }): Promise<unknown>;
     /** 事業所別の利用者数 (匿名集計)
-     * GET /api/platform/facility-users / scope facility-users:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: activeUserCount, careLevelDistribution, facilityId / 模擬サーバ: 無し (501) */
+     * GET /api/platform/facility-users / scope facility-users:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: activeUserCount, careLevelDistribution, facilityId / 模擬サーバ: 無し (501) */
     getFacilityUsers(args?: { facilityId?: string }): Promise<unknown>;
     /** 月別の常勤換算
      * GET /api/platform/fte / scope fte:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: あり */
     getFte(args?: { facilityId?: string; month?: string }): Promise<unknown>;
+    /** 住所→座標 (Nominatim / Google。住所はログに残さない)
+     * POST /api/platform/geo/geocode / scope geo:read / 認証 both / 応答の形あり / 模擬サーバ: 無し (501) */
+    postGeoGeocode(args: { body: unknown; facilityId?: string }): Promise<unknown>;
+    /** 事業所の利用者のうち座標が無い人にまとめて座標を付ける (手動座標は飛ばす)
+     * POST /api/platform/geo/geocode-missing / scope master-users:write / 認証 both / 応答の形あり / 模擬サーバ: 無し (501) */
+    postGeoGeocodeMissing(args: { body: unknown; facilityId?: string }): Promise<unknown>;
+    /** 所要時間・距離の行列 (OSRM。未設定・障害時は概算に縮退)
+     * POST /api/platform/geo/travel-matrix / scope geo:read / 認証 both / 応答の形あり / 模擬サーバ: 無し (501) */
+    postGeoTravelMatrix(args: { body: unknown; facilityId?: string }): Promise<unknown>;
     /** 加算マネージャ統合 export
      * GET /api/platform/kasan/export / scope kasan-export:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     getKasanExport(args?: { facilityId?: string }): Promise<unknown>;
@@ -1402,25 +1463,25 @@ export interface CposApi_app {
      * GET /api/platform/ltc-web/users/{insuredNumber}/eligibility-summary / scope ltc-web:eligibility:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     getLtcWebUsersByInsuredNumberEligibilitySummary(args: { insuredNumber: string; facilityId?: string }): Promise<unknown>;
     /** 利用者マスタの一覧
-     * GET /api/platform/master-users / scope master-users:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: address, birthDate, careLevel, careLevelHistory, careManagerName, careManagerOrg, certificationEndDate, certificationStartDate, createdAt, extras, furigana, furiganaKey … / 模擬サーバ: あり */
+     * GET /api/platform/master-users / scope master-users:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: address, birthDate, careLevel, careLevelHistory, careManagerName, careManagerOrg, certificationEndDate, certificationStartDate, createdAt, extras, furigana, furiganaKey … / 模擬サーバ: あり */
     getMasterUsers(args?: { facilityId?: string; query?: string; activeOnly?: boolean; includeFacilities?: boolean; careManagerUserId?: string; careManagerStaffId?: string; careManagerName?: string; limit?: number }): Promise<unknown>;
     /** 利用者マスタを 1 件
-     * GET /api/platform/master-users/{insuredNumber} / scope master-users:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: address, birthDate, careLevel, careLevelHistory, careManagerName, careManagerOrg, certificationEndDate, certificationStartDate, createdAt, extras, furigana, gender … / 模擬サーバ: 無し (501) */
+     * GET /api/platform/master-users/{insuredNumber} / scope master-users:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: address, birthDate, careLevel, careLevelHistory, careManagerName, careManagerOrg, certificationEndDate, certificationStartDate, createdAt, extras, furigana, gender … / 模擬サーバ: あり */
     getMasterUsersByInsuredNumber(args: { insuredNumber: string; facilityId?: string }): Promise<unknown>;
     /** 見出し付き
-     * GET /api/platform/master-users/{insuredNumber}/face-sheet / scope master-users:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: facilityIds, hasContent, insuredNumber, items, masterUserId, name, sheet, text / 模擬サーバ: 無し (501) */
+     * GET /api/platform/master-users/{insuredNumber}/face-sheet / scope master-users:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: facilityIds, hasContent, insuredNumber, items, masterUserId, name, sheet, text / 模擬サーバ: 無し (501) */
     getMasterUsersByInsuredNumberFaceSheet(args: { insuredNumber: string; facilityId?: string }): Promise<unknown>;
     /** 被保険者番号 → 表示名の対応表 (旧番号・仮番号込み)
-     * GET /api/platform/master-users/name-map / scope master-users:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: items / 模擬サーバ: 無し (501) */
+     * GET /api/platform/master-users/name-map / scope master-users:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items / 模擬サーバ: あり */
     getMasterUsersNameMap(args?: { facilityId?: string }): Promise<unknown>;
     /** 自分が使える事業所の一覧
-     * GET /api/platform/my-facilities / 認証 both / 実測 200 (2026-09-14) 応答の項目: defaultFacilityId, facilities, ok / 模擬サーバ: 無し (501) */
+     * GET /api/platform/my-facilities / 認証 both / 実測 200 (2026-09-27) 応答の項目: defaultFacilityId, facilities, ok / 模擬サーバ: 無し (501) */
     getMyFacilities(args?: { facilityId?: string }): Promise<unknown>;
     /** ===================== POST /organizations (払い出し) =====================
      * POST /api/platform/organizations / scope organizations:provision / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postOrganizations(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** ===================== GET /organizations/:id =====================
-     * GET /api/platform/organizations/{id} / scope users:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/platform/organizations/{id} / scope users:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getOrganizationsById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** ============== PUT /organizations/:id/entitlements/:product ==============
      * PUT /api/platform/organizations/{id}/entitlements/{product} / scope users:admin / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -1435,16 +1496,16 @@ export interface CposApi_app {
      * POST /api/platform/pii/scan / scope platform:pii:scan / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postPiiScan(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 有資格者名簿
-     * GET /api/platform/qualified-persons / scope qualified-persons:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: qualifiedPersons / 模擬サーバ: あり */
+     * GET /api/platform/qualified-persons / scope qualified-persons:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: qualifiedPersons / 模擬サーバ: あり */
     getQualifiedPersons(args?: { facilityId?: string; activeOnly?: boolean }): Promise<unknown>;
     /** 営業活動の一覧 (営業先・営業者・予定日・結果)
-     * GET /api/platform/sales/activities / scope sales:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: items, nextCursor / 模擬サーバ: 無し (501) */
+     * GET /api/platform/sales/activities / scope sales:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items, nextCursor / 模擬サーバ: 無し (501) */
     getSalesActivities(args?: { facilityId?: string; from?: string; to?: string; status?: string; partnerOrganizationId?: string; staffId?: string; query?: string; limit?: number; cursor?: string }): Promise<unknown>;
     /** 営業活動を登録
      * POST /api/platform/sales/activities / scope sales:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postSalesActivities(args: { body: unknown; facilityId?: string }): Promise<unknown>;
     /** 営業活動を 1 件
-     * GET /api/platform/sales/activities/{id} / scope sales:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/platform/sales/activities/{id} / scope sales:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getSalesActivitiesById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 1 件更新
      * PUT /api/platform/sales/activities/{id} / scope sales:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -1453,21 +1514,27 @@ export interface CposApi_app {
      * DELETE /api/platform/sales/activities/{id} / scope sales:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     deleteSalesActivitiesById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 営業活動の集計 (件数・反応・営業先別・営業者別・期限超過)
-     * GET /api/platform/sales/activities/summary / scope sales:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: summary, truncated / 模擬サーバ: 無し (501) */
+     * GET /api/platform/sales/activities/summary / scope sales:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: summary, truncated / 模擬サーバ: 無し (501) */
     getSalesActivitiesSummary(args?: { facilityId?: string; from?: string; to?: string; today?: string }): Promise<unknown>;
+    /** 営業パイプライン (営業先ごとの現在ステージ・次にすること・期限超過)
+     * GET /api/platform/sales/pipeline / scope sales:read / 認証 both / 応答の形あり / 模擬サーバ: 無し (501) */
+    getSalesPipeline(args?: { facilityId?: string; today?: string }): Promise<unknown>;
+    /** 紹介元別の受付・契約実績 (月別。利用者の氏名・番号は含まない)
+     * GET /api/platform/sales/referral-outcomes / scope sales:read / 認証 both / facilityId 必須 / 応答の形あり / 模擬サーバ: 無し (501) */
+    getSalesReferralOutcomes(args: { facilityId: string; from?: string; to?: string }): Promise<unknown>;
     /** ===================== GET /users (管理ダッシュボード) ===================== 組織内ユーザー一覧 + その組織のエンタイトルメント。 ?organizationId= で対象組織を指定 (省略時はトークンの組織)。別組織を指定する 場合は払い出し本人 (creat
-     * GET /api/platform/users / scope users:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: entitlements, nextCursor, organizationId, users / 模擬サーバ: あり */
+     * GET /api/platform/users / scope users:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: entitlements, nextCursor, organizationId, users / 模擬サーバ: あり */
     getUsers(args?: { facilityId?: string }): Promise<unknown>;
   };
   progressNotes: {
     /** list (facilityId/insuredNumber/
-     * GET /api/progress-notes / scope progress-notes:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: items / 模擬サーバ: 無し (501) */
+     * GET /api/progress-notes / scope progress-notes:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items, truncated / 模擬サーバ: 無し (501) */
     get(args?: { facilityId?: string }): Promise<unknown>;
     /** create (native only)
      * POST /api/progress-notes / scope progress-notes:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     post(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** single record
-     * GET /api/progress-notes/{id} / scope progress-notes:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: addenda, author, body, category, createdAt, createdBy, facilityId, id, insuredNumber, masterUserId, noteType, occurredAt … / 模擬サーバ: 無し (501) */
+     * GET /api/progress-notes/{id} / scope progress-notes:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: addenda, author, body, category, clientOpHash, clientOpId, createdAt, createdBy, facilityId, id, insuredNumber, masterUserId … / 模擬サーバ: 無し (501) */
     getById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** update (native only; see below)
      * PUT /api/progress-notes/{id} / scope progress-notes:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -1479,7 +1546,7 @@ export interface CposApi_app {
      * POST /api/progress-notes/{id}/addenda / scope progress-notes:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postByIdAddenda(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 経過記録の添付一覧
-     * GET /api/progress-notes/{id}/attachments / scope progress-notes:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: items / 模擬サーバ: 無し (501) */
+     * GET /api/progress-notes/{id}/attachments / scope progress-notes:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items / 模擬サーバ: 無し (501) */
     getByIdAttachments(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 経過記録にファイルを添付
      * POST /api/progress-notes/{id}/attachments / scope progress-notes:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -1488,7 +1555,7 @@ export interface CposApi_app {
      * DELETE /api/progress-notes/{id}/attachments/{fileId} / scope progress-notes:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     deleteByIdAttachmentsByFileId(args: { id: string; fileId: string; facilityId?: string }): Promise<unknown>;
     /** 添付の中身
-     * GET /api/progress-notes/{id}/attachments/{fileId}/content / scope progress-notes:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/progress-notes/{id}/attachments/{fileId}/content / scope progress-notes:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getByIdAttachmentsByFileIdContent(args: { id: string; fileId: string; facilityId?: string }): Promise<unknown>;
     /** 経過記録の masterUserId 補完の状況 (件数)
      * GET /api/progress-notes/backfill-master-user-id / scope progress-notes:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -1499,7 +1566,7 @@ export interface CposApi_app {
   };
   public: {
     /** public: 1 件取得 (feedback-attachments/:id/:fileId)
-     * GET /public/feedback-attachments/{id}/{fileId} / 認証 none / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /public/feedback-attachments/{id}/{fileId} / 認証 none / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getFeedbackAttachmentsByIdByFileId(args: { id: string; fileId: string; facilityId?: string }): Promise<unknown>;
   };
   recordApp: {
@@ -1565,22 +1632,28 @@ export interface CposApi_app {
     deleteRecordTypes(args?: { facilityId?: string }): Promise<unknown>;
     /** 記録の一覧 (利用者・種類・期間で絞る)
      * GET /api/record-app/records / scope care-records:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
-    getRecords(args?: { facilityId?: string }): Promise<unknown>;
+    getRecords(args?: { includeVoided?: boolean; isUnclassified?: boolean; facilityId?: string }): Promise<unknown>;
     /** 記録を 1 件保存
      * POST /api/record-app/records / scope care-records:write / 認証 none / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postRecords(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** (フル編集)
      * PUT /api/record-app/records/{id} / scope care-records:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     putRecordsById(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
-    /** 記録を 1 件削除
+    /** 記録を取消 (物理削除せず voided にする)
      * DELETE /api/record-app/records/{id} / scope care-records:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     deleteRecordsById(args: { id: string; facilityId?: string }): Promise<unknown>;
+    /** 未分類の記録を利用者に分類する
+     * POST /api/record-app/records/{id}/classify / scope care-records:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postRecordsByIdClassify(args: { id: string; body: unknown; facilityId?: string }): Promise<unknown>;
     /** recordTypes 更新
      * PATCH /api/record-app/records/{id}/flags / scope care-records:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     patchRecordsByIdFlags(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 重要度更新
      * PATCH /api/record-app/records/{id}/importance / scope care-records:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     patchRecordsByIdImportance(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 記録の取消を戻す (voided → draft)
+     * POST /api/record-app/records/{id}/unvoid / scope care-records:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postRecordsByIdUnvoid(args: { id: string; body: unknown; facilityId?: string }): Promise<unknown>;
     /** 記録の添付一覧 (署名 URL は返さない)
      * GET /api/record-app/records/{recordId}/attachments / scope care-records:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     getRecordsByRecordIdAttachments(args: { recordId: string; facilityId?: string }): Promise<unknown>;
@@ -1683,7 +1756,7 @@ export interface CposApi_app {
      * POST /api/record-extractors/rehab / scope record-extractors:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postRehab(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** Lightweight `rules` introspection endpoint. Returns the field names and labels that the server knows about (useful for client UIs to render extracted-field summ
-     * GET /api/record-extractors/rules / scope record-extractors:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: ok, vitals / 模擬サーバ: 無し (501) */
+     * GET /api/record-extractors/rules / scope record-extractors:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: ok, vitals / 模擬サーバ: 無し (501) */
     getRules(args?: { facilityId?: string }): Promise<unknown>;
     /** 記録本文を項目ごとに構造化
      * POST /api/record-extractors/structured-note / scope record-extractors:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -1692,16 +1765,16 @@ export interface CposApi_app {
      * POST /api/record-extractors/summary / scope record-extractors:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postSummary(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 要約の設定 (実際に使われている AI プロバイダ)
-     * GET /api/record-extractors/summary/config / scope record-extractors:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: allowedModels, appliedProvider, defaultModel, defaultPromptVersion, diagnostics, knownPromptVersions, promptVersions, provider, reason / 模擬サーバ: 無し (501) */
+     * GET /api/record-extractors/summary/config / scope record-extractors:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: allowedModels, appliedProvider, defaultModel, defaultPromptVersion, diagnostics, knownPromptVersions, promptVersions, provider, reason / 模擬サーバ: 無し (501) */
     getSummaryConfig(args?: { facilityId?: string }): Promise<unknown>;
     /** 要約フィードバックの集計 (管理者)
-     * GET /api/record-extractors/summary/feedback / scope record-extractors:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: items / 模擬サーバ: 無し (501) */
+     * GET /api/record-extractors/summary/feedback / scope record-extractors:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items / 模擬サーバ: 無し (501) */
     getSummaryFeedback(args?: { facilityId?: string }): Promise<unknown>;
     /** 要約の品質フィードバックを記録
      * POST /api/record-extractors/summary/feedback / scope record-extractors:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postSummaryFeedback(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 要約機能の稼働状態 (キーの有無は真偽値のみ)
-     * GET /api/record-extractors/summary/health / scope record-extractors:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: allowedModels, apiKeyPresent, appliedProvider, defaultModel, defaultPromptVersion, deprecatedModels, ok, provider, reason, warningDetails, warnings / 模擬サーバ: 無し (501) */
+     * GET /api/record-extractors/summary/health / scope record-extractors:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: allowedModels, apiKeyPresent, appliedProvider, defaultModel, defaultPromptVersion, deprecatedModels, ok, provider, reason, warningDetails, warnings / 模擬サーバ: 無し (501) */
     getSummaryHealth(args?: { facilityId?: string }): Promise<unknown>;
     /** 固定の文で要約プロバイダが動くか確認 (管理者)
      * POST /api/record-extractors/summary/smoke-test / scope record-extractors:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -1715,7 +1788,7 @@ export interface CposApi_app {
   };
   reportedPlacements: {
     /** 届出上の人員配置の一覧
-     * GET /api/reported-placements / scope reported-placements:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: items / 模擬サーバ: 無し (501) */
+     * GET /api/reported-placements / scope reported-placements:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items / 模擬サーバ: 無し (501) */
     get(args?: { facilityId?: string }): Promise<unknown>;
     /** 届出配置を登録・更新
      * POST /api/reported-placements / scope reported-placements:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -1727,21 +1800,21 @@ export interface CposApi_app {
      * POST /api/reported-placements/{id}/end / scope reported-placements:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postByIdEnd(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 実績シフトとの乖離
-     * GET /api/reported-placements/divergence / scope reported-placements:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 400 (2026-09-14) パラメータが要る: month (YYYY-MM) は必須です / 模擬サーバ: 無し (501) */
+     * GET /api/reported-placements/divergence / scope reported-placements:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 400 (2026-09-27) パラメータが要る: month (YYYY-MM) は必須です / 模擬サーバ: 無し (501) */
     getDivergence(args?: { facilityId?: string }): Promise<unknown>;
     /** 職種別の常勤換算サマリ
-     * GET /api/reported-placements/summary / scope reported-placements:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: roles / 模擬サーバ: 無し (501) */
+     * GET /api/reported-placements/summary / scope reported-placements:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: roles / 模擬サーバ: 無し (501) */
     getSummary(args?: { facilityId?: string }): Promise<unknown>;
   };
   selfInspections: {
     /** list (facilityId/from/to/category/
-     * GET /api/self-inspections / scope self-inspections:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: items / 模擬サーバ: 無し (501) */
+     * GET /api/self-inspections / scope self-inspections:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items / 模擬サーバ: 無し (501) */
     get(args?: { facilityId?: string }): Promise<unknown>;
     /** create (native only)
      * POST /api/self-inspections / scope self-inspections:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     post(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** single record
-     * GET /api/self-inspections/{id} / scope self-inspections:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/self-inspections/{id} / scope self-inspections:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** update (native only; the merged record
      * PUT /api/self-inspections/{id} / scope self-inspections:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -1752,13 +1825,13 @@ export interface CposApi_app {
   };
   serviceCodeMaster: {
     /** サービスコードマスタ (アプリ用) の一覧
-     * GET /api/service-code-master/v1 / scope service-code-master:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: items / 模擬サーバ: 無し (501) */
+     * GET /api/service-code-master/v1 / scope service-code-master:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items / 模擬サーバ: 無し (501) */
     getV1(args?: { facilityId?: string }): Promise<unknown>;
     /** サービスコードマスタを登録
      * POST /api/service-code-master/v1 / scope service-code-master:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV1(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** サービスコードマスタを 1 件取得
-     * GET /api/service-code-master/v1/{id} / scope service-code-master:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/service-code-master/v1/{id} / scope service-code-master:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getV1ById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** サービスコードマスタを更新
      * PUT /api/service-code-master/v1/{id} / scope service-code-master:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -1772,13 +1845,13 @@ export interface CposApi_app {
   };
   shifts: {
     /** シフト計画の一覧
-     * GET /api/shifts/plans / scope shifts:read / 認証 both / facilityId 必須 / 実測 200 (2026-09-14) だが 0 件で項目名は未確認 (推測しない) / 模擬サーバ: あり */
+     * GET /api/shifts/plans / scope shifts:read / 認証 both / facilityId 必須 / 実測 200 (2026-09-27) 応答の項目: createdAt, createdBy, facilityId, finalizedAt, finalizedBy, id, organizationId, publishedAt, revision, status, targetMonth, updatedAt / 模擬サーバ: あり */
     getPlans(args: { facilityId: string; targetMonth?: string; scope?: string }): Promise<unknown>;
     /** シフト計画を作成
      * POST /api/shifts/plans / scope shifts:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: あり (本文の形は spec/cpos-api.yaml。本物で実測) */
     postPlans(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** シフト計画を 1 件 (割当を含む)
-     * GET /api/shifts/plans/{id} / scope shifts:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: あり */
+     * GET /api/shifts/plans/{id} / scope shifts:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: assignments, conflicts, plan / 模擬サーバ: あり */
     getPlansById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 割当の置換 (1 計画分をまとめて更新) + 変更履歴。 会社全体計画では割当ごとに facilityId (配置先事業所) を指定できる。
      * PUT /api/shifts/plans/{id}/assignments / scope shifts:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: あり (本文の形は spec/cpos-api.yaml。本物で実測) */
@@ -1787,13 +1860,13 @@ export interface CposApi_app {
      * POST /api/shifts/plans/{id}/finalize / scope shifts:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: あり */
     postPlansByIdFinalize(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** シフト計画の変更履歴
-     * GET /api/shifts/plans/{id}/history / scope shifts:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: あり */
+     * GET /api/shifts/plans/{id}/history / scope shifts:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: after, before, changedAt, changedBy, id, planId, reason / 模擬サーバ: あり */
     getPlansByIdHistory(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** シフト計画を公開 (職員に見せる)
      * POST /api/shifts/plans/{id}/publish / scope shifts:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: あり */
     postPlansByIdPublish(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 勤務希望の一覧 (月・職員)
-     * GET /api/shifts/preferences / scope shifts:read / 認証 both / 実測 200 (2026-09-14) だが 0 件で項目名は未確認 (推測しない) / 模擬サーバ: あり */
+     * GET /api/shifts/preferences / scope shifts:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: constraints, createdAt, facilityId, id, note, organizationId, preferredDays, status, submittedAt, targetMonth, unavailableDays, updatedAt … / 模擬サーバ: あり */
     getPreferences(args?: { facilityId?: string }): Promise<unknown>;
     /** 勤務希望を保存 (下書き)
      * POST /api/shifts/preferences / scope shifts:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: あり (本文の形は spec/cpos-api.yaml。本物で実測) */
@@ -1802,7 +1875,7 @@ export interface CposApi_app {
      * POST /api/shifts/preferences/{id}/submit / scope shifts:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: あり */
     postPreferencesByIdSubmit(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 勤務区分マスタ
-     * GET /api/shifts/shift-types / scope shifts:read / 認証 both / facilityId 必須 / 実測 200 (2026-09-14) 応答の項目: breakMinutes, category, code, color, createdAt, endTime, facilityId, id, isActive, name, note, organizationId … / 模擬サーバ: あり */
+     * GET /api/shifts/shift-types / scope shifts:read / 認証 both / facilityId 必須 / 実測 200 (2026-09-27) 応答の項目: breakMinutes, category, code, color, createdAt, endTime, facilityId, id, isActive, name, note, organizationId … / 模擬サーバ: あり */
     getShiftTypes(args: { facilityId: string; includeInactive?: boolean }): Promise<unknown>;
     /** 勤務区分を登録
      * POST /api/shifts/shift-types / scope shifts:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: あり (本文の形は spec/cpos-api.yaml。本物で実測) */
@@ -1811,7 +1884,7 @@ export interface CposApi_app {
      * DELETE /api/shifts/shift-types/{id} / scope shifts:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: あり */
     deleteShiftTypesById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 必要人員 (曜日別)
-     * GET /api/shifts/staffing-requirements / scope shifts:read / 認証 both / facilityId 必須 / 実測 200 (2026-09-14) だが 0 件で項目名は未確認 (推測しない) / 模擬サーバ: あり */
+     * GET /api/shifts/staffing-requirements / scope shifts:read / 認証 both / facilityId 必須 / 実測 200 (2026-09-27) だが 0 件で項目名は未確認 (推測しない) / 模擬サーバ: あり */
     getStaffingRequirements(args: { facilityId: string; dayOfWeek?: string; includeInactive?: boolean }): Promise<unknown>;
     /** 必要人員 (曜日別) を登録
      * POST /api/shifts/staffing-requirements / scope shifts:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: あり (本文の形は spec/cpos-api.yaml。本物で実測) */
@@ -1822,13 +1895,13 @@ export interface CposApi_app {
   };
   sources: {
     /** 取り込んだ文書 (ソース) の一覧 (利用者・種類で絞る)
-     * GET /api/sources / scope sources:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: items, nextCursor / 模擬サーバ: 無し (501) */
+     * GET /api/sources / scope sources:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items, nextCursor / 模擬サーバ: 無し (501) */
     get(args?: { facilityId?: string }): Promise<unknown>;
     /** 手入力のソースを作成 (なんでもボックス: 口頭・メモ・電話記録)
      * POST /api/sources / scope sources:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     post(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 項目抽出の結果
-     * GET /api/sources/{sourceId}/extractions / scope sources:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: items / 模擬サーバ: 無し (501) */
+     * GET /api/sources/{sourceId}/extractions / scope sources:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items / 模擬サーバ: 無し (501) */
     getBySourceIdExtractions(args: { sourceId: string; facilityId?: string }): Promise<unknown>;
     /** ソースから項目抽出を実行
      * POST /api/sources/{sourceId}/extractions / scope sources:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -1837,21 +1910,21 @@ export interface CposApi_app {
      * PATCH /api/sources/{sourceId}/metadata / scope sources:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     patchBySourceIdMetadata(args: { sourceId: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** OCR の結果
-     * GET /api/sources/{sourceId}/ocr / scope sources:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: items / 模擬サーバ: 無し (501) */
+     * GET /api/sources/{sourceId}/ocr / scope sources:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items / 模擬サーバ: 無し (501) */
     getBySourceIdOcr(args: { sourceId: string; facilityId?: string }): Promise<unknown>;
     /** ソースの OCR を実行
      * POST /api/sources/{sourceId}/ocr / scope sources:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postBySourceIdOcr(args: { sourceId: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** ソースの本文テキスト (OCR / 抽出済み)
-     * GET /api/sources/{sourceId}/text / scope sources:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: createdAt, sourceId, text, title / 模擬サーバ: 無し (501) */
+     * GET /api/sources/{sourceId}/text / scope sources:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: createdAt, sourceId, text, title / 模擬サーバ: 無し (501) */
     getBySourceIdText(args: { sourceId: string; facilityId?: string }): Promise<unknown>;
   };
   staffingStandards: {
     /** … 登録済み基準の一覧
-     * GET /api/staffing-standards / scope staffing-standards:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: items / 模擬サーバ: あり */
+     * GET /api/staffing-standards / scope staffing-standards:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items / 模擬サーバ: あり */
     get(args?: { facilityId?: string }): Promise<unknown>;
     /** … 1 件取得
-     * GET /api/staffing-standards/{facilityId}/{serviceTypeCode} / scope staffing-standards:read / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/staffing-standards/{facilityId}/{serviceTypeCode} / scope staffing-standards:read / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getByFacilityIdByServiceTypeCode(args: { facilityId: string; serviceTypeCode: string }): Promise<unknown>;
     /** … 登録・更新
      * PUT /api/staffing-standards/{facilityId}/{serviceTypeCode} / scope staffing-standards:write / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -1860,21 +1933,21 @@ export interface CposApi_app {
      * DELETE /api/staffing-standards/{facilityId}/{serviceTypeCode} / scope staffing-standards:write / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     deleteByFacilityIdByServiceTypeCode(args: { facilityId: string; serviceTypeCode: string }): Promise<unknown>;
     /** 人員配置基準の充足判定
-     * GET /api/staffing-standards/{facilityId}/{serviceTypeCode}/compliance / scope staffing-standards:read / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/staffing-standards/{facilityId}/{serviceTypeCode}/compliance / scope staffing-standards:read / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getByFacilityIdByServiceTypeCodeCompliance(args: { facilityId: string; serviceTypeCode: string }): Promise<unknown>;
     /** … 制度別の基準テンプレート (法令 seed)
-     * GET /api/staffing-standards/catalog / scope staffing-standards:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: entries / 模擬サーバ: 無し (501) */
+     * GET /api/staffing-standards/catalog / scope staffing-standards:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: entries / 模擬サーバ: 無し (501) */
     getCatalog(args?: { facilityId?: string }): Promise<unknown>;
   };
   trainings: {
     /** list (facilityId/from/to/trainingType
-     * GET /api/trainings / scope trainings:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: items / 模擬サーバ: あり */
+     * GET /api/trainings / scope trainings:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items / 模擬サーバ: あり */
     get(args?: { facilityId?: string }): Promise<unknown>;
     /** create (native only)
      * POST /api/trainings / scope trainings:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     post(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** single record
-     * GET /api/trainings/{id} / scope trainings:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/trainings/{id} / scope trainings:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** update (native only)
      * PUT /api/trainings/{id} / scope trainings:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -1885,13 +1958,13 @@ export interface CposApi_app {
   };
   transport: {
     /** 送迎計画の一覧
-     * GET /api/transport/plans / scope transport:read / 認証 both / facilityId 必須 / 実測 200 (2026-09-14) 応答の項目: createdAt, createdBy, facilityId, id, organizationId, serviceDate, source, status, summary, trips, updatedAt, versionNo / 模擬サーバ: 無し (501) */
+     * GET /api/transport/plans / scope transport:read / 認証 both / facilityId 必須 / 実測 200 (2026-09-27) 応答の項目: createdAt, createdBy, facilityId, id, organizationId, serviceDate, source, status, summary, trips, updatedAt, versionNo / 模擬サーバ: 無し (501) */
     getPlans(args: { facilityId: string; serviceDate?: string }): Promise<unknown>;
     /** 送迎計画を作成
      * POST /api/transport/plans / scope transport:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postPlans(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 送迎計画を 1 件 (停車・乗務員を含む)
-     * GET /api/transport/plans/{id} / scope transport:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: plan, stops, vehicles, warnings / 模擬サーバ: 無し (501) */
+     * GET /api/transport/plans/{id} / scope transport:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: plan, stops, vehicles, warnings / 模擬サーバ: 無し (501) */
     getPlansById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 送迎計画を有効にする
      * POST /api/transport/plans/{id}/activate / scope transport:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -1900,7 +1973,7 @@ export interface CposApi_app {
      * PUT /api/transport/plans/{id}/crew / scope transport:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     putPlansByIdCrew(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** ドライバー・添乗者から見た当日の運行 (分担表が使う)。 送迎アプリは車両から見る / 分担表は職員から見る。データは同じ 1 つ。
-     * GET /api/transport/plans/{id}/crew-view / scope transport:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: facilityId, joint, planId, runs, serviceDate, unassigned / 模擬サーバ: 無し (501) */
+     * GET /api/transport/plans/{id}/crew-view / scope transport:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: facilityId, joint, planId, runs, serviceDate, unassigned / 模擬サーバ: 無し (501) */
     getPlansByIdCrewView(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 乗降・GPS の実績を足す。同じ出来事は何度送っても 1 件 (オフライン再送)。
      * POST /api/transport/plans/{id}/events / scope transport:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -1912,7 +1985,7 @@ export interface CposApi_app {
      * POST /api/transport/plans/{id}/join / scope transport:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postPlansByIdJoin(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 送迎計画の指標 (台数・人数・所要時間)
-     * GET /api/transport/plans/{id}/kpi / scope transport:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: tripCount, unassignedCount, userCount, vehicleCount, warningsCount / 模擬サーバ: 無し (501) */
+     * GET /api/transport/plans/{id}/kpi / scope transport:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: tripCount, unassignedCount, userCount, vehicleCount, warningsCount / 模擬サーバ: 無し (501) */
     getPlansByIdKpi(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 1 停車の車両/順序変更 (manual move)。
      * POST /api/transport/plans/{id}/manual-move / scope transport:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -1924,19 +1997,19 @@ export interface CposApi_app {
      * PUT /api/transport/plans/{id}/stops / scope transport:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     putPlansByIdStops(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 未割当の利用者に号車を提案する (**書き込まない**)。 本格的な経路最適化は送迎アプリが持つ。ここは定員・車いす枠・同じ住所を 守る決定論の下ごしらえで、どのアプリから呼んでも同じ答えになる。
-     * GET /api/transport/plans/{id}/suggest / scope transport:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: seats, suggestions, unassigned / 模擬サーバ: 無し (501) */
+     * GET /api/transport/plans/{id}/suggest / scope transport:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: seats, suggestions, unassigned / 模擬サーバ: 無し (501) */
     getPlansByIdSuggest(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 車両の走行記録 (出庫・帰庫のメーター)。号車ごとに 1 件。
      * PUT /api/transport/plans/{id}/vehicle-logs / scope transport:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     putPlansByIdVehicleLogs(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 送迎車両の一覧
-     * GET /api/transport/vehicles / scope transport:read / 認証 both / facilityId 必須 / 実測 200 (2026-09-14) 応答の項目: capacity, createdAt, facilityId, garageAddress, garageLat, garageLng, id, isActive, name, organizationId, updatedAt, wheelchairCapacity / 模擬サーバ: 無し (501) */
+     * GET /api/transport/vehicles / scope transport:read / 認証 both / facilityId 必須 / 実測 200 (2026-09-27) 応答の項目: capacity, createdAt, facilityId, garageAddress, garageLat, garageLng, id, isActive, name, organizationId, updatedAt, wheelchairCapacity / 模擬サーバ: 無し (501) */
     getVehicles(args: { facilityId: string }): Promise<unknown>;
     /** 送迎車両を登録
      * POST /api/transport/vehicles / scope transport:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postVehicles(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 送迎車両を 1 件
-     * GET /api/transport/vehicles/{id} / scope transport:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: capacity, createdAt, facilityId, garageAddress, garageLat, garageLng, id, isActive, name, organizationId, updatedAt, wheelchairCapacity / 模擬サーバ: 無し (501) */
+     * GET /api/transport/vehicles/{id} / scope transport:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: capacity, createdAt, facilityId, garageAddress, garageLat, garageLng, id, isActive, name, organizationId, updatedAt, wheelchairCapacity / 模擬サーバ: 無し (501) */
     getVehiclesById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 送迎車両を更新
      * PUT /api/transport/vehicles/{id} / scope transport:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -1947,13 +2020,13 @@ export interface CposApi_app {
   };
   userGroups: {
     /** 利用者セット (任意のグループ) の一覧
-     * GET /api/user-groups / scope user-groups:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: groups, ok / 模擬サーバ: 無し (501) */
+     * GET /api/user-groups / scope user-groups:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: groups, ok / 模擬サーバ: 無し (501) */
     get(args?: { facilityId?: string }): Promise<unknown>;
     /** 利用者セットを作成
      * POST /api/user-groups / scope user-groups:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     post(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 利用者セットを 1 件取得
-     * GET /api/user-groups/{id} / scope user-groups:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/user-groups/{id} / scope user-groups:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 利用者セットを更新
      * PATCH /api/user-groups/{id} / scope user-groups:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -1961,6 +2034,14 @@ export interface CposApi_app {
     /** 利用者セットを削除
      * DELETE /api/user-groups/{id} / scope user-groups:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     deleteById(args: { id: string; facilityId?: string }): Promise<unknown>;
+  };
+  userIdMaintenance: {
+    /** 利用者が紐づいていないアプリの記録を氏名でまとめ、候補の利用者を返す (書き込みなし)
+     * GET /api/user-id-maintenance/v1/unlinked-app-data / scope master-users:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getV1UnlinkedAppData(args?: { facilityId?: string }): Promise<unknown>;
+    /** 人が選んだ利用者に記録を紐づける (封筒の insuredNumber / masterUserId だけ)
+     * POST /api/user-id-maintenance/v1/unlinked-app-data/link / scope master-users:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV1UnlinkedAppDataLink(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
   };
   userListImport: {
     /** 利用者一覧ファイルの列を解析 (書き込まない)
@@ -1975,7 +2056,7 @@ export interface CposApi_app {
   };
   visitCheckins: {
     /** 訪問チェックインの一覧
-     * GET /api/visit-checkins / scope visit-checkins:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: items / 模擬サーバ: 無し (501) */
+     * GET /api/visit-checkins / scope visit-checkins:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items / 模擬サーバ: 無し (501) */
     get(args?: { facilityId?: string }): Promise<unknown>;
     /** 訪問チェックインを登録 (位置・時刻)
      * POST /api/visit-checkins / scope visit-checkins:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -1983,7 +2064,7 @@ export interface CposApi_app {
   };
   visitNursingInstructions: {
     /** 訪問看護指示書の一覧 (事業所・利用者・種類・有効日で絞る)
-     * GET /api/visit-nursing-instructions/v1 / scope care-claim-candidates:read / 認証 both / 実測 200 (2026-09-14) 応答の項目: items / 模擬サーバ: 無し (501) */
+     * GET /api/visit-nursing-instructions/v1 / scope care-claim-candidates:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items / 模擬サーバ: 無し (501) */
     getV1(args?: { facilityId?: string }): Promise<unknown>;
     /** 訪問看護指示書を登録
      * POST /api/visit-nursing-instructions/v1 / scope care-claim-candidates:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -2098,6 +2179,18 @@ export interface CposApi_app {
     /** 福祉用具 v2: 個体の移動記録 (回収は点検待ちへ。点検待ちのまま出荷しない)
      * POST /api/welfare-equipment/v2/assets/{assetId}/movements / scope welfare-equipment:stock-manage / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV2AssetsByAssetIdMovements(args: { assetId: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 福祉用具 v2: 利用者ごとの担当者の一覧 (主担当・共同担当)
+     * GET /api/welfare-equipment/v2/assignments / scope welfare-equipment:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getV2Assignments(args?: { facilityId?: string }): Promise<unknown>;
+    /** 福祉用具 v2: 利用者 1 人の担当者を決める (無ければ作る。idempotencyKey 必須)
+     * POST /api/welfare-equipment/v2/assignments / scope welfare-equipment:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV2Assignments(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 福祉用具 v2: 担当者の詳細 (他事業所の行は 404)
+     * GET /api/welfare-equipment/v2/assignments/{assignmentId} / scope welfare-equipment:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getV2AssignmentsByAssignmentId(args: { assignmentId: string; facilityId?: string }): Promise<unknown>;
+    /** 福祉用具 v2: 担当者をまとめて設定 (未設定のみ / 選んだ人すべて を明示)
+     * POST /api/welfare-equipment/v2/assignments/bulk / scope welfare-equipment:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV2AssignmentsBulk(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 福祉用具 v2: 運営確認資料のまとめ (欠落を隠さない)
      * POST /api/welfare-equipment/v2/audit-packs / scope welfare-equipment:export / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV2AuditPacks(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
@@ -2179,6 +2272,12 @@ export interface CposApi_app {
     /** 福祉用具 v2: 書類一覧 (受領原本と自社文書を分け、出力と交付も分ける)
      * GET /api/welfare-equipment/v2/documents / scope welfare-equipment:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     getV2Documents(args?: { facilityId?: string }): Promise<unknown>;
+    /** 福祉用具 v2: 書き出せる種類と件数 (公表価格は選べる適用月つき)
+     * GET /api/welfare-equipment/v2/exports / scope welfare-equipment:export / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getV2Exports(args?: { facilityId?: string }): Promise<unknown>;
+    /** 福祉用具 v2: 取込と同じ形での書き出し (商品マスター / 全国平均・上限 / 現用具。bundle は 3 つまとめて)
+     * GET /api/welfare-equipment/v2/exports/{dataset} / scope welfare-equipment:export / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getV2ExportsByDataset(args: { dataset: string; facilityId?: string }): Promise<unknown>;
     /** 福祉用具 v2: 様式へ出力した控えの履歴 (出力は交付ではない)
      * GET /api/welfare-equipment/v2/form-renders / scope welfare-equipment:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     getV2FormRenders(args?: { facilityId?: string }): Promise<unknown>;
@@ -2212,9 +2311,21 @@ export interface CposApi_app {
     /** 福祉用具 v2: 公表価格取込の適用月・データ種別の申告 (推測せず人が決める)
      * POST /api/welfare-equipment/v2/imports/{importId}/benchmark-options / scope welfare-equipment:price-manage / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV2ImportsByImportIdBenchmarkOptions(args: { importId: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 福祉用具 v2: この取込で決まらない利用者 (寄せる / 新規登録 / 取り込まない を人が選ぶための一覧)
+     * GET /api/welfare-equipment/v2/imports/{importId}/persons / scope welfare-equipment:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getV2ImportsByImportIdPersons(args: { importId: string; facilityId?: string }): Promise<unknown>;
+    /** 福祉用具 v2: この取込に無い移行行を数える (下見) / 合言葉つきで消す (保守)
+     * POST /api/welfare-equipment/v2/imports/{importId}/prune-absent / scope welfare-equipment:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV2ImportsByImportIdPruneAbsent(args: { importId: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 福祉用具 v2: 取込の下見 (原本を残し、1 件も書き込まない)
      * POST /api/welfare-equipment/v2/imports/preview / scope welfare-equipment:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV2ImportsPreview(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 福祉用具 v2: 本人 ID の付け替え (統合で消えた ID の記録を、人が指定した利用者へ。理由必須)
+     * POST /api/welfare-equipment/v2/imports/reassign-person / scope welfare-equipment:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV2ImportsReassignPerson(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 福祉用具 v2: 取込で登録した利用者をこの事業所の名簿 (割当) に載せ直す (保守)
+     * POST /api/welfare-equipment/v2/imports/roster-repair / scope welfare-equipment:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV2ImportsRosterRepair(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 福祉用具 v2: 不具合・苦情の一覧
      * GET /api/welfare-equipment/v2/issues / scope welfare-equipment:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     getV2Issues(args?: { facilityId?: string }): Promise<unknown>;
@@ -2344,6 +2455,9 @@ export interface CposApi_app {
     /** 福祉用具 v2: 設置台帳の一覧 (同じ商品 2 個は 2 行)
      * GET /api/welfare-equipment/v2/placements / scope welfare-equipment:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     getV2Placements(args?: { facilityId?: string }): Promise<unknown>;
+    /** 福祉用具 v2: 台帳 1 行の訂正 (移行した行の設置場所・数量・期間・月額。月額は結び付いた契約行にも書く)
+     * PATCH /api/welfare-equipment/v2/placements/{placementId} / scope welfare-equipment:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    patchV2PlacementsByPlacementId(args: { placementId: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 福祉用具 v2: 台帳 1 行の履歴 (由来の納品と個体の移動)
      * GET /api/welfare-equipment/v2/placements/{placementId}/history / scope welfare-equipment:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     getV2PlacementsByPlacementIdHistory(args: { placementId: string; facilityId?: string }): Promise<unknown>;
@@ -2416,6 +2530,9 @@ export interface CposApi_app {
     /** 福祉用具 v2: 商品コードの追加 (正規化できないコードは拒否。直前の期間を閉じる)
      * POST /api/welfare-equipment/v2/products/{productId}/code-history / scope welfare-equipment:price-manage / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV2ProductsByProductIdCodeHistory(args: { productId: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 福祉用具 v2: 取込実績と公表価格から、未確認の商品の保険対象を「対象」にする (保守)
+     * POST /api/welfare-equipment/v2/products/eligibility-from-usage / scope welfare-equipment:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV2ProductsEligibilityFromUsage(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 福祉用具 v2: 比較提案の一覧
      * GET /api/welfare-equipment/v2/proposals / scope welfare-equipment:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     getV2Proposals(args?: { facilityId?: string }): Promise<unknown>;
@@ -2440,6 +2557,9 @@ export interface CposApi_app {
     /** 福祉用具 v2: 選定理由の文例 (承認済みだけが AI の候補に使える)
      * GET /api/welfare-equipment/v2/reason-templates / scope welfare-equipment:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     getV2ReasonTemplates(args?: { facilityId?: string }): Promise<unknown>;
+    /** 福祉用具 v2: 機種ごとの選定理由の雛形を手で登録する (現在の問題点 / 改善される点 / 選定理由)
+     * POST /api/welfare-equipment/v2/reason-templates / scope welfare-equipment:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV2ReasonTemplates(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 福祉用具 v2: 文例を承認・却下する (個人が残っていれば直すまで承認しない)
      * POST /api/welfare-equipment/v2/reason-templates/{templateId}/approve / scope welfare-equipment:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV2ReasonTemplatesByTemplateIdApprove(args: { templateId: string; body?: unknown; facilityId?: string }): Promise<unknown>;
@@ -2473,13 +2593,13 @@ export interface CposApi_app {
   };
   wellKnown: {
     /** 認可サーバのメタデータ (RFC 8414)
-     * GET /.well-known/oauth-authorization-server / 認証 none / 実測 200 (2026-09-14) 応答の項目: authorization_endpoint, code_challenge_methods_supported, grant_types_supported, issuer, registration_endpoint, response_modes_supported, response_types_supported, revocation_endpoint, revocation_endpoint_auth_methods_supported, scopes_supported, service_documentation, token_endpoint … / 模擬サーバ: 無し (501) */
+     * GET /.well-known/oauth-authorization-server / 認証 none / 実測 200 (2026-09-27) 応答の項目: authorization_endpoint, code_challenge_methods_supported, grant_types_supported, issuer, registration_endpoint, response_modes_supported, response_types_supported, revocation_endpoint, revocation_endpoint_auth_methods_supported, scopes_supported, service_documentation, token_endpoint … / 模擬サーバ: 無し (501) */
     getOauthAuthorizationServer(args?: { facilityId?: string }): Promise<unknown>;
     /** 保護リソース (/mcp) のメタデータ (RFC 9728)
-     * GET /.well-known/oauth-protected-resource / 認証 none / 実測 200 (2026-09-14) 応答の項目: authorization_servers, bearer_methods_supported, resource, resource_documentation, scopes_supported / 模擬サーバ: 無し (501) */
+     * GET /.well-known/oauth-protected-resource / 認証 none / 実測 200 (2026-09-27) 応答の項目: authorization_servers, bearer_methods_supported, resource, resource_documentation, scopes_supported / 模擬サーバ: 無し (501) */
     getOauthProtectedResource(args?: { facilityId?: string }): Promise<unknown>;
     /** 保護リソース (/mcp) のメタデータ (パス付き形式)
-     * GET /.well-known/oauth-protected-resource/mcp / 認証 none / 実測 200 (2026-09-14) 応答の項目: authorization_servers, bearer_methods_supported, resource, resource_documentation, scopes_supported / 模擬サーバ: 無し (501) */
+     * GET /.well-known/oauth-protected-resource/mcp / 認証 none / 実測 200 (2026-09-27) 応答の項目: authorization_servers, bearer_methods_supported, resource, resource_documentation, scopes_supported / 模擬サーバ: 無し (501) */
     getOauthProtectedResourceMcp(args?: { facilityId?: string }): Promise<unknown>;
   };
 }
@@ -2504,7 +2624,7 @@ export interface CposApi_session {
   };
   androidApp: {
     /** Android アプリ管理: device-connectの取得 (device-connect)
-     * GET /api/android-app/v1/device-connect / 認証 session / 実測 200 (2026-09-14) だが 0 件で項目名は未確認 (推測しない) / 模擬サーバ: 無し (501) */
+     * GET /api/android-app/v1/device-connect / 認証 session / 実測 200 (2026-09-27) だが 0 件で項目名は未確認 (推測しない) / 模擬サーバ: 無し (501) */
     getV1DeviceConnect(args?: { facilityId?: string }): Promise<unknown>;
     /** Android アプリ管理: exchangeの登録・実行 (device-connect/exchange)
      * POST /api/android-app/v1/device-connect/exchange / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -2512,7 +2632,7 @@ export interface CposApi_session {
   };
   apiTokens: {
     /** API トークン: 一覧
-     * GET /api/api-tokens / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/api-tokens / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     get(args?: { facilityId?: string }): Promise<unknown>;
     /** body: { appId, name, scopes[], allowedFacilityIds?, expiresAt? }
      * POST /api/api-tokens / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -2524,30 +2644,35 @@ export interface CposApi_session {
      * POST /api/api-tokens/{id}/revoke / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postByIdRevoke(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** API トークン: usageの取得 (:id/usage)
-     * GET /api/api-tokens/{id}/usage / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/api-tokens/{id}/usage / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getByIdUsage(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** API トークン: 発行画面のスコープ候補 (KNOWN_TOKEN_SCOPES。?appId= で <appId> の雛形を埋める)
-     * GET /api/api-tokens/known-scopes / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/api-tokens/known-scopes / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getKnownScopes(args?: { facilityId?: string }): Promise<unknown>;
     /** API トークン: releasesの登録・実行 (releases)
      * POST /api/api-tokens/releases / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postReleases(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** API トークン: 1 件取得 (releases/:appId)
-     * GET /api/api-tokens/releases/{appId} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/api-tokens/releases/{appId} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getReleasesByAppId(args: { appId: string; facilityId?: string }): Promise<unknown>;
     /** API トークン: 削除 (releases/:appId/:versionCode)
      * DELETE /api/api-tokens/releases/{appId}/{versionCode} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     deleteReleasesByAppIdByVersionCode(args: { appId: string; versionCode: string; facilityId?: string }): Promise<unknown>;
     /** API トークン: usage-summaryの取得 (usage-summary)
-     * GET /api/api-tokens/usage-summary / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/api-tokens/usage-summary / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getUsageSummary(args?: { facilityId?: string }): Promise<unknown>;
+  };
+  appData: {
+    /** AppData lifecycle listener の失敗件数と直近の失敗 (診断)
+     * GET /api/app-data/lifecycle-health / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getLifecycleHealth(args?: { all?: boolean; facilityId?: string }): Promise<unknown>;
   };
   appInvocations: {
     /** 呼び出しを作成 (ui-launch / async-job / server-action)
      * POST /api/app-invocations / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     post(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 状態 + job を取得
-     * GET /api/app-invocations/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/app-invocations/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** source 側がキャンセル
      * POST /api/app-invocations/{id}/cancel / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -2559,10 +2684,10 @@ export interface CposApi_session {
      * POST /api/app-invocations/{id}/result / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postByIdResult(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 全 action 一覧 (UI のアクション選択用)
-     * GET /api/app-invocations/actions / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/app-invocations/actions / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getActions(args?: { facilityId?: string }): Promise<unknown>;
     /** 特定アプリの action
-     * GET /api/app-invocations/actions/{targetAppId} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/app-invocations/actions/{targetAppId} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getActionsByTargetAppId(args: { targetAppId: string; facilityId?: string }): Promise<unknown>;
     /** target app が code を payload に交換
      * POST /api/app-invocations/exchange / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -2570,13 +2695,13 @@ export interface CposApi_session {
   };
   apps: {
     /** ワークフロー対応のリスト（status フィルタ対応）
-     * GET /api/apps / 認証 session / 実測 200 (2026-09-14) 応答の項目: approvedAt, approvedBy, createdAt, description, icon, id, isPublic, manifestPath, name, organizationId, publishedAt, rejectedAt … / 模擬サーバ: 無し (501) */
+     * GET /api/apps / 認証 session / 実測 200 (2026-09-27) 応答の項目: approvedAt, approvedBy, createdAt, description, icon, id, isPublic, manifestPath, name, organizationId, publishedAt, rejectedAt … / 模擬サーバ: 無し (501) */
     get(args?: { facilityId?: string }): Promise<unknown>;
     /** 新規登録（draft）
      * POST /api/apps / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     post(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 登録アプリ: 1 件取得 (:id)
-     * GET /api/apps/{id} / 認証 session / 実測 200 (2026-09-14) 応答の項目: approvedAt, approvedBy, createdAt, description, icon, id, isPublic, manifestPath, name, organizationId, publishedAt, rejectedAt … / 模擬サーバ: 無し (501) */
+     * GET /api/apps/{id} / 認証 session / 実測 200 (2026-09-27) 応答の項目: approvedAt, approvedBy, createdAt, description, icon, id, isPublic, manifestPath, name, organizationId, publishedAt, rejectedAt … / 模擬サーバ: 無し (501) */
     getById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 編集 (PUT /api/apps/:id) 編集可能なフィールド: name / description / type / url / manifestPath / isPublic / requiredPermissions / icon / resources。 認可: - draft / rejected ステ
      * PUT /api/apps/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -2588,7 +2713,7 @@ export interface CposApi_session {
      * POST /api/apps/{id}/{action} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postByIdByAction(args: { id: string; action: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** — 該当アプリの grant 一覧
-     * GET /api/apps/{id}/access / 認証 session / 実測 200 (2026-09-14) 応答の項目: appId, grants, isPublic / 模擬サーバ: 無し (501) */
+     * GET /api/apps/{id}/access / 認証 session / 実測 200 (2026-09-27) 応答の項目: appId, grants, isPublic / 模擬サーバ: 無し (501) */
     getByIdAccess(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** — grant を追加
      * POST /api/apps/{id}/access / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -2597,10 +2722,10 @@ export interface CposApi_session {
      * DELETE /api/apps/{id}/access/{grantId} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     deleteByIdAccessByGrantId(args: { id: string; grantId: string; facilityId?: string }): Promise<unknown>;
     /** アクション可否プレビュー（UI の有効/無効に使う）
-     * GET /api/apps/{id}/actions / 認証 session / 実測 200 (2026-09-14) 応答の項目: actions, currentStatus / 模擬サーバ: 無し (501) */
+     * GET /api/apps/{id}/actions / 認証 session / 実測 200 (2026-09-27) 応答の項目: actions, currentStatus / 模擬サーバ: 無し (501) */
     getByIdActions(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 登録アプリ: 診断の取得 (:id/diagnostics)
-     * GET /api/apps/{id}/diagnostics / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/apps/{id}/diagnostics / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getByIdDiagnostics(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 現行互換 /import-manifest + 推奨 alias /manifest (docs と統一)。
      * POST /api/apps/{id}/import-manifest / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -2608,8 +2733,11 @@ export interface CposApi_session {
     /** 登録アプリ: manifestの登録・実行 (:id/manifest)
      * POST /api/apps/{id}/manifest / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postByIdManifest(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 必要 API Token scopes を直す (dryRun=true で差分だけ)。manifest を取れないアプリ用
+     * PUT /api/apps/{id}/scopes / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    putByIdScopes(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 登録アプリ: launcherの取得 (launcher)
-     * GET /api/apps/launcher / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/apps/launcher / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getLauncher(args?: { facilityId?: string }): Promise<unknown>;
     /** 登録アプリ: register-from-urlの登録・実行 (register-from-url)
      * POST /api/apps/register-from-url / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -2617,23 +2745,23 @@ export interface CposApi_session {
   };
   auditLogs: {
     /** 監査ログ: 一覧
-     * GET /api/audit-logs / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/audit-logs / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     get(args?: { facilityId?: string }): Promise<unknown>;
   };
   auth: {
     /** 認証: 自分の取得 (me)
-     * GET /api/auth/me / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) not authenticated / 模擬サーバ: あり */
+     * GET /api/auth/me / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) not authenticated / 模擬サーバ: あり */
     getMe(args?: { facilityId?: string }): Promise<unknown>;
   };
   authUsers: {
     /** ログインアカウント: 一覧
-     * GET /api/auth-users / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/auth-users / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     get(args?: { facilityId?: string }): Promise<unknown>;
     /** ログインアカウント: 作成
      * POST /api/auth-users / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     post(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** ログインアカウント: 1 件取得 (:id)
-     * GET /api/auth-users/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/auth-users/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** ログインアカウント: 更新 (:id)
      * PUT /api/auth-users/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -2642,7 +2770,7 @@ export interface CposApi_session {
      * DELETE /api/auth-users/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     deleteById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** ログインアカウント: google-accountの取得 (:id/google-account)
-     * GET /api/auth-users/{id}/google-account / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/auth-users/{id}/google-account / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getByIdGoogleAccount(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** ログインアカウント: google-accountの登録・実行 (:id/google-account)
      * POST /api/auth-users/{id}/google-account / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -2654,28 +2782,28 @@ export interface CposApi_session {
      * POST /api/auth-users/{id}/google-account/suspend / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postByIdGoogleAccountSuspend(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** ログインアカウント: 1 件取得 (by-facility/:facilityId)
-     * GET /api/auth-users/by-facility/{facilityId} / 認証 session / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/auth-users/by-facility/{facilityId} / 認証 session / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getByFacilityByFacilityId(args: { facilityId: string }): Promise<unknown>;
     /** ログインアカウント: export.csvの取得 (export.csv)
      * GET /api/auth-users/export.csv / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     getExportCsv(args?: { facilityId?: string }): Promise<unknown>;
     /** ログインアカウント: google-account-configの取得 (google-account-config)
-     * GET /api/auth-users/google-account-config / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/auth-users/google-account-config / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getGoogleAccountConfig(args?: { facilityId?: string }): Promise<unknown>;
     /** ログインアカウント: 診断の取得 (hrm/diagnostics)
-     * GET /api/auth-users/hrm/diagnostics / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/auth-users/hrm/diagnostics / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getHrmDiagnostics(args?: { facilityId?: string }): Promise<unknown>;
     /** ログインアカウント: import-csvの登録・実行 (import-csv)
      * POST /api/auth-users/import-csv / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postImportCsv(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** ログインアカウント: login-historyの取得 (login-history)
-     * GET /api/auth-users/login-history / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/auth-users/login-history / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getLoginHistory(args?: { facilityId?: string }): Promise<unknown>;
     /** ログインアカウント: migrate-clinical-rolesの登録・実行 (migrate-clinical-roles)
      * POST /api/auth-users/migrate-clinical-roles / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postMigrateClinicalRoles(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** ログインアカウント: template.csvの取得 (template.csv)
-     * GET /api/auth-users/template.csv / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/auth-users/template.csv / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getTemplateCsv(args?: { facilityId?: string }): Promise<unknown>;
   };
   backup: {
@@ -2721,7 +2849,7 @@ export interface CposApi_session {
   };
   billing: {
     /** 請求: addon-summaryの取得 (addon-summary)
-     * GET /api/billing/v1/addon-summary / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/billing/v1/addon-summary / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getV1AddonSummary(args?: { facilityId?: string }): Promise<unknown>;
     /** 請求: check-requirementsの登録・実行 (check-requirements)
      * POST /api/billing/v1/check-requirements / scope billing:read / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -2757,16 +2885,16 @@ export interface CposApi_session {
      * POST /api/billing/v1/export-profiles/{id}/uncertify / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV1ExportProfilesByIdUncertify(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 請求: iryou-visit-nursing-receiptの取得 (exports/iryou-visit-nursing-receipt)
-     * GET /api/billing/v1/exports/iryou-visit-nursing-receipt / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/billing/v1/exports/iryou-visit-nursing-receipt / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getV1ExportsIryouVisitNursingReceipt(args?: { facilityId?: string }): Promise<unknown>;
     /** 請求: kaigo-kokuhorenの取得 (exports/kaigo-kokuhoren)
-     * GET /api/billing/v1/exports/kaigo-kokuhoren / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/billing/v1/exports/kaigo-kokuhoren / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getV1ExportsKaigoKokuhoren(args?: { facilityId?: string }): Promise<unknown>;
     /** 施設基準カタログ (UI の選択肢用)。standard / exampleName / codeCount。
-     * GET /api/billing/v1/facility-standards / scope billing:read / 認証 session / 実測 200 (2026-09-14) 応答の項目: items / 模擬サーバ: 無し (501) */
+     * GET /api/billing/v1/facility-standards / scope billing:read / 認証 session / 実測 200 (2026-09-27) 応答の項目: items / 模擬サーバ: 無し (501) */
     getV1FacilityStandards(args?: { facilityId?: string }): Promise<unknown>;
     /** 請求: 1 件取得 (imports/:jobId)
-     * GET /api/billing/v1/imports/{jobId} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/billing/v1/imports/{jobId} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getV1ImportsByJobId(args: { jobId: string; facilityId?: string }): Promise<unknown>;
     /** 請求: 確定 (imports/pdf/commit)
      * POST /api/billing/v1/imports/pdf/commit / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -2784,7 +2912,7 @@ export interface CposApi_session {
      * POST /api/billing/v1/preview/preview-from-actuals / scope billing:read / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV1PreviewPreviewFromActuals(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 請求: receipt-code-tablesの取得 (receipt-code-tables)
-     * GET /api/billing/v1/receipt-code-tables / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/billing/v1/receipt-code-tables / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getV1ReceiptCodeTables(args?: { facilityId?: string }): Promise<unknown>;
     /** 請求: receipt-code-tablesの登録・実行 (receipt-code-tables)
      * POST /api/billing/v1/receipt-code-tables / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -2796,13 +2924,13 @@ export interface CposApi_session {
      * POST /api/billing/v1/receipt-code-tables/seed / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV1ReceiptCodeTablesSeed(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 請求: statementsの取得 (statements)
-     * GET /api/billing/v1/statements / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/billing/v1/statements / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getV1Statements(args?: { facilityId?: string }): Promise<unknown>;
     /** 請求: statementsの登録・実行 (statements)
      * POST /api/billing/v1/statements / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV1Statements(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 請求明細書を 1 件取得
-     * GET /api/billing/v1/statements/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/billing/v1/statements/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getV1StatementsById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 請求: 更新 (statements/:id)
      * PUT /api/billing/v1/statements/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -2811,7 +2939,7 @@ export interface CposApi_session {
      * DELETE /api/billing/v1/statements/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     deleteV1StatementsById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 請求: adjudicationsの取得 (statements/:id/adjudications)
-     * GET /api/billing/v1/statements/{id}/adjudications / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/billing/v1/statements/{id}/adjudications / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getV1StatementsByIdAdjudications(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 請求: adjudicationsの登録・実行 (statements/:id/adjudications)
      * POST /api/billing/v1/statements/{id}/adjudications / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -2826,7 +2954,7 @@ export interface CposApi_session {
      * GET /api/billing/v1/statements/{id}/export-internal.csv / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     getV1StatementsByIdExportInternalCsv(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 請求: linesの取得 (statements/:id/lines)
-     * GET /api/billing/v1/statements/{id}/lines / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/billing/v1/statements/{id}/lines / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getV1StatementsByIdLines(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 請求: linesの登録・実行 (statements/:id/lines)
      * POST /api/billing/v1/statements/{id}/lines / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -2844,7 +2972,7 @@ export interface CposApi_session {
      * POST /api/billing/v1/statements/{id}/mark-submitted / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV1StatementsByIdMarkSubmitted(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 請求: supplemental-recordsの取得 (statements/:id/supplemental-records)
-     * GET /api/billing/v1/statements/{id}/supplemental-records / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/billing/v1/statements/{id}/supplemental-records / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getV1StatementsByIdSupplementalRecords(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 請求: supplemental-recordsの登録・実行 (statements/:id/supplemental-records)
      * POST /api/billing/v1/statements/{id}/supplemental-records / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -2862,12 +2990,17 @@ export interface CposApi_session {
      * GET /api/billing/v1/statements/export.csv / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     getV1StatementsExportCsv(args?: { facilityId?: string }): Promise<unknown>;
     /** 請求: 検証の取得 (statements/validate)
-     * GET /api/billing/v1/statements/validate / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/billing/v1/statements/validate / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getV1StatementsValidate(args?: { facilityId?: string }): Promise<unknown>;
+  };
+  buildInfo: {
+    /** いま動いている版 (設定画面の「ビルド版」)。コミット SHA を含むため認証が要る
+     * GET /api/build-info / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    get(args?: { facilityId?: string }): Promise<unknown>;
   };
   capabilities: {
     /** 機能セット: 一覧
-     * GET /api/capabilities / 認証 session / 実測 200 (2026-09-14) 応答の項目: features, server / 模擬サーバ: あり */
+     * GET /api/capabilities / 認証 session / 実測 200 (2026-09-27) 応答の項目: features, server / 模擬サーバ: あり */
     get(args?: { facilityId?: string }): Promise<unknown>;
   };
   carePlanCsv: {
@@ -2875,22 +3008,22 @@ export interface CposApi_session {
      * POST /api/care-plan-csv/bulk-import/apply / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postBulkImportApply(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** ケアプラン連携 CSV: batchesの取得 (bulk-import/batches)
-     * GET /api/care-plan-csv/bulk-import/batches / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/care-plan-csv/bulk-import/batches / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getBulkImportBatches(args?: { facilityId?: string }): Promise<unknown>;
     /** ケアプラン連携 CSV: 1 件取得 (bulk-import/batches/:id)
-     * GET /api/care-plan-csv/bulk-import/batches/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/care-plan-csv/bulk-import/batches/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getBulkImportBatchesById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** ケアプラン連携 CSV: errors.csvの取得 (bulk-import/batches/:id/errors.csv)
-     * GET /api/care-plan-csv/bulk-import/batches/{id}/errors.csv / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/care-plan-csv/bulk-import/batches/{id}/errors.csv / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getBulkImportBatchesByIdErrorsCsv(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** ケアプラン連携 CSV: filesの取得 (bulk-import/batches/:id/files)
-     * GET /api/care-plan-csv/bulk-import/batches/{id}/files / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/care-plan-csv/bulk-import/batches/{id}/files / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getBulkImportBatchesByIdFiles(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** ケアプラン連携 CSV: progressの取得 (bulk-import/batches/:id/progress)
-     * GET /api/care-plan-csv/bulk-import/batches/{id}/progress / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/care-plan-csv/bulk-import/batches/{id}/progress / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getBulkImportBatchesByIdProgress(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** ケアプラン連携 CSV: warnings.csvの取得 (bulk-import/batches/:id/warnings.csv)
-     * GET /api/care-plan-csv/bulk-import/batches/{id}/warnings.csv / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/care-plan-csv/bulk-import/batches/{id}/warnings.csv / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getBulkImportBatchesByIdWarningsCsv(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** ケアプラン連携 CSV: プレビュー (bulk-import/from-local-path/preview)
      * POST /api/care-plan-csv/bulk-import/from-local-path/preview / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -2902,13 +3035,13 @@ export interface CposApi_session {
      * POST /api/care-plan-csv/bulk-import/upload / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postBulkImportUpload(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 一覧
-     * GET /api/care-plan-csv/bundles / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/care-plan-csv/bundles / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getBundles(args?: { facilityId?: string }): Promise<unknown>;
     /** CarePlanBundle を保存
      * POST /api/care-plan-csv/bundles / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postBundles(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 1 件
-     * GET /api/care-plan-csv/bundles/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/care-plan-csv/bundles/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getBundlesById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** ケアプラン連携 CSV: 更新 (bundles/:id)
      * PUT /api/care-plan-csv/bundles/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -2929,7 +3062,7 @@ export interface CposApi_session {
      * POST /api/care-plan-csv/bundles/{id}/export-to-transfer-folder / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postBundlesByIdExportToTransferFolder(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** VNS / 旧 client 互換 alias。正規 URL は download.zip。
-     * GET /api/care-plan-csv/bundles/{id}/v4.zip / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/care-plan-csv/bundles/{id}/v4.zip / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getBundlesByIdV4Zip(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 既存ビルドの validate
      * POST /api/care-plan-csv/bundles/{id}/validate / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -2954,13 +3087,13 @@ export interface CposApi_session {
   };
   carePlans: {
     /** ケアプラン: 一覧
-     * GET /api/care-plans / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/care-plans / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     get(args?: { facilityId?: string }): Promise<unknown>;
     /** (新規ドラフト or 既存上書き)
      * POST /api/care-plans / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     post(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** ケアプラン: 1 件取得 (:id)
-     * GET /api/care-plans/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/care-plans/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** ケアプラン: 削除 (:id)
      * DELETE /api/care-plans/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -2992,10 +3125,10 @@ export interface CposApi_session {
   };
   careRecords: {
     /** 申し送りに載せる記録 (日付ごと)
-     * GET /api/care-records/handover / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/care-records/handover / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getHandover(args?: { facilityId?: string }): Promise<unknown>;
     /** 記録が抜けている利用者・日 (当日の未記録)
-     * GET /api/care-records/missing / scope care-records:read / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/care-records/missing / scope care-records:read / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getMissing(args?: { facilityId?: string }): Promise<unknown>;
     /** AI に質問 POST /ask body: { facilityId, question, userName?, since?, until? }
      * POST /api/care-records/v1/records/ask / scope care-records:write / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3004,12 +3137,12 @@ export interface CposApi_session {
      * POST /api/care-records/v1/records/process / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV1RecordsProcess(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** バイタルの集計 (期間・利用者ごと)
-     * GET /api/care-records/vitals-summary / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/care-records/vitals-summary / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getVitalsSummary(args?: { facilityId?: string }): Promise<unknown>;
   };
   careReminders: {
     /** リマインダー: 一覧
-     * GET /api/care-reminders / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/care-reminders / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     get(args?: { facilityId?: string }): Promise<unknown>;
     /** リマインダー: dismissの登録・実行 (events/:id/dismiss)
      * POST /api/care-reminders/events/{id}/dismiss / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3021,7 +3154,7 @@ export interface CposApi_session {
      * POST /api/care-reminders/events/rebuild / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postEventsRebuild(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** リマインダー: rulesの取得 (rules)
-     * GET /api/care-reminders/rules / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/care-reminders/rules / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getRules(args?: { facilityId?: string }): Promise<unknown>;
     /** リマインダー: rulesの登録・実行 (rules)
      * POST /api/care-reminders/rules / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3036,23 +3169,26 @@ export interface CposApi_session {
      * PUT /api/care-reminders/rules/sync / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     putRulesSync(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** リマインダー: 今日の分の取得 (today)
-     * GET /api/care-reminders/today / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/care-reminders/today / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getToday(args?: { facilityId?: string }): Promise<unknown>;
   };
   connectors: {
     /** Google connector (Docs/Drive/Sheets) 有効化状態の自己診断
-     * GET /api/connectors/google/status / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/connectors/google/status / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getGoogleStatus(args?: { facilityId?: string }): Promise<unknown>;
   };
   dataBrowser: {
+    /** データブラウザ: CSV エクスポートの記録 (監査ログ)
+     * POST /api/data-browser/exports / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postExports(args: { body: unknown; facilityId?: string }): Promise<unknown>;
     /** データブラウザ: テーブル一覧 (Firestore コレクションの列挙)
-     * GET /api/data-browser/tables / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/data-browser/tables / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getTables(args?: { withCounts?: boolean; facilityId?: string }): Promise<unknown>;
     /** データブラウザ: テーブルの中身 (生ドキュメント)
-     * GET /api/data-browser/tables/{collection}/rows / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/data-browser/tables/{collection}/rows / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getTablesByCollectionRows(args: { collection: string; limit?: number; cursor?: string; includeUnscoped?: boolean; facilityId?: string }): Promise<unknown>;
     /** データブラウザ: 保存ビューの一覧
-     * GET /api/data-browser/views / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/data-browser/views / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getViews(args?: { facilityId?: string }): Promise<unknown>;
     /** データブラウザ: 保存ビューの作成・更新
      * POST /api/data-browser/views / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3066,17 +3202,17 @@ export interface CposApi_session {
      * POST /api/device/ask / scope ask-ai / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postAsk(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** /bootstrap
-     * GET /api/device/bootstrap / scope * / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 403 (2026-09-14) スコープ * が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/device/bootstrap / scope * / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 403 (2026-09-27) スコープ * が必要です / 模擬サーバ: 無し (501) */
     getBootstrap(args?: { facilityId?: string }): Promise<unknown>;
     /** /facilities
-     * GET /api/device/facilities / scope * / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 403 (2026-09-14) スコープ * が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/device/facilities / scope * / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 403 (2026-09-27) スコープ * が必要です / 模擬サーバ: 無し (501) */
     getFacilities(args?: { facilityId?: string }): Promise<unknown>;
     /** /ping
-     * GET /api/device/ping / scope * / 認証 session / 実測 200 (2026-09-14) 応答の項目: appId, ok, scopes, serverTime, tokenId / 模擬サーバ: 無し (501) */
+     * GET /api/device/ping / scope * / 認証 session / 実測 200 (2026-09-27) 応答の項目: appId, ok, scopes, serverTime, tokenId / 模擬サーバ: 無し (501) */
     getPing(args?: { facilityId?: string }): Promise<unknown>;
     /** 一覧 (filters: insuredNumber, today/yesterday/week, since)
-     * GET /api/device/records / scope care-records:read / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 400 (2026-09-14) パラメータが要る: facilityId is required / 模擬サーバ: 無し (501) */
-    getRecords(args?: { facilityId?: string }): Promise<unknown>;
+     * GET /api/device/records / scope care-records:read / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 400 (2026-09-27) パラメータが要る: facilityId is required / 模擬サーバ: 無し (501) */
+    getRecords(args?: { includeVoided?: boolean; facilityId?: string }): Promise<unknown>;
     /** (新規作成、AI 解析なし)
      * POST /api/device/records / scope care-records:write / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postRecords(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
@@ -3084,32 +3220,32 @@ export interface CposApi_session {
      * POST /api/device/records/process / scope care-records:write / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postRecordsProcess(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 差分同期 (since=ISO)
-     * GET /api/device/records/updates / scope care-records:read / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 400 (2026-09-14) パラメータが要る: facilityId is required / 模擬サーバ: 無し (501) */
+     * GET /api/device/records/updates / scope care-records:read / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 400 (2026-09-27) パラメータが要る: facilityId is required / 模擬サーバ: 無し (501) */
     getRecordsUpdates(args?: { facilityId?: string }): Promise<unknown>;
     /** デバイス API: releasesの取得 (releases)
-     * GET /api/device/releases / 認証 session / 実測 200 (2026-09-14) 応答の項目: appId, ok, releases / 模擬サーバ: 無し (501) */
+     * GET /api/device/releases / 認証 session / 実測 200 (2026-09-27) 応答の項目: appId, ok, releases / 模擬サーバ: 無し (501) */
     getReleases(args?: { facilityId?: string }): Promise<unknown>;
     /** デバイス API: latestの取得 (releases/latest)
-     * GET /api/device/releases/latest / scope * / 認証 session / 実測 200 (2026-09-14) 応答の項目: appId, latest, ok, updateAvailable, updateRequired / 模擬サーバ: 無し (501) */
+     * GET /api/device/releases/latest / scope * / 認証 session / 実測 200 (2026-09-27) 応答の項目: appId, latest, ok, updateAvailable, updateRequired / 模擬サーバ: 無し (501) */
     getReleasesLatest(args?: { facilityId?: string }): Promise<unknown>;
     /** /users (scope: users:read)
-     * GET /api/device/users / scope users:read / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 400 (2026-09-14) パラメータが要る: facilityId is required / 模擬サーバ: 無し (501) */
+     * GET /api/device/users / scope users:read / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 400 (2026-09-27) パラメータが要る: facilityId is required / 模擬サーバ: 無し (501) */
     getUsers(args?: { facilityId?: string }): Promise<unknown>;
   };
   documentGovernance: {
     /** 文書ガバナンス: 1 件取得 (:documentId)
-     * GET /api/document-governance/{documentId} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/document-governance/{documentId} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getByDocumentId(args: { documentId: string; facilityId?: string }): Promise<unknown>;
     /** 文書ガバナンス: 更新 (:documentId)
      * PUT /api/document-governance/{documentId} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     putByDocumentId(args: { documentId: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 文書ガバナンス: output-historyの取得 (:documentId/output-history)
-     * GET /api/document-governance/{documentId}/output-history / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/document-governance/{documentId}/output-history / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getByDocumentIdOutputHistory(args: { documentId: string; facilityId?: string }): Promise<unknown>;
   };
   documentOutputHistory: {
     /** 帳票出力履歴の一覧
-     * GET /api/document-output-history / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/document-output-history / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     get(args?: { facilityId?: string }): Promise<unknown>;
     /** 帳票出力履歴を記録
      * POST /api/document-output-history / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3165,13 +3301,13 @@ export interface CposApi_session {
   };
   externalPartners: {
     /** ============================== contacts ===============================
-     * GET /api/external-partners/contacts / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/external-partners/contacts / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getContacts(args?: { facilityId?: string }): Promise<unknown>;
     /** 1 件作成
      * POST /api/external-partners/contacts / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postContacts(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 1 件取得
-     * GET /api/external-partners/contacts/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/external-partners/contacts/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getContactsById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 1 件更新
      * PUT /api/external-partners/contacts/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3189,13 +3325,13 @@ export interface CposApi_session {
      * POST /api/external-partners/import-csv/preview / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postImportCsvPreview(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** ============================ organizations ============================
-     * GET /api/external-partners/organizations / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/external-partners/organizations / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getOrganizations(args?: { facilityId?: string }): Promise<unknown>;
     /** 1 件作成
      * POST /api/external-partners/organizations / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postOrganizations(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 1 件取得
-     * GET /api/external-partners/organizations/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/external-partners/organizations/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getOrganizationsById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 1 件更新
      * PUT /api/external-partners/organizations/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3204,12 +3340,12 @@ export interface CposApi_session {
      * DELETE /api/external-partners/organizations/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     deleteOrganizationsById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** =============================== CSV =================================== 固定パスのため /:id 動的ルートとは衝突しない (organizations/contacts 配下に :id を置いているので、ここはトップレベルの固定パス)。
-     * GET /api/external-partners/template.csv / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/external-partners/template.csv / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getTemplateCsv(args?: { facilityId?: string }): Promise<unknown>;
   };
   facilities: {
     /** 通所の出席状況 (日付ごと)
-     * GET /api/facilities/{facilityId}/attendance / 認証 session / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/facilities/{facilityId}/attendance / 認証 session / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getByFacilityIdAttendance(args: { facilityId: string }): Promise<unknown>;
     /** 出席を登録
      * POST /api/facilities/{facilityId}/attendance / 認証 session / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3220,17 +3356,17 @@ export interface CposApi_session {
   };
   features: {
     /** 機能フラグの一覧
-     * GET /api/features / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/features / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     get(args?: { facilityId?: string }): Promise<unknown>;
   };
   fieldHistory: {
     /** 項目履歴: 一覧
-     * GET /api/field-history / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/field-history / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     get(args?: { facilityId?: string }): Promise<unknown>;
   };
   fieldProposals: {
     /** 一覧 (status / appId / facilityId / insuredNumber)
-     * GET /api/field-proposals / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/field-proposals / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     get(args?: { facilityId?: string }): Promise<unknown>;
     /** 新規作成 (AI 抽出 / 手動)
      * POST /api/field-proposals / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3270,13 +3406,13 @@ export interface CposApi_session {
   };
   groups: {
     /** グループ: 一覧
-     * GET /api/groups / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/groups / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     get(args?: { facilityId?: string }): Promise<unknown>;
     /** グループ: 作成
      * POST /api/groups / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     post(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** グループ: 1 件取得 (:id)
-     * GET /api/groups/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/groups/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** グループ: 更新 (:id)
      * PUT /api/groups/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3293,7 +3429,7 @@ export interface CposApi_session {
   };
   helpInquiries: {
     /** ヘルプ問い合わせ: 一覧
-     * GET /api/help-inquiries / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/help-inquiries / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     get(args?: { facilityId?: string }): Promise<unknown>;
     /** ヘルプ問い合わせ: 作成
      * POST /api/help-inquiries / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3333,12 +3469,12 @@ export interface CposApi_session {
      * POST /api/integrations/google-sheets/import / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postGoogleSheetsImport(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 連携設定: 状態の取得 (google-sheets/status)
-     * GET /api/integrations/google-sheets/status / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/integrations/google-sheets/status / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getGoogleSheetsStatus(args?: { facilityId?: string }): Promise<unknown>;
   };
   knowledge: {
     /** ナレッジ: articlesの取得 (articles)
-     * GET /api/knowledge/articles / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/knowledge/articles / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getArticles(args?: { facilityId?: string }): Promise<unknown>;
     /** ナレッジ: articlesの登録・実行 (articles)
      * POST /api/knowledge/articles / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3353,7 +3489,7 @@ export interface CposApi_session {
      * POST /api/knowledge/articles/{id}/publish / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postArticlesByIdPublish(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** ナレッジ: 検索の取得 (search)
-     * GET /api/knowledge/search / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/knowledge/search / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getSearch(args?: { facilityId?: string }): Promise<unknown>;
   };
   legacyConfidential: {
@@ -3361,12 +3497,12 @@ export interface CposApi_session {
      * POST /api/legacy-confidential/scan / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postScan(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 旧データ機微情報: 状態の取得 (status)
-     * GET /api/legacy-confidential/status / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/legacy-confidential/status / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getStatus(args?: { facilityId?: string }): Promise<unknown>;
   };
   legacyRecords: {
     /** : 取得
-     * GET /api/legacy-records/v1/facilities/{facilityId}/config / 認証 session / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/legacy-records/v1/facilities/{facilityId}/config / 認証 session / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getV1FacilitiesByFacilityIdConfig(args: { facilityId: string }): Promise<unknown>;
     /** : 上書き
      * PUT /api/legacy-records/v1/facilities/{facilityId}/config / 認証 session / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3402,22 +3538,22 @@ export interface CposApi_session {
      * POST /api/legacy-records/v1/facilities/{facilityId}/diagnose / 認証 session / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV1FacilitiesByFacilityIdDiagnose(args: { facilityId: string; body?: unknown }): Promise<unknown>;
     /** : Sheets vs DB 差分
-     * GET /api/legacy-records/v1/facilities/{facilityId}/diff / 認証 session / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/legacy-records/v1/facilities/{facilityId}/diff / 認証 session / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getV1FacilitiesByFacilityIdDiff(args: { facilityId: string }): Promise<unknown>;
     /** 旧記録 (GAS): export-legacy-sheetの取得 (facilities/:facilityId/export-legacy-sheet)
      * GET /api/legacy-records/v1/facilities/{facilityId}/export-legacy-sheet / 認証 session / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     getV1FacilitiesByFacilityIdExportLegacySheet(args: { facilityId: string }): Promise<unknown>;
     /** : merged read facade
-     * GET /api/legacy-records/v1/facilities/{facilityId}/records / 認証 session / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/legacy-records/v1/facilities/{facilityId}/records / 認証 session / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getV1FacilitiesByFacilityIdRecords(args: { facilityId: string }): Promise<unknown>;
     /** : 実行履歴
-     * GET /api/legacy-records/v1/facilities/{facilityId}/runs / 認証 session / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/legacy-records/v1/facilities/{facilityId}/runs / 認証 session / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getV1FacilitiesByFacilityIdRuns(args: { facilityId: string }): Promise<unknown>;
     /** : preview / apply 実行
      * POST /api/legacy-records/v1/facilities/{facilityId}/sync / 認証 session / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV1FacilitiesByFacilityIdSync(args: { facilityId: string; body?: unknown }): Promise<unknown>;
     /** : 同期 warning 一覧
-     * GET /api/legacy-records/v1/facilities/{facilityId}/warnings / 認証 session / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/legacy-records/v1/facilities/{facilityId}/warnings / 認証 session / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getV1FacilitiesByFacilityIdWarnings(args: { facilityId: string }): Promise<unknown>;
     /** 旧記録 (GAS): resolveの登録・実行 (facilities/:facilityId/warnings/:id/resolve)
      * POST /api/legacy-records/v1/facilities/{facilityId}/warnings/{id}/resolve / 認証 session / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3443,15 +3579,20 @@ export interface CposApi_session {
      * POST /api/life/v1/exports/{interfaceName}/dry-run / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV1ExportsByInterfaceNameDryRun(args: { interfaceName: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** インターフェース一覧
-     * GET /api/life/v1/spec / 認証 session / 実測 200 (2026-09-14) 応答の項目: interfaces, relations, version / 模擬サーバ: 無し (501) */
+     * GET /api/life/v1/spec / 認証 session / 実測 200 (2026-09-27) 応答の項目: interfaces, relations, version / 模擬サーバ: 無し (501) */
     getV1Spec(args?: { facilityId?: string }): Promise<unknown>;
     /** 1 IF の項目仕様
-     * GET /api/life/v1/spec/{interfaceName} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/life/v1/spec/{interfaceName} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getV1SpecByInterfaceName(args: { interfaceName: string; facilityId?: string }): Promise<unknown>;
+  };
+  maintenance: {
+    /** 保守: テスト利用者の試験データを片付ける (super_admin 専用・既定は dry-run・要実行理由)
+     * POST /api/maintenance/purge-user-test-data / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postPurgeUserTestData(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
   };
   mappingProfiles: {
     /** 取込マッピング: 一覧
-     * GET /api/mapping-profiles / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/mapping-profiles / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     get(args?: { facilityId?: string }): Promise<unknown>;
     /** 取込マッピング: 作成
      * POST /api/mapping-profiles / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3465,13 +3606,13 @@ export interface CposApi_session {
   };
   masterUsers: {
     /** 利用者マスタ: 一覧
-     * GET /api/master-users / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/master-users / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     get(args?: { facilityId?: string }): Promise<unknown>;
     /** 利用者マスタ: 作成
      * POST /api/master-users / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     post(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 利用者マスタ: 1 件取得 (:insuredNumber)
-     * GET /api/master-users/{insuredNumber} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/master-users/{insuredNumber} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getByInsuredNumber(args: { insuredNumber: string; facilityId?: string }): Promise<unknown>;
     /** 利用者マスタ: 更新 (:insuredNumber)
      * PUT /api/master-users/{insuredNumber} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3480,16 +3621,16 @@ export interface CposApi_session {
      * DELETE /api/master-users/{insuredNumber} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     deleteByInsuredNumber(args: { insuredNumber: string; facilityId?: string }): Promise<unknown>;
     /** 利用者マスタ: care-plansの取得 (:insuredNumber/care-plans)
-     * GET /api/master-users/{insuredNumber}/care-plans / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/master-users/{insuredNumber}/care-plans / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getByInsuredNumberCarePlans(args: { insuredNumber: string; facilityId?: string }): Promise<unknown>;
     /** 利用者マスタ: プレビューの取得 (:insuredNumber/care-plans/preview)
-     * GET /api/master-users/{insuredNumber}/care-plans/preview / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/master-users/{insuredNumber}/care-plans/preview / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getByInsuredNumberCarePlansPreview(args: { insuredNumber: string; facilityId?: string }): Promise<unknown>;
     /** 利用者マスタ: convertの登録・実行 (:insuredNumber/careplan/convert)
      * POST /api/master-users/{insuredNumber}/careplan/convert / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postByInsuredNumberCareplanConvert(args: { insuredNumber: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 利用者マスタ: viewの取得 (:insuredNumber/careplan/view)
-     * GET /api/master-users/{insuredNumber}/careplan/view / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/master-users/{insuredNumber}/careplan/view / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getByInsuredNumberCareplanView(args: { insuredNumber: string; facilityId?: string }): Promise<unknown>;
     /** 利用者マスタ: applyの登録・実行 (:insuredNumber/change-insured-number/apply)
      * POST /api/master-users/{insuredNumber}/change-insured-number/apply / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3498,19 +3639,19 @@ export interface CposApi_session {
      * POST /api/master-users/{insuredNumber}/change-insured-number/preview / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postByInsuredNumberChangeInsuredNumberPreview(args: { insuredNumber: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 利用者マスタ: extras-promotionの取得 (:insuredNumber/extras-promotion)
-     * GET /api/master-users/{insuredNumber}/extras-promotion / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/master-users/{insuredNumber}/extras-promotion / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getByInsuredNumberExtrasPromotion(args: { insuredNumber: string; facilityId?: string }): Promise<unknown>;
     /** 利用者マスタ: extras-promotionの登録・実行 (:insuredNumber/extras-promotion)
      * POST /api/master-users/{insuredNumber}/extras-promotion / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postByInsuredNumberExtrasPromotion(args: { insuredNumber: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 利用者マスタ: facilitiesの取得 (:insuredNumber/facilities)
-     * GET /api/master-users/{insuredNumber}/facilities / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/master-users/{insuredNumber}/facilities / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getByInsuredNumberFacilities(args: { insuredNumber: string; facilityId?: string }): Promise<unknown>;
     /** 利用者マスタ: facilitiesの登録・実行 (:insuredNumber/facilities)
      * POST /api/master-users/{insuredNumber}/facilities / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postByInsuredNumberFacilities(args: { insuredNumber: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 利用者マスタ: identifier-aliasesの取得 (:insuredNumber/identifier-aliases)
-     * GET /api/master-users/{insuredNumber}/identifier-aliases / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/master-users/{insuredNumber}/identifier-aliases / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getByInsuredNumberIdentifierAliases(args: { insuredNumber: string; facilityId?: string }): Promise<unknown>;
     /** 利用者マスタ: identifier-aliasesの登録・実行 (:insuredNumber/identifier-aliases)
      * POST /api/master-users/{insuredNumber}/identifier-aliases / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3519,13 +3660,13 @@ export interface CposApi_session {
      * POST /api/master-users/{insuredNumber}/identifier-aliases/deactivate / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postByInsuredNumberIdentifierAliasesDeactivate(args: { insuredNumber: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 利用者マスタ: important-mattersの取得 (:insuredNumber/important-matters)
-     * GET /api/master-users/{insuredNumber}/important-matters / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/master-users/{insuredNumber}/important-matters / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getByInsuredNumberImportantMatters(args: { insuredNumber: string; facilityId?: string }): Promise<unknown>;
     /** 利用者マスタ: 更新 (:insuredNumber/important-matters)
      * PUT /api/master-users/{insuredNumber}/important-matters / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     putByInsuredNumberImportantMatters(args: { insuredNumber: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 利用者マスタ: personal-record-entriesの取得 (:insuredNumber/personal-record-entries)
-     * GET /api/master-users/{insuredNumber}/personal-record-entries / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/master-users/{insuredNumber}/personal-record-entries / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getByInsuredNumberPersonalRecordEntries(args: { insuredNumber: string; facilityId?: string }): Promise<unknown>;
     /** 利用者マスタ: applyの登録・実行 (:masterUserId/insured-number/apply)
      * POST /api/master-users/{masterUserId}/insured-number/apply / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3545,6 +3686,9 @@ export interface CposApi_session {
     /** 利用者マスタ: 削除 (assignments/:id)
      * DELETE /api/master-users/assignments/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     deleteAssignmentsById(args: { id: string; facilityId?: string }): Promise<unknown>;
+    /** 利用者マスタ: 事業所アサインの重複整理 (同じ本人 x 同じ事業所の行を 1 件にまとめる)
+     * POST /api/master-users/assignments/dedupe / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postAssignmentsDedupe(args: { body: unknown; facilityId?: string }): Promise<unknown>;
     /** 利用者マスタ: bulk-deleteの登録・実行 (bulk-delete)
      * POST /api/master-users/bulk-delete / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postBulkDelete(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
@@ -3552,10 +3696,10 @@ export interface CposApi_session {
      * POST /api/master-users/bulk-folder-reconcile / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postBulkFolderReconcile(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 利用者マスタ: 1 件取得 (by-facility/:facilityId)
-     * GET /api/master-users/by-facility/{facilityId} / 認証 session / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/master-users/by-facility/{facilityId} / 認証 session / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getByFacilityByFacilityId(args: { facilityId: string }): Promise<unknown>;
     /** 利用者マスタ: duplicatesの取得 (duplicates)
-     * GET /api/master-users/duplicates / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/master-users/duplicates / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getDuplicates(args?: { facilityId?: string }): Promise<unknown>;
     /** 利用者マスタ: export.csvの取得 (export.csv)
      * GET /api/master-users/export.csv / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3570,10 +3714,10 @@ export interface CposApi_session {
      * POST /api/master-users/import-trikea-csv-pair / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postImportTrikeaCsvPair(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 利用者マスタ: 状態の取得 (master-user-id-migration/status)
-     * GET /api/master-users/master-user-id-migration/status / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/master-users/master-user-id-migration/status / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getMasterUserIdMigrationStatus(args?: { facilityId?: string }): Promise<unknown>;
     /** 利用者マスタ: merge-auditの取得 (merge-audit)
-     * GET /api/master-users/merge-audit / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 501 (2026-09-14) 利用者統合の復旧機能は現在無効です。保守作業時のみ有効化されます / 模擬サーバ: 無し (501) */
+     * GET /api/master-users/merge-audit / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 501 (2026-09-27) 利用者統合の復旧機能は現在無効です。保守作業時のみ有効化されます / 模擬サーバ: 無し (501) */
     getMergeAudit(args?: { facilityId?: string }): Promise<unknown>;
     /** body: { from, into }
      * POST /api/master-users/merge/apply / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3591,13 +3735,13 @@ export interface CposApi_session {
      * POST /api/master-users/normalize-strings / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postNormalizeStrings(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 利用者マスタ: orphan-identitiesの取得 (orphan-identities)
-     * GET /api/master-users/orphan-identities / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/master-users/orphan-identities / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getOrphanIdentities(args?: { facilityId?: string }): Promise<unknown>;
     /** body: { fromIdentifier, toMasterUserId } [P0-7]
      * POST /api/master-users/orphan-identities/attach / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postOrphanIdentitiesAttach(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 利用者マスタ: orphan-recordsの取得 (orphan-records)
-     * GET /api/master-users/orphan-records / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/master-users/orphan-records / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getOrphanRecords(args?: { facilityId?: string }): Promise<unknown>;
     /** body: { from: tmp-*, to: 現行番号 } [P0-7]
      * POST /api/master-users/orphan-records/attach / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3609,7 +3753,7 @@ export interface CposApi_session {
      * POST /api/master-users/quick-registration/preview / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postQuickRegistrationPreview(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 利用者マスタ: resultの取得 (quick-registration/result)
-     * GET /api/master-users/quick-registration/result / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/master-users/quick-registration/result / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getQuickRegistrationResult(args?: { facilityId?: string }): Promise<unknown>;
     /** 利用者マスタ: applyの登録・実行 (retire-temp-insured-numbers/apply)
      * POST /api/master-users/retire-temp-insured-numbers/apply / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3627,12 +3771,12 @@ export interface CposApi_session {
      * GET /api/master-users/sync-jobs/{jobId} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     getSyncJobsByJobId(args: { jobId: string; facilityId?: string }): Promise<unknown>;
     /** 利用者マスタ: unresolved-refsの取得 (unresolved-refs)
-     * GET /api/master-users/unresolved-refs / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 501 (2026-09-14) 利用者統合の復旧機能は現在無効です。保守作業時のみ有効化されます / 模擬サーバ: 無し (501) */
+     * GET /api/master-users/unresolved-refs / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 501 (2026-09-27) 利用者統合の復旧機能は現在無効です。保守作業時のみ有効化されます / 模擬サーバ: 無し (501) */
     getUnresolvedRefs(args?: { facilityId?: string }): Promise<unknown>;
   };
   notificationDeliveries: {
     /** 通知配信: 一覧
-     * GET /api/notification-deliveries / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/notification-deliveries / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     get(args?: { facilityId?: string }): Promise<unknown>;
     /** 通知配信: retryの登録・実行 (:id/retry)
      * POST /api/notification-deliveries/{id}/retry / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3640,7 +3784,7 @@ export interface CposApi_session {
   };
   notificationRules: {
     /** 通知ルール: 一覧
-     * GET /api/notification-rules / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/notification-rules / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     get(args?: { facilityId?: string }): Promise<unknown>;
     /** 通知ルール: 作成
      * POST /api/notification-rules / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3657,12 +3801,12 @@ export interface CposApi_session {
      * POST /api/notifications/{id}/read / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postByIdRead(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 通知: 自分の取得 (me)
-     * GET /api/notifications/me / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/notifications/me / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getMe(args?: { facilityId?: string }): Promise<unknown>;
   };
   oauth: {
     /** 同意画面 (未ログインなら Google Workspace ログインへ送る)
-     * GET /oauth/authorize / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 400 (2026-09-14) パラメータが要る:  / 模擬サーバ: 無し (501) */
+     * GET /oauth/authorize / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 400 (2026-09-27) パラメータが要る:  / 模擬サーバ: 無し (501) */
     getAuthorize(args: { response_type: string; client_id: string; redirect_uri: string; scope?: string; state?: string; code_challenge: string; code_challenge_method: string; resource?: string; facilityId?: string }): Promise<unknown>;
     /** 同意の結果を受け、認可コードを redirect_uri へ返す
      * POST /oauth/authorize / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3681,13 +3825,13 @@ export interface CposApi_session {
      * POST /api/operations/backup-test / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postBackupTest(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** bot Gmail 送信トークンの実地診断。実際に resolveBotAccessToken() を呼び、 トークンが取得できるか / 付与スコープに gmail.send があるか / 失敗理由を返す。 token そのものは返さない (秘匿)。メール送信が 503 になる原因切り分け用。
-     * GET /api/operations/bot-gmail-status / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/operations/bot-gmail-status / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getBotGmailStatus(args?: { facilityId?: string }): Promise<unknown>;
     /** 運用診断: config-summaryの取得 (config-summary)
-     * GET /api/operations/config-summary / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/operations/config-summary / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getConfigSummary(args?: { facilityId?: string }): Promise<unknown>;
     /** 運用診断: 診断の取得 (diagnostics)
-     * GET /api/operations/diagnostics / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/operations/diagnostics / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getDiagnostics(args?: { facilityId?: string }): Promise<unknown>;
     /** 運用診断: 実行 (diagnostics/run)
      * POST /api/operations/diagnostics/run / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3695,7 +3839,7 @@ export interface CposApi_session {
   };
   personalAccessTokens: {
     /** Personal Access Token: 一覧
-     * GET /api/personal-access-tokens / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/personal-access-tokens / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     get(args?: { facilityId?: string }): Promise<unknown>;
     /** Personal Access Token: 作成
      * POST /api/personal-access-tokens / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3709,7 +3853,7 @@ export interface CposApi_session {
   };
   platform: {
     /** Platform: config-export: config-exportの取得 (config-export)
-     * GET /api/platform/config-export / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/platform/config-export / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getConfigExport(args?: { facilityId?: string }): Promise<unknown>;
     /** Platform: config-import: applyの登録・実行 (config-import/apply)
      * POST /api/platform/config-import/apply / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3718,13 +3862,13 @@ export interface CposApi_session {
      * POST /api/platform/config-import/preview / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postConfigImportPreview(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 定義一覧
-     * GET /api/platform/definitions / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/platform/definitions / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getDefinitions(args?: { facilityId?: string }): Promise<unknown>;
     /** 新規
      * POST /api/platform/definitions / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postDefinitions(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 単一
-     * GET /api/platform/definitions/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/platform/definitions/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getDefinitionsById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 更新
      * PUT /api/platform/definitions/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3733,22 +3877,28 @@ export interface CposApi_session {
      * DELETE /api/platform/definitions/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     deleteDefinitionsById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** user/group 割当
-     * GET /api/platform/facility-assignments / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/platform/facility-assignments / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getFacilityAssignments(args?: { facilityId?: string }): Promise<unknown>;
+    /** 旧「事業所アクセス」の割当から、ユーザーの所属 (facilityIds) を埋め戻す (移行・修復用)。足すだけで所属からは何も消さない。dryRun=true (既定) は差分のみ返す
+     * POST /api/platform/facility-assignments/backfill-user-facilities / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postFacilityAssignmentsBackfillUserFacilities(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** group 割当 upsert
      * POST /api/platform/facility-assignments/groups / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postFacilityAssignmentsGroups(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** Platform: facility-assignments: 削除 (facility-assignments/groups/:id)
      * DELETE /api/platform/facility-assignments/groups/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     deleteFacilityAssignmentsGroupsById(args: { id: string; facilityId?: string }): Promise<unknown>;
-    /** user 割当 upsert
+    /** この人をこの事業所の所属から外す (ユーザーの facilityIds から削除 + 対応する明細も削除)
+     * DELETE /api/platform/facility-assignments/membership/{userId}/{facilityId} / 認証 session / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    deleteFacilityAssignmentsMembershipByUserIdByFacilityId(args: { userId: string; facilityId: string }): Promise<unknown>;
+    /** user 割当 upsert (ユーザーの所属 facilityIds にも書き戻す)
      * POST /api/platform/facility-assignments/users / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postFacilityAssignmentsUsers(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** Platform: facility-assignments: 削除 (facility-assignments/users/:id)
      * DELETE /api/platform/facility-assignments/users/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     deleteFacilityAssignmentsUsersById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 自分の認証情報 (誰として・どの組織で・どのスコープで呼んでいるか)
-     * GET /api/platform/me / 認証 session / 実測 200 (2026-09-14) 応答の項目: authMethod, ok, organizationId, token, user / 模擬サーバ: あり */
+     * GET /api/platform/me / 認証 session / 実測 200 (2026-09-27) 応答の項目: authMethod, ok, organizationId, token, user / 模擬サーバ: あり */
     getMe(args?: { facilityId?: string }): Promise<unknown>;
     /** — 実際に definition を upsert
      * POST /api/platform/presets/record/apply / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3759,13 +3909,13 @@ export interface CposApi_session {
   };
   prompts: {
     /** プロンプト: 一覧
-     * GET /api/prompts / scope prompts:read / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 403 (2026-09-14) scope prompts:read / 模擬サーバ: 無し (501) */
+     * GET /api/prompts / scope prompts:read / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 403 (2026-09-27) scope prompts:read / 模擬サーバ: 無し (501) */
     get(args?: { facilityId?: string }): Promise<unknown>;
     /** プロンプト: 作成
      * POST /api/prompts / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     post(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** プロンプト: 1 件取得 (:id)
-     * GET /api/prompts/{id} / scope prompts:read / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/prompts/{id} / scope prompts:read / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** プロンプト: 更新 (:id)
      * PUT /api/prompts/{id} / scope prompts:read / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3782,13 +3932,13 @@ export interface CposApi_session {
   };
   providers: {
     /** 一覧 (cursor pagination)
-     * GET /api/providers / scope providers:read / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 403 (2026-09-14) scope providers:read / 模擬サーバ: 無し (501) */
+     * GET /api/providers / scope providers:read / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 403 (2026-09-27) scope providers:read / 模擬サーバ: 無し (501) */
     get(args?: { facilityId?: string }): Promise<unknown>;
     /** 1 件作成 (UI manual add)
      * POST /api/providers / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     post(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 1 件取得 (full ProviderServiceOffice)
-     * GET /api/providers/{id} / scope providers:read / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/providers/{id} / scope providers:read / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 1 件更新
      * PUT /api/providers/{id} / scope providers:read / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3806,21 +3956,21 @@ export interface CposApi_session {
      * POST /api/providers/import-csv/preview / scope providers:read / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postImportCsvPreview(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 検索 (query / providerNumber / serviceTypeCode / activeOnly)
-     * GET /api/providers/search / scope providers:read / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 403 (2026-09-14) scope providers:read / 模擬サーバ: 無し (501) */
+     * GET /api/providers/search / scope providers:read / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 403 (2026-09-27) scope providers:read / 模擬サーバ: 無し (501) */
     getSearch(args?: { facilityId?: string }): Promise<unknown>;
     /** 取込用 CSV テンプレート (UTF-8 BOM)
-     * GET /api/providers/template.csv / scope providers:read / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 403 (2026-09-14) scope providers:read / 模擬サーバ: 無し (501) */
+     * GET /api/providers/template.csv / scope providers:read / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 403 (2026-09-27) scope providers:read / 模擬サーバ: 無し (501) */
     getTemplateCsv(args?: { facilityId?: string }): Promise<unknown>;
   };
   provision: {
     /** テナント払い出し: 一覧
-     * GET /api/provision/v1 / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/provision/v1 / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getV1(args?: { facilityId?: string }): Promise<unknown>;
     /** テナント払い出し: 作成
      * POST /api/provision/v1 / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV1(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** テナント払い出し: 1 件取得 (:id)
-     * GET /api/provision/v1/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/provision/v1/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getV1ById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** テナント払い出し: 更新 (:id)
      * PUT /api/provision/v1/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3829,7 +3979,7 @@ export interface CposApi_session {
      * DELETE /api/provision/v1/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     deleteV1ById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** テナント払い出し: linesの取得 (:id/lines)
-     * GET /api/provision/v1/{id}/lines / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/provision/v1/{id}/lines / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getV1ByIdLines(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** テナント払い出し: linesの登録・実行 (:id/lines)
      * POST /api/provision/v1/{id}/lines / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3843,13 +3993,13 @@ export interface CposApi_session {
   };
   qualifiedPersons: {
     /** 有資格者: 一覧
-     * GET /api/qualified-persons/v1 / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/qualified-persons/v1 / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getV1(args?: { facilityId?: string }): Promise<unknown>;
     /** 有資格者: 作成
      * POST /api/qualified-persons/v1 / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV1(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 有資格者: 1 件取得 (:id)
-     * GET /api/qualified-persons/v1/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/qualified-persons/v1/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getV1ById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 有資格者: 更新 (:id)
      * PUT /api/qualified-persons/v1/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3877,10 +4027,10 @@ export interface CposApi_session {
   };
   recordTransfer: {
     /** 記録移送: 候補の取得 (candidates)
-     * GET /api/record-transfer/v1/candidates / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/record-transfer/v1/candidates / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getV1Candidates(args?: { facilityId?: string }): Promise<unknown>;
     /** 記録移送: 1 件取得 (candidates/:id)
-     * GET /api/record-transfer/v1/candidates/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/record-transfer/v1/candidates/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getV1CandidatesById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** 記録移送: 更新 (candidates/:id)
      * PUT /api/record-transfer/v1/candidates/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3903,7 +4053,7 @@ export interface CposApi_session {
      * DELETE /api/records/{recordId} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     deleteByRecordId(args: { recordId: string; facilityId?: string }): Promise<unknown>;
     /** 記録: 添付の取得 (:recordId/attachments)
-     * GET /api/records/{recordId}/attachments / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/records/{recordId}/attachments / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getByRecordIdAttachments(args: { recordId: string; facilityId?: string }): Promise<unknown>;
     /** 記録: 添付 (:recordId/attachments)
      * POST /api/records/{recordId}/attachments / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3915,7 +4065,7 @@ export interface CposApi_session {
      * POST /api/records/{recordId}/classify / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postByRecordIdClassify(args: { recordId: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 記録: unclassifiedの取得 (unclassified)
-     * GET /api/records/unclassified / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/records/unclassified / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getUnclassified(args?: { facilityId?: string }): Promise<unknown>;
   };
   recordsPipeline: {
@@ -3978,10 +4128,10 @@ export interface CposApi_session {
   };
   search: {
     /** 横断検索 (ナレッジ + 各アプリが AppData に溜めたレコード)
-     * GET /api/search / 認証 session / 応答の形あり / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/search / 認証 session / 応答の形あり / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     get(args?: { q?: string; facilityId?: string; insuredNumber?: string; from?: string; to?: string; types?: string; tags?: string; status?: string; limit?: number }): Promise<unknown>;
     /** 検索の方式と、登録されているソースの一覧
-     * GET /api/search/index-status / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/search/index-status / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getIndexStatus(args?: { facilityId?: string }): Promise<unknown>;
     /** 再インデックス (ライブ検索のため現状は no-op)
      * POST /api/search/reindex / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -3989,22 +4139,22 @@ export interface CposApi_session {
   };
   serviceActuals: {
     /** サービス実績 (旧 API) の一覧
-     * GET /api/service-actuals/v1 / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/service-actuals/v1 / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getV1(args?: { facilityId?: string }): Promise<unknown>;
     /** サービス実績 (旧): generateの登録・実行 (claim-candidates/generate)
      * POST /api/service-actuals/v1/claim-candidates/generate / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV1ClaimCandidatesGenerate(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** サービス実績 (旧): cross-service-summaryの取得 (cross-service-summary)
-     * GET /api/service-actuals/v1/cross-service-summary / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/service-actuals/v1/cross-service-summary / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getV1CrossServiceSummary(args?: { facilityId?: string }): Promise<unknown>;
     /** サービス実績 (旧): import-pdfの登録・実行 (import-pdf)
      * POST /api/service-actuals/v1/import-pdf / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV1ImportPdf(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** サービス実績 (旧): importsの取得 (imports)
-     * GET /api/service-actuals/v1/imports / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/service-actuals/v1/imports / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getV1Imports(args?: { facilityId?: string }): Promise<unknown>;
     /** サービス実績 (旧): 1 件取得 (imports/:batchId)
-     * GET /api/service-actuals/v1/imports/{batchId} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/service-actuals/v1/imports/{batchId} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getV1ImportsByBatchId(args: { batchId: string; facilityId?: string }): Promise<unknown>;
     /** サービス実績 (旧): applyの登録・実行 (imports/:batchId/apply)
      * POST /api/service-actuals/v1/imports/{batchId}/apply / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -4016,7 +4166,7 @@ export interface CposApi_session {
      * POST /api/service-actuals/v1/imports/{batchId}/void / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV1ImportsByBatchIdVoid(args: { batchId: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** ?facilityId=&serviceTypeCode=&mappingStatus=&category=
-     * GET /api/service-actuals/v1/item-candidates / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/service-actuals/v1/item-candidates / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getV1ItemCandidates(args?: { facilityId?: string }): Promise<unknown>;
     /** 人手 mapping 確定
      * PATCH /api/service-actuals/v1/item-candidates/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -4031,18 +4181,18 @@ export interface CposApi_session {
      * POST /api/service-actuals/v1/records-to-actuals/preview / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV1RecordsToActualsPreview(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 利用者のサービス実績 (旧 API)
-     * GET /api/service-actuals/v1/users/{insuredNumber} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/service-actuals/v1/users/{insuredNumber} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getV1UsersByInsuredNumber(args: { insuredNumber: string; facilityId?: string }): Promise<unknown>;
   };
   settings: {
     /** 設定: 一覧
-     * GET /api/settings / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/settings / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     get(args?: { facilityId?: string }): Promise<unknown>;
     /** 設定: 更新
      * PUT /api/settings / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     put(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 設定: api-keysの取得 (api-keys)
-     * GET /api/settings/api-keys / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/settings/api-keys / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getApiKeys(args?: { facilityId?: string }): Promise<unknown>;
     /** 設定: 更新 (api-keys)
      * PUT /api/settings/api-keys / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -4050,7 +4200,7 @@ export interface CposApi_session {
   };
   staffingFte: {
     /** 常勤換算: 一覧
-     * GET /api/staffing-fte/v1 / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/staffing-fte/v1 / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getV1(args?: { facilityId?: string }): Promise<unknown>;
     /** 常勤換算: 作成
      * POST /api/staffing-fte/v1 / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -4070,13 +4220,13 @@ export interface CposApi_session {
      * PATCH /api/subjects/files/{fileId}/tags / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     patchFilesByFileIdTags(args: { fileId: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 対象者フォルダ: filesの取得 (master-users/:insuredNumber/files)
-     * GET /api/subjects/master-users/{insuredNumber}/files / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/subjects/master-users/{insuredNumber}/files / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getMasterUsersByInsuredNumberFiles(args: { insuredNumber: string; facilityId?: string }): Promise<unknown>;
     /** 対象者フォルダ: filesの登録・実行 (master-users/:insuredNumber/files)
      * POST /api/subjects/master-users/{insuredNumber}/files / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postMasterUsersByInsuredNumberFiles(args: { insuredNumber: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 対象者フォルダ: folderの取得 (master-users/:insuredNumber/folder)
-     * GET /api/subjects/master-users/{insuredNumber}/folder / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/subjects/master-users/{insuredNumber}/folder / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getMasterUsersByInsuredNumberFolder(args: { insuredNumber: string; facilityId?: string }): Promise<unknown>;
     /** 対象者フォルダ: ensureの登録・実行 (master-users/:insuredNumber/folder/ensure)
      * POST /api/subjects/master-users/{insuredNumber}/folder/ensure / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -4084,52 +4234,52 @@ export interface CposApi_session {
   };
   systemSettings: {
     /** システム設定: 一覧
-     * GET /api/system-settings / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/system-settings / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     get(args?: { facilityId?: string }): Promise<unknown>;
     /** システム設定: care-planの取得 (care-plan)
-     * GET /api/system-settings/care-plan / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/system-settings/care-plan / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getCarePlan(args?: { facilityId?: string }): Promise<unknown>;
     /** システム設定: 更新 (care-plan)
      * PUT /api/system-settings/care-plan / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     putCarePlan(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** システム設定: company-ai-preambleの取得 (company-ai-preamble)
-     * GET /api/system-settings/company-ai-preamble / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/system-settings/company-ai-preamble / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getCompanyAiPreamble(args?: { facilityId?: string }): Promise<unknown>;
     /** システム設定: 更新 (company-ai-preamble)
      * PUT /api/system-settings/company-ai-preamble / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     putCompanyAiPreamble(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** システム設定: corporationの取得 (corporation)
-     * GET /api/system-settings/corporation / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/system-settings/corporation / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getCorporation(args?: { facilityId?: string }): Promise<unknown>;
     /** システム設定: 更新 (corporation)
      * PUT /api/system-settings/corporation / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     putCorporation(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** システム設定: filingの取得 (filing)
-     * GET /api/system-settings/filing / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/system-settings/filing / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getFiling(args?: { facilityId?: string }): Promise<unknown>;
     /** システム設定: 更新 (filing)
      * PUT /api/system-settings/filing / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     putFiling(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** システム設定: google-workspaceの取得 (google-workspace)
-     * GET /api/system-settings/google-workspace / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/system-settings/google-workspace / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getGoogleWorkspace(args?: { facilityId?: string }): Promise<unknown>;
     /** システム設定: 更新 (google-workspace)
      * PUT /api/system-settings/google-workspace / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     putGoogleWorkspace(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** システム設定: hrm-job-classesの取得 (hrm-job-classes)
-     * GET /api/system-settings/hrm-job-classes / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/system-settings/hrm-job-classes / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getHrmJobClasses(args?: { facilityId?: string }): Promise<unknown>;
     /** システム設定: 更新 (hrm-job-classes)
      * PUT /api/system-settings/hrm-job-classes / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     putHrmJobClasses(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** システム設定: important-matters-docの取得 (important-matters-doc)
-     * GET /api/system-settings/important-matters-doc / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/system-settings/important-matters-doc / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getImportantMattersDoc(args?: { facilityId?: string }): Promise<unknown>;
     /** システム設定: 更新 (important-matters-doc)
      * PUT /api/system-settings/important-matters-doc / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     putImportantMattersDoc(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** システム設定: notificationsの取得 (notifications)
-     * GET /api/system-settings/notifications / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/system-settings/notifications / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getNotifications(args?: { facilityId?: string }): Promise<unknown>;
     /** システム設定: 更新 (notifications)
      * PUT /api/system-settings/notifications / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -4138,22 +4288,22 @@ export interface CposApi_session {
      * POST /api/system-settings/notifications/test / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postNotificationsTest(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** システム設定: personal-docの取得 (personal-doc)
-     * GET /api/system-settings/personal-doc / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/system-settings/personal-doc / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getPersonalDoc(args?: { facilityId?: string }): Promise<unknown>;
     /** システム設定: 更新 (personal-doc)
      * PUT /api/system-settings/personal-doc / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     putPersonalDoc(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** システム設定: record-summaryの取得 (record-summary)
-     * GET /api/system-settings/record-summary / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/system-settings/record-summary / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getRecordSummary(args?: { facilityId?: string }): Promise<unknown>;
     /** システム設定: 更新 (record-summary)
      * PUT /api/system-settings/record-summary / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     putRecordSummary(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** システム設定: secrets-statusの取得 (secrets-status)
-     * GET /api/system-settings/secrets-status / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/system-settings/secrets-status / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getSecretsStatus(args?: { facilityId?: string }): Promise<unknown>;
     /** システム設定: user-foldersの取得 (user-folders)
-     * GET /api/system-settings/user-folders / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/system-settings/user-folders / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getUserFolders(args?: { facilityId?: string }): Promise<unknown>;
     /** システム設定: 更新 (user-folders)
      * PUT /api/system-settings/user-folders / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -4274,10 +4424,10 @@ export interface CposApi_session {
   };
   training: {
     /** 研修の出席一覧
-     * GET /api/training/attendance / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/training/attendance / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getAttendance(args?: { facilityId?: string }): Promise<unknown>;
     /** 研修計画の一覧
-     * GET /api/training/plans / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/training/plans / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getPlans(args?: { facilityId?: string }): Promise<unknown>;
     /** 研修計画を登録
      * POST /api/training/plans / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -4296,10 +4446,10 @@ export interface CposApi_session {
   };
   userDetail: {
     /** 利用者詳細: 一覧
-     * GET /api/user-detail / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 400 (2026-09-14) パラメータが要る: facilityId is required / 模擬サーバ: 無し (501) */
+     * GET /api/user-detail / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 400 (2026-09-27) パラメータが要る: facilityId is required / 模擬サーバ: 無し (501) */
     get(args?: { facilityId?: string }): Promise<unknown>;
     /** 利用者詳細: record-timelineの取得 (:insuredNumber/record-timeline)
-     * GET /api/user-detail/{insuredNumber}/record-timeline / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/user-detail/{insuredNumber}/record-timeline / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getByInsuredNumberRecordTimeline(args: { insuredNumber: string; facilityId?: string }): Promise<unknown>;
     /** 利用者詳細: record-timelineの登録・実行 (:insuredNumber/record-timeline)
      * POST /api/user-detail/{insuredNumber}/record-timeline / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -4307,13 +4457,13 @@ export interface CposApi_session {
   };
   users: {
     /** ユーザー: 一覧
-     * GET /api/users / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/users / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     get(args?: { facilityId?: string }): Promise<unknown>;
     /** ユーザー: 作成
      * POST /api/users / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     post(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** ユーザー: 1 件取得 (:id)
-     * GET /api/users/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/users/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** ユーザー: 更新 (:id)
      * PUT /api/users/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -4322,7 +4472,7 @@ export interface CposApi_session {
      * DELETE /api/users/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     deleteById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** ユーザー: groupsの取得 (:id/groups)
-     * GET /api/users/{id}/groups / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/users/{id}/groups / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getByIdGroups(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** ユーザー: 更新 (:id/preferences)
      * PUT /api/users/{id}/preferences / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -4330,7 +4480,7 @@ export interface CposApi_session {
   };
   visitCheckins: {
     /** 訪問チェックイン: orphansの取得 (orphans)
-     * GET /api/visit-checkins/orphans / scope visit-checkins:read / 認証 session / 実測 200 (2026-09-14) 応答の項目: items / 模擬サーバ: 無し (501) */
+     * GET /api/visit-checkins/orphans / scope visit-checkins:read / 認証 session / 実測 200 (2026-09-27) 応答の項目: items / 模擬サーバ: 無し (501) */
     getOrphans(args?: { facilityId?: string }): Promise<unknown>;
     /** body: { facilityId?, from, to?, masterUserId?, dryRun? }
      * POST /api/visit-checkins/reassign / scope visit-checkins:write / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -4344,7 +4494,7 @@ export interface CposApi_session {
      * POST /api/workspace-governance/diagnose / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postDiagnose(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** Workspace ガバナンス: 1 件取得 (diagnose/:id)
-     * GET /api/workspace-governance/diagnose/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-14) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+     * GET /api/workspace-governance/diagnose/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getDiagnoseById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** Workspace ガバナンス: export-policy.jsonの取得 (export-policy.json)
      * GET /api/workspace-governance/export-policy.json / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -4356,10 +4506,10 @@ export interface CposApi_session {
      * POST /api/workspace-governance/import-policy.json / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postImportPolicyJson(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** Workspace ガバナンス: permission-driftの取得 (permission-drift)
-     * GET /api/workspace-governance/permission-drift / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/workspace-governance/permission-drift / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getPermissionDrift(args?: { facilityId?: string }): Promise<unknown>;
     /** Workspace ガバナンス: policyの取得 (policy)
-     * GET /api/workspace-governance/policy / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-14) 認証が必要です / 模擬サーバ: 無し (501) */
+     * GET /api/workspace-governance/policy / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getPolicy(args?: { facilityId?: string }): Promise<unknown>;
     /** Workspace ガバナンス: 更新 (policy)
      * PUT /api/workspace-governance/policy / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */

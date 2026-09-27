@@ -71,6 +71,20 @@ export function connectionMode(o = {}) {
   return /^https?:\/\/(127\.0\.0\.1|localhost)(:|\/|$)/.test(u) ? 'mock' : 'staging';
 }
 
+/**
+ * 帳票・画面に出してよい被保険者番号。無ければ null。
+ * CPOS の insuredNumber は「保存キー」で、番号の無い人・未確定の人は仮番号 (tmp-*) か masterUserId そのもの (mu_*) が入る。
+ * それを本物の番号として出さない。CPOS が displayInsuredNumber を返す API (platform/facilities/{facilityId}/users など) ではそれを使い、
+ * 返さない API (platform/master-users) では CPOS と同じ規則 (tmp- 始まりか mu_ + 6 文字以上は出さない) で insuredNumber から出す。
+ * @param {{ insuredNumber?: string | null, displayInsuredNumber?: string | null }} user
+ * @returns {string | null}
+ */
+export function displayInsuredNumber(user) {
+  if (user && user.displayInsuredNumber !== undefined) return user.displayInsuredNumber || null;
+  const v = typeof user?.insuredNumber === 'string' ? user.insuredNumber.trim() : '';
+  return v && !/^tmp-/.test(v) && !/^mu_[A-Za-z0-9_-]{6,}$/.test(v) ? v : null;
+}
+
 export class CposApiError extends Error {
   /**
    * @param {{ status: number, error: string, message?: string, hint?: string, method: string, path: string }} info
@@ -307,20 +321,40 @@ export function createCposClient(opts) {
         }
         return encodeURIComponent(r);
       };
+      // 利用者への紐づけ: 行を利用者に結ぶのは data の中ではなく「封筒」の insuredNumber (CPOS 2026-09-26 の利用者キー移行。本物で 2026-09-27 に実測)。
+      // CPOS は番号・masterUserId・過去の番号・仮番号のどれで来ても本人の今の保存キーに揃えて masterUserId を付け、
+      // 一覧の ?insuredNumber= は本人の全キーで引く。利用者ごとの画面・統合・番号変更の追随は封筒しか見ない (data の中は見ない)。
+      // user を渡さない呼び出しは今までと同じ本文を送る。
+      const who = (p, what) => {
+        const u = p ? p.user : undefined;
+        if (u === undefined || u === null) return undefined;
+        if (typeof u !== 'string' || !u.trim()) {
+          throw new CposClientError(`appData.${what}: user は利用者を指す文字列 (masterUserId) です`,
+            '例: { facilityId, user: u.masterUserId }。番号 (insuredNumber) でも本人に着地しますが、番号は変わるので masterUserId を渡してください');
+        }
+        return u.trim();
+      };
       return {
-        list: async (resource, p = {}) => raw('GET', `${base}/${res(resource)}`, { facilityId: boundary(p, 'list'), query: { paginated: p.paginated ? 'true' : undefined, cursor: p.cursor, limit: p.limit ? String(p.limit) : undefined } }),
+        list: async (resource, p = {}) => raw('GET', `${base}/${res(resource)}`, { facilityId: boundary(p, 'list'), query: { insuredNumber: who(p, 'list'), paginated: p.paginated ? 'true' : undefined, cursor: p.cursor, limit: p.limit ? String(p.limit) : undefined } }),
         get: async (resource, id, p = {}) => raw('GET', `${base}/${res(resource)}/${encodeURIComponent(id)}`, { facilityId: boundary(p, 'get') }),
-        create: async (resource, data, p = {}) => { const f = boundary(p, 'create'); return raw('POST', `${base}/${res(resource)}`, { facilityId: f, body: { data, ...(f ? { facilityId: f } : {}) } }); },
-        update: async (resource, id, data, p = {}) => raw('PUT', `${base}/${res(resource)}/${encodeURIComponent(id)}`, { facilityId: boundary(p, 'update'), body: { data } }),
+        create: async (resource, data, p = {}) => { const f = boundary(p, 'create'); const u = who(p, 'create'); return raw('POST', `${base}/${res(resource)}`, { facilityId: f, body: { data, ...(f ? { facilityId: f } : {}), ...(u ? { insuredNumber: u } : {}) } }); },
+        // user を渡すと封筒の利用者を付け直す。ふつうは作成時に付けたものが残るので渡さない
+        // (2026-09-26 より前の CPOS は PUT の insuredNumber を保存キーに揃えずにそのまま入れる)
+        update: async (resource, id, data, p = {}) => { const f = boundary(p, 'update'); const u = who(p, 'update'); return raw('PUT', `${base}/${res(resource)}/${encodeURIComponent(id)}`, { facilityId: f, body: { data, ...(u ? { insuredNumber: u } : {}) } }); },
         remove: async (resource, id, p = {}) => raw('DELETE', `${base}/${res(resource)}/${encodeURIComponent(id)}`, { facilityId: boundary(p, 'remove') }),
         /**
          * data[keyField] が一致する 1 件を探して update、無ければ create。
          * AppData に一意制約は無いので、ここで「利用者 1 人に 1 件」のような約束を守る。
          * 一覧を取って探すので件数が数千を超える resource には向かない (そのときは自前で index を持つ)。
+         *
+         * user を渡すと、本人の行だけを CPOS 側で絞ってから探し (全件を取らない)、作るときは本人に紐づける。
+         * 紐づける前に作った行 (data にしか本人がいない行) は、keyField の値が user と同じとき
+         * (例: keyField 'masterUserId' で data.masterUserId === user) だけ拾って本人に紐づける。
+         * それ以外の keyField で紐づけ前の行を拾うと、別の人の行を付け替えうるので拾わない。
          * @param {string} resource
          * @param {string} keyField   例 'masterUserId'
          * @param {Record<string, unknown>} data  keyField を含むこと
-         * @param {{ facilityId?: string }} [p]
+         * @param {{ facilityId?: string, user?: string }} [p]
          */
         upsertBy: async (resource, keyField, data, p = {}) => {
           const keyValue = data?.[keyField];
@@ -328,14 +362,24 @@ export function createCposClient(opts) {
             throw new CposClientError(`upsertBy: data.${keyField} がありません`, `例: upsertBy('${resource}', '${keyField}', { ${keyField}: '...', ... }, { facilityId })`);
           }
           const f = boundary(p, 'upsertBy');
+          const u = who(p, 'upsertBy');
           const path = `${base}/${res(resource)}`;
-          const items = await raw('GET', path, { facilityId: f });
-          const hits = (Array.isArray(items) ? items : items?.items ?? []).filter((r) => r?.data?.[keyField] === keyValue);
+          const rowsOf = (items) => (Array.isArray(items) ? items : items?.items ?? []);
+          const same = (r) => r?.data?.[keyField] === keyValue;
+          // 探す一覧は CPOS のキャッシュを素通しする (別インスタンスの書き込みが最大 30 秒古く見え、二重に作るのを防ぐ。CPOS 2026-09-15 から。古い CPOS は無視する)
+          const fresh = { 'Cache-Control': 'no-cache' };
+          let hits = rowsOf(await raw('GET', path, { facilityId: f, query: u ? { insuredNumber: u } : undefined, headers: fresh })).filter(same);
+          let link = false;
+          if (u && hits.length === 0 && keyValue === u) {
+            hits = rowsOf(await raw('GET', path, { facilityId: f, headers: fresh })).filter((r) => same(r) && !r.insuredNumber && !r.masterUserId);
+            link = hits.length > 0;
+          }
           if (hits.length === 0) {
-            return raw('POST', path, { facilityId: f, body: { data, ...(f ? { facilityId: f } : {}) } });
+            return raw('POST', path, { facilityId: f, body: { data, ...(f ? { facilityId: f } : {}), ...(u ? { insuredNumber: u } : {}) } });
           }
           const [first, ...dupes] = hits.sort((a, b) => String(a.createdAt ?? '').localeCompare(String(b.createdAt ?? '')));
-          const updated = await raw('PUT', `${path}/${encodeURIComponent(first.id)}`, { facilityId: f, body: { data: { ...first.data, ...data } } });
+          // 封筒は紐づけ前の行を紐づけるときだけ送る (紐づいている行は CPOS が揃えた保存キーのまま触らない)
+          const updated = await raw('PUT', `${path}/${encodeURIComponent(first.id)}`, { facilityId: f, body: { data: { ...first.data, ...data }, ...(link ? { insuredNumber: u } : {}) } });
           return dupes.length ? { ...updated, duplicates: dupes.map((d) => d.id) } : updated;
         }
       };

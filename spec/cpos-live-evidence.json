@@ -1,8 +1,8 @@
 {
  "note": "本物の CPOS で確かめた最終結果 (operation ごと)。status と応答の項目名だけ。値は記録しない。kit の保守者が本物の CPOS で検証する道具 (verify-live) が更新する。手で編集しない",
  "verifiedAgainst": {
-  "revision": "00201-58l",
-  "at": "2026-09-14",
+  "revision": "00278-7tl",
+  "at": "2026-09-27",
   "kitRevision": "00201-58l"
  },
  "operations": {
@@ -26,7 +26,7 @@
     "ui_locales_supported",
     "x-cpos-authentication"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/.well-known/oauth-authorization-server"
@@ -41,7 +41,7 @@
     "resource_documentation",
     "scopes_supported"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/.well-known/oauth-protected-resource"
@@ -56,7 +56,7 @@
     "resource_documentation",
     "scopes_supported"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/.well-known/oauth-protected-resource/mcp"
@@ -80,7 +80,7 @@
     "target",
     "updatedAt"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/alerts"
@@ -104,7 +104,7 @@
     "target",
     "updatedAt"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/alerts/{id}"
@@ -138,7 +138,7 @@
      "updatedAt"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/alerts/search"
@@ -146,7 +146,7 @@
   "get_api_android_app_v1_device_connect": {
    "status": 200,
    "note": "JSON ではない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/android-app/v1/device-connect"
@@ -154,7 +154,7 @@
   "get_api_api_tokens": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/api-tokens"
@@ -162,7 +162,7 @@
   "get_api_api_tokens_id_usage": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/api-tokens/{id}/usage"
@@ -170,7 +170,7 @@
   "get_api_api_tokens_known_scopes": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/api-tokens/known-scopes"
@@ -178,7 +178,7 @@
   "get_api_api_tokens_releases_appId": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/api-tokens/releases/{appId}"
@@ -186,7 +186,7 @@
   "get_api_api_tokens_usage_summary": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/api-tokens/usage-summary"
@@ -202,7 +202,7 @@
     "recommendedClientMaxBytes",
     "signedUploadSupported"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/app-data/attachments/config"
@@ -210,7 +210,7 @@
   "get_api_app_invocations_actions": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/app-invocations/actions"
@@ -218,7 +218,7 @@
   "get_api_app_invocations_actions_targetAppId": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/app-invocations/actions/{targetAppId}"
@@ -226,7 +226,7 @@
   "get_api_app_invocations_id": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/app-invocations/{id}"
@@ -254,11 +254,12 @@
     "status",
     "submittedAt",
     "submittedBy",
+    "tokenSecret",
     "type",
     "updatedAt",
     "url"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/apps"
@@ -266,7 +267,7 @@
   "get_api_apps_appId_bootstrap": {
    "status": 404,
    "note": "app-not-found",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/apps/{appId}/bootstrap"
@@ -274,7 +275,7 @@
   "get_api_apps_appId_connect": {
    "status": 200,
    "note": "JSON ではない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/apps/{appId}/connect"
@@ -282,7 +283,7 @@
   "get_api_apps_appId_sheet_mappings": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/apps/{appId}/sheet-mappings"
@@ -290,7 +291,7 @@
   "get_api_apps_appId_sheet_sync_jobs": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/apps/{appId}/sheet-sync/jobs"
@@ -298,7 +299,7 @@
   "get_api_apps_appId_sheet_sync_jobs_id": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/apps/{appId}/sheet-sync/jobs/{id}"
@@ -326,6 +327,7 @@
     "status",
     "submittedAt",
     "submittedBy",
+    "tokenSecret",
     "type",
     "updatedAt",
     "url"
@@ -341,7 +343,7 @@
      "name"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/apps/{id}"
@@ -366,7 +368,7 @@
      "subjectType"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/apps/{id}/access"
@@ -378,7 +380,7 @@
     "actions",
     "currentStatus"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/apps/{id}/actions"
@@ -386,7 +388,7 @@
   "get_api_apps_id_diagnostics": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/apps/{id}/diagnostics"
@@ -398,7 +400,7 @@
     "appId",
     "scopes"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/apps/{id}/scopes"
@@ -406,7 +408,7 @@
   "get_api_apps_launcher": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/apps/launcher"
@@ -414,7 +416,7 @@
   "get_api_audit_logs": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/audit-logs"
@@ -427,7 +429,7 @@
     "configured",
     "loginPath"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/auth/config"
@@ -435,7 +437,7 @@
   "get_api_auth_google": {
    "status": 200,
    "note": "JSON ではない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/auth/google"
@@ -443,7 +445,7 @@
   "get_api_auth_google_callback": {
    "status": 400,
    "note": "パラメータが要る: missing code",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/auth/google/callback"
@@ -451,7 +453,7 @@
   "get_api_auth_login": {
    "status": 400,
    "note": "パラメータが要る: {\"code\":\"INVALID_NEXT\",\"message\":\"next が指定されていません\"}",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/auth/login"
@@ -459,7 +461,7 @@
   "get_api_auth_logout": {
    "status": 200,
    "note": "JSON ではない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/auth/logout"
@@ -467,7 +469,7 @@
   "get_api_auth_me": {
    "status": 401,
    "note": "not authenticated",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/auth/me"
@@ -475,7 +477,7 @@
   "get_api_auth_return": {
    "status": 200,
    "note": "JSON ではない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/auth/return"
@@ -483,7 +485,7 @@
   "get_api_auth_users": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/auth-users"
@@ -491,7 +493,7 @@
   "get_api_auth_users_by_facility_facilityId": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/auth-users/by-facility/{facilityId}"
@@ -499,7 +501,7 @@
   "get_api_auth_users_google_account_config": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/auth-users/google-account-config"
@@ -507,7 +509,7 @@
   "get_api_auth_users_hrm_diagnostics": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/auth-users/hrm/diagnostics"
@@ -515,7 +517,7 @@
   "get_api_auth_users_id": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/auth-users/{id}"
@@ -523,7 +525,7 @@
   "get_api_auth_users_id_google_account": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/auth-users/{id}/google-account"
@@ -531,7 +533,7 @@
   "get_api_auth_users_login_history": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/auth-users/login-history"
@@ -539,7 +541,7 @@
   "get_api_auth_users_template_csv": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/auth-users/template.csv"
@@ -564,7 +566,7 @@
      "yenPerUnit"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/billing-masters/area-rates"
@@ -572,7 +574,7 @@
   "get_api_billing_masters_area_rates_template_csv": {
    "status": 200,
    "note": "JSON ではない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/billing-masters/area-rates/template.csv"
@@ -596,7 +598,7 @@
      "yenPerUnit"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/billing-masters/iryou/area-rates"
@@ -629,7 +631,7 @@
      "validTo"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/billing-masters/iryou/service-codes"
@@ -654,7 +656,7 @@
      "yenPerUnit"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/billing-masters/kaigo/area-rates"
@@ -687,7 +689,7 @@
      "validTo"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/billing-masters/kaigo/service-codes"
@@ -700,7 +702,7 @@
     "byProgram",
     "total"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/billing-masters/service-codes/stats"
@@ -708,7 +710,7 @@
   "get_api_billing_masters_service_codes_template_csv": {
    "status": 200,
    "note": "JSON ではない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/billing-masters/service-codes/template.csv"
@@ -732,7 +734,7 @@
      "yenPerUnit"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/billing-masters/shougai/area-rates"
@@ -740,7 +742,7 @@
   "get_api_billing_masters_shougai_service_codes": {
    "status": 500,
    "note": "JSON ではない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/billing-masters/shougai/service-codes"
@@ -752,7 +754,7 @@
     "checkedAt",
     "version"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/billing-masters/version"
@@ -760,7 +762,7 @@
   "get_api_billing_v1_addon_summary": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/billing/v1/addon-summary"
@@ -768,7 +770,7 @@
   "get_api_billing_v1_exports_iryou_visit_nursing_receipt": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/billing/v1/exports/iryou-visit-nursing-receipt"
@@ -776,7 +778,7 @@
   "get_api_billing_v1_exports_kaigo_kokuhoren": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/billing/v1/exports/kaigo-kokuhoren"
@@ -794,7 +796,7 @@
      "standard"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/billing/v1/facility-standards"
@@ -802,7 +804,7 @@
   "get_api_billing_v1_imports_jobId": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/billing/v1/imports/{jobId}"
@@ -810,7 +812,7 @@
   "get_api_billing_v1_receipt_code_tables": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/billing/v1/receipt-code-tables"
@@ -818,7 +820,7 @@
   "get_api_billing_v1_statements": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/billing/v1/statements"
@@ -826,7 +828,7 @@
   "get_api_billing_v1_statements_id": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/billing/v1/statements/{id}"
@@ -834,7 +836,7 @@
   "get_api_billing_v1_statements_id_adjudications": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/billing/v1/statements/{id}/adjudications"
@@ -842,7 +844,7 @@
   "get_api_billing_v1_statements_id_lines": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/billing/v1/statements/{id}/lines"
@@ -850,7 +852,7 @@
   "get_api_billing_v1_statements_id_supplemental_records": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/billing/v1/statements/{id}/supplemental-records"
@@ -858,7 +860,7 @@
   "get_api_billing_v1_statements_validate": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/billing/v1/statements/validate"
@@ -870,7 +872,7 @@
     "features",
     "server"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/capabilities"
@@ -881,7 +883,7 @@
    "keys": [
     "items"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/care-billing-contexts/v1"
@@ -892,7 +894,7 @@
    "keys": [
     "items"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/care-billing-plans/v1"
@@ -900,7 +902,7 @@
   "get_api_care_billing_plans_v1_id": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/care-billing-plans/v1/{id}"
@@ -911,7 +913,7 @@
    "keys": [
     "items"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/care-claim-candidates/v1"
@@ -919,7 +921,7 @@
   "get_api_care_claim_candidates_v1_id": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/care-claim-candidates/v1/{id}"
@@ -944,7 +946,7 @@
      "updatedAt"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/care-documents/v1"
@@ -966,7 +968,7 @@
     "title",
     "updatedAt"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/care-documents/v1/{id}"
@@ -974,7 +976,7 @@
   "get_api_care_documents_v1_id_files_fileId": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/care-documents/v1/{id}/files/{fileId}"
@@ -998,7 +1000,7 @@
      "version"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/care-documents/v1/legal-profiles"
@@ -1006,7 +1008,7 @@
   "get_api_care_documents_v1_legal_profiles_key": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/care-documents/v1/legal-profiles/{key}"
@@ -1035,7 +1037,7 @@
      "version"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/care-documents/v1/templates"
@@ -1080,7 +1082,7 @@
      "title"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/care-documents/v1/templates/{templateId}"
@@ -1088,7 +1090,7 @@
   "get_api_care_plan_csv_bulk_import_batches": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/care-plan-csv/bulk-import/batches"
@@ -1096,7 +1098,7 @@
   "get_api_care_plan_csv_bulk_import_batches_id": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/care-plan-csv/bulk-import/batches/{id}"
@@ -1104,7 +1106,7 @@
   "get_api_care_plan_csv_bulk_import_batches_id_errors_csv": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/care-plan-csv/bulk-import/batches/{id}/errors.csv"
@@ -1112,7 +1114,7 @@
   "get_api_care_plan_csv_bulk_import_batches_id_files": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/care-plan-csv/bulk-import/batches/{id}/files"
@@ -1120,7 +1122,7 @@
   "get_api_care_plan_csv_bulk_import_batches_id_progress": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/care-plan-csv/bulk-import/batches/{id}/progress"
@@ -1128,7 +1130,7 @@
   "get_api_care_plan_csv_bulk_import_batches_id_warnings_csv": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/care-plan-csv/bulk-import/batches/{id}/warnings.csv"
@@ -1136,7 +1138,7 @@
   "get_api_care_plan_csv_bundles": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/care-plan-csv/bundles"
@@ -1144,7 +1146,7 @@
   "get_api_care_plan_csv_bundles_id": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/care-plan-csv/bundles/{id}"
@@ -1152,7 +1154,7 @@
   "get_api_care_plan_csv_bundles_id_v4_zip": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/care-plan-csv/bundles/{id}/v4.zip"
@@ -1160,7 +1162,7 @@
   "get_api_care_plans": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/care-plans"
@@ -1168,7 +1170,7 @@
   "get_api_care_plans_id": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/care-plans/{id}"
@@ -1176,7 +1178,7 @@
   "get_api_care_records_handover": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/care-records/handover"
@@ -1184,7 +1186,7 @@
   "get_api_care_records_missing": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/care-records/missing"
@@ -1192,7 +1194,7 @@
   "get_api_care_records_vitals_summary": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/care-records/vitals-summary"
@@ -1200,7 +1202,7 @@
   "get_api_care_reminders": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/care-reminders"
@@ -1208,7 +1210,7 @@
   "get_api_care_reminders_rules": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/care-reminders/rules"
@@ -1216,7 +1218,7 @@
   "get_api_care_reminders_today": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/care-reminders/today"
@@ -1254,7 +1256,7 @@
      "updatedBy"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/care-schedule-exceptions"
@@ -1262,7 +1264,7 @@
   "get_api_care_schedule_exceptions_id": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/care-schedule-exceptions/{id}"
@@ -1273,7 +1275,7 @@
    "keys": [
     "items"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/care-schedules"
@@ -1281,7 +1283,7 @@
   "get_api_care_schedules_id": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/care-schedules/{id}"
@@ -1289,7 +1291,7 @@
   "get_api_care_schedules_occurrences": {
    "status": 400,
    "note": "パラメータが要る: dateFrom / dateTo (YYYY-MM-DD) が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/care-schedules/occurrences"
@@ -1320,7 +1322,7 @@
      "status"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/care-schedules/reconciliation"
@@ -1332,7 +1334,7 @@
     "date",
     "items"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/care-schedules/today"
@@ -1372,7 +1374,7 @@
      "updatedBy"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/care-service-actuals/v1"
@@ -1380,7 +1382,7 @@
   "get_api_care_service_actuals_v1_id": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/care-service-actuals/v1/{id}"
@@ -1396,7 +1398,7 @@
     "month",
     "ok"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/care-service-actuals/v1/metrics"
@@ -1404,7 +1406,7 @@
   "get_api_care_service_actuals_v1_monthly_close": {
    "status": 400,
    "note": "パラメータが要る: serviceMonth (YYYY-MM) が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/care-service-actuals/v1/monthly-close"
@@ -1412,7 +1414,7 @@
   "get_api_care_service_actuals_v1_operations_board": {
    "status": 400,
    "note": "パラメータが要る: date (YYYY-MM-DD) が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/care-service-actuals/v1/operations-board"
@@ -1420,7 +1422,7 @@
   "get_api_connectors_google_status": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/connectors/google/status"
@@ -1428,7 +1430,7 @@
   "get_api_data_browser_tables": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/data-browser/tables"
@@ -1436,7 +1438,7 @@
   "get_api_data_browser_tables_collection_rows": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/data-browser/tables/{collection}/rows"
@@ -1444,7 +1446,7 @@
   "get_api_data_browser_views": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/data-browser/views"
@@ -1452,7 +1454,7 @@
   "get_api_device_bootstrap": {
    "status": 403,
    "note": "スコープ * が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/device/bootstrap"
@@ -1460,7 +1462,7 @@
   "get_api_device_facilities": {
    "status": 403,
    "note": "スコープ * が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/device/facilities"
@@ -1475,7 +1477,7 @@
     "serverTime",
     "tokenId"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/device/ping"
@@ -1483,7 +1485,7 @@
   "get_api_device_records": {
    "status": 400,
    "note": "パラメータが要る: facilityId is required",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/device/records"
@@ -1491,7 +1493,7 @@
   "get_api_device_records_updates": {
    "status": 400,
    "note": "パラメータが要る: facilityId is required",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/device/records/updates"
@@ -1504,7 +1506,7 @@
     "ok",
     "releases"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/device/releases"
@@ -1519,7 +1521,7 @@
     "updateAvailable",
     "updateRequired"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/device/releases/latest"
@@ -1527,7 +1529,7 @@
   "get_api_device_users": {
    "status": 400,
    "note": "パラメータが要る: facilityId is required",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/device/users"
@@ -1535,7 +1537,7 @@
   "get_api_document_governance_documentId": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/document-governance/{documentId}"
@@ -1543,7 +1545,7 @@
   "get_api_document_governance_documentId_output_history": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/document-governance/{documentId}/output-history"
@@ -1551,7 +1553,7 @@
   "get_api_document_output_history": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/document-output-history"
@@ -1559,7 +1561,7 @@
   "get_api_external_partners_contacts": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/external-partners/contacts"
@@ -1567,7 +1569,7 @@
   "get_api_external_partners_contacts_id": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/external-partners/contacts/{id}"
@@ -1575,7 +1577,7 @@
   "get_api_external_partners_organizations": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/external-partners/organizations"
@@ -1583,7 +1585,7 @@
   "get_api_external_partners_organizations_id": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/external-partners/organizations/{id}"
@@ -1591,7 +1593,7 @@
   "get_api_external_partners_template_csv": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/external-partners/template.csv"
@@ -1620,7 +1622,7 @@
     "updatedAt",
     "users"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/facilities"
@@ -1628,7 +1630,7 @@
   "get_api_facilities_facilityId_attendance": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/facilities/{facilityId}/attendance"
@@ -1636,7 +1638,7 @@
   "get_api_facilities_facilityId_bath_schedule_weekStart": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/facilities/{facilityId}/bath-schedule/{weekStart}"
@@ -1644,7 +1646,7 @@
   "get_api_facilities_facilityId_business_diary_date": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/facilities/{facilityId}/business-diary/{date}"
@@ -1675,7 +1677,7 @@
      "userName"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/facilities/{facilityId}/care-manager-links"
@@ -1710,7 +1712,7 @@
      "values"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/facilities/{facilityId}/intakes"
@@ -1739,7 +1741,7 @@
     "updatedBy",
     "values"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/facilities/{facilityId}/intakes/{id}"
@@ -1747,7 +1749,7 @@
   "get_api_facilities_facilityId_intakes_prefill": {
    "status": 400,
    "note": "パラメータが要る: templateId が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/facilities/{facilityId}/intakes/prefill"
@@ -1809,7 +1811,7 @@
      "userId"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/facilities/{facilityId}/staff"
@@ -1841,7 +1843,7 @@
     "updatedBy",
     "userId"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/facilities/{facilityId}/staff/{id}"
@@ -1861,7 +1863,7 @@
      "master"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/facilities/{facilityId}/users"
@@ -1879,7 +1881,7 @@
     "organizationId",
     "updatedAt"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/facilities/{facilityId}/users/{insuredNumber}/extras"
@@ -1887,7 +1889,7 @@
   "get_api_facilities_facilityId_weekly_schedule_weekStart": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/facilities/{facilityId}/weekly-schedule/{weekStart}"
@@ -1916,7 +1918,7 @@
     "updatedAt",
     "users"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/facilities/{id}"
@@ -1931,7 +1933,7 @@
     "facilityStandards",
     "treatmentImprovementAddon"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/facilities/{id}/billing-settings"
@@ -1939,7 +1941,7 @@
   "get_api_facilities_id_diagnose": {
    "status": 503,
    "note": "",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/facilities/{id}/diagnose"
@@ -1951,7 +1953,7 @@
     "items",
     "reason"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/facilities/{id}/employees"
@@ -1959,7 +1961,7 @@
   "get_api_facilities_id_scan_users": {
    "status": 503,
    "note": "OAuth セッションなし",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/facilities/{id}/scan-users"
@@ -1967,7 +1969,7 @@
   "get_api_facility_financials_labor_cost_ratio": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/facility-financials/labor-cost-ratio"
@@ -1978,7 +1980,7 @@
    "keys": [
     "items"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/facility-financials/revenue"
@@ -1986,7 +1988,7 @@
   "get_api_features": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/features"
@@ -1994,7 +1996,7 @@
   "get_api_field_history": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/field-history"
@@ -2002,7 +2004,7 @@
   "get_api_field_proposals": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/field-proposals"
@@ -2025,7 +2027,7 @@
     "updatedAt",
     "version"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/form-templates"
@@ -2062,7 +2064,7 @@
      "values"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/form-templates/{id}"
@@ -2070,7 +2072,7 @@
   "get_api_groups": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/groups"
@@ -2078,7 +2080,7 @@
   "get_api_groups_id": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/groups/{id}"
@@ -2087,10 +2089,13 @@
    "status": 200,
    "shape": "object",
    "keys": [
+    "app",
+    "appEnv",
+    "revision",
     "status",
     "timestamp"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/health"
@@ -2098,7 +2103,7 @@
   "get_api_help_inquiries": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/help-inquiries"
@@ -2109,7 +2114,7 @@
    "keys": [
     "items"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/incidents"
@@ -2117,7 +2122,7 @@
   "get_api_incidents_id": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/incidents/{id}"
@@ -2125,7 +2130,7 @@
   "get_api_integrations_google_sheets_status": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/integrations/google-sheets/status"
@@ -2133,7 +2138,7 @@
   "get_api_kasan_v1_analysis_source": {
    "status": 400,
    "note": "パラメータが要る: facilityId が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/kasan/v1/analysis-source"
@@ -2161,7 +2166,7 @@
      "serviceTypeCodes"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/kasan/v1/bootstrap"
@@ -2169,7 +2174,7 @@
   "get_api_kasan_v1_facilities_facilityId_monthly_status": {
    "status": 400,
    "note": "パラメータが要る: serviceMonth は YYYY-MM 形式",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/kasan/v1/facilities/{facilityId}/monthly-status"
@@ -2177,7 +2182,7 @@
   "get_api_knowledge_articles": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/knowledge/articles"
@@ -2185,7 +2190,7 @@
   "get_api_knowledge_search": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/knowledge/search"
@@ -2193,7 +2198,7 @@
   "get_api_legacy_confidential_status": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/legacy-confidential/status"
@@ -2201,7 +2206,7 @@
   "get_api_legacy_records_v1_facilities_facilityId_config": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/legacy-records/v1/facilities/{facilityId}/config"
@@ -2209,7 +2214,7 @@
   "get_api_legacy_records_v1_facilities_facilityId_diff": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/legacy-records/v1/facilities/{facilityId}/diff"
@@ -2217,7 +2222,7 @@
   "get_api_legacy_records_v1_facilities_facilityId_records": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/legacy-records/v1/facilities/{facilityId}/records"
@@ -2225,7 +2230,7 @@
   "get_api_legacy_records_v1_facilities_facilityId_runs": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/legacy-records/v1/facilities/{facilityId}/runs"
@@ -2233,7 +2238,7 @@
   "get_api_legacy_records_v1_facilities_facilityId_warnings": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/legacy-records/v1/facilities/{facilityId}/warnings"
@@ -2241,7 +2246,7 @@
   "get_api_life_assessment_rows": {
    "status": 400,
    "note": "パラメータが要る: facilityId が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/life/assessment-rows"
@@ -2252,7 +2257,7 @@
    "keys": [
     "assessments"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/life/assessments"
@@ -2263,7 +2268,7 @@
    "keys": [
     "feedbacks"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/life/feedbacks"
@@ -2271,7 +2276,7 @@
   "get_api_life_feedbacks_id_file": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/life/feedbacks/{id}/file"
@@ -2297,7 +2302,7 @@
      "maxScore"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/life/meta"
@@ -2323,7 +2328,7 @@
      "parent"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/life/v1/spec"
@@ -2331,7 +2336,7 @@
   "get_api_life_v1_spec_interfaceName": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/life/v1/spec/{interfaceName}"
@@ -2339,7 +2344,7 @@
   "get_api_mapping_profiles": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/mapping-profiles"
@@ -2347,7 +2352,7 @@
   "get_api_master_users": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/master-users"
@@ -2355,7 +2360,7 @@
   "get_api_master_users_by_facility_facilityId": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/master-users/by-facility/{facilityId}"
@@ -2363,7 +2368,7 @@
   "get_api_master_users_duplicates": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/master-users/duplicates"
@@ -2371,7 +2376,7 @@
   "get_api_master_users_insuredNumber": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/master-users/{insuredNumber}"
@@ -2379,7 +2384,7 @@
   "get_api_master_users_insuredNumber_care_plans": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/master-users/{insuredNumber}/care-plans"
@@ -2387,7 +2392,7 @@
   "get_api_master_users_insuredNumber_care_plans_preview": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/master-users/{insuredNumber}/care-plans/preview"
@@ -2395,7 +2400,7 @@
   "get_api_master_users_insuredNumber_careplan_view": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/master-users/{insuredNumber}/careplan/view"
@@ -2403,7 +2408,7 @@
   "get_api_master_users_insuredNumber_extras_promotion": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/master-users/{insuredNumber}/extras-promotion"
@@ -2411,7 +2416,7 @@
   "get_api_master_users_insuredNumber_facilities": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/master-users/{insuredNumber}/facilities"
@@ -2419,7 +2424,7 @@
   "get_api_master_users_insuredNumber_identifier_aliases": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/master-users/{insuredNumber}/identifier-aliases"
@@ -2427,7 +2432,7 @@
   "get_api_master_users_insuredNumber_important_matters": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/master-users/{insuredNumber}/important-matters"
@@ -2435,7 +2440,7 @@
   "get_api_master_users_insuredNumber_personal_record_entries": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/master-users/{insuredNumber}/personal-record-entries"
@@ -2443,7 +2448,7 @@
   "get_api_master_users_master_user_id_migration_status": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/master-users/master-user-id-migration/status"
@@ -2451,7 +2456,7 @@
   "get_api_master_users_merge_audit": {
    "status": 501,
    "note": "利用者統合の復旧機能は現在無効です。保守作業時のみ有効化されます",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/master-users/merge-audit"
@@ -2459,7 +2464,7 @@
   "get_api_master_users_orphan_identities": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/master-users/orphan-identities"
@@ -2467,7 +2472,7 @@
   "get_api_master_users_orphan_records": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/master-users/orphan-records"
@@ -2475,7 +2480,7 @@
   "get_api_master_users_quick_registration_result": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/master-users/quick-registration/result"
@@ -2483,7 +2488,7 @@
   "get_api_master_users_unresolved_refs": {
    "status": 501,
    "note": "利用者統合の復旧機能は現在無効です。保守作業時のみ有効化されます",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/master-users/unresolved-refs"
@@ -2491,7 +2496,7 @@
   "get_api_notification_deliveries": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/notification-deliveries"
@@ -2499,7 +2504,7 @@
   "get_api_notification_rules": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/notification-rules"
@@ -2507,7 +2512,7 @@
   "get_api_notifications_me": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/notifications/me"
@@ -2533,7 +2538,7 @@
      "name"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/openapi.json"
@@ -2549,7 +2554,7 @@
     "stale",
     "undocumented"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/openapi/status"
@@ -2557,7 +2562,7 @@
   "get_api_operations_bot_gmail_status": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/operations/bot-gmail-status"
@@ -2565,7 +2570,7 @@
   "get_api_operations_config_summary": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/operations/config-summary"
@@ -2573,7 +2578,7 @@
   "get_api_operations_diagnostics": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/operations/diagnostics"
@@ -2581,7 +2586,7 @@
   "get_api_personal_access_tokens": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/personal-access-tokens"
@@ -2589,7 +2594,7 @@
   "get_api_platform_bootstrap": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/platform/bootstrap"
@@ -2597,7 +2602,7 @@
   "get_api_platform_config_export": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/platform/config-export"
@@ -2605,7 +2610,7 @@
   "get_api_platform_definitions": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/platform/definitions"
@@ -2613,7 +2618,7 @@
   "get_api_platform_definitions_id": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/platform/definitions/{id}"
@@ -2621,7 +2626,7 @@
   "get_api_platform_effective_settings": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/platform/effective-settings"
@@ -2644,7 +2649,7 @@
      "vnsCompat"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/platform/external-partners/care-managers"
@@ -2665,7 +2670,7 @@
      "vnsCompat"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/platform/external-partners/medical-providers"
@@ -2685,7 +2690,7 @@
      "organizationId"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/platform/external-partners/search"
@@ -2713,7 +2718,7 @@
     "updatedAt",
     "users"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/platform/facilities"
@@ -2750,7 +2755,7 @@
      "postalCode"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/platform/facilities/{facilityId}/users"
@@ -2778,7 +2783,7 @@
     "updatedAt",
     "users"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/platform/facilities/{id}"
@@ -2786,7 +2791,7 @@
   "get_api_platform_facility_assignments": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/platform/facility-assignments"
@@ -2837,7 +2842,7 @@
      "userId"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/platform/facility-staff"
@@ -2850,7 +2855,7 @@
     "careLevelDistribution",
     "facilityId"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/platform/facility-users"
@@ -2887,7 +2892,7 @@
     "status",
     "updatedAt"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/platform/master-users"
@@ -2932,7 +2937,7 @@
      "validTo"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/platform/master-users/{insuredNumber}"
@@ -2950,7 +2955,7 @@
     "sheet",
     "text"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/platform/master-users/{insuredNumber}/face-sheet"
@@ -2970,7 +2975,7 @@
      "name"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/platform/master-users/name-map"
@@ -2985,7 +2990,7 @@
     "token",
     "user"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/platform/me"
@@ -3011,7 +3016,7 @@
      "timeZone"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/platform/my-facilities"
@@ -3019,7 +3024,7 @@
   "get_api_platform_organizations_id": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/platform/organizations/{id}"
@@ -3042,7 +3047,7 @@
      "validTo"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/platform/qualified-persons"
@@ -3054,7 +3059,7 @@
     "items",
     "nextCursor"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/platform/sales/activities"
@@ -3062,7 +3067,7 @@
   "get_api_platform_sales_activities_id": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/platform/sales/activities/{id}"
@@ -3074,7 +3079,7 @@
     "summary",
     "truncated"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/platform/sales/activities/summary"
@@ -3100,7 +3105,7 @@
      "role"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/platform/users"
@@ -3109,7 +3114,8 @@
    "status": 200,
    "shape": "object",
    "keys": [
-    "items"
+    "items",
+    "truncated"
    ],
    "itemKeys": {
     "items": [
@@ -3138,7 +3144,7 @@
      "updatedBy"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/progress-notes"
@@ -3151,6 +3157,8 @@
     "author",
     "body",
     "category",
+    "clientOpHash",
+    "clientOpId",
     "createdAt",
     "createdBy",
     "facilityId",
@@ -3169,7 +3177,7 @@
     "updatedAt",
     "updatedBy"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/progress-notes/{id}"
@@ -3180,7 +3188,7 @@
    "keys": [
     "items"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/progress-notes/{id}/attachments"
@@ -3188,7 +3196,7 @@
   "get_api_progress_notes_id_attachments_fileId_content": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/progress-notes/{id}/attachments/{fileId}/content"
@@ -3196,7 +3204,7 @@
   "get_api_prompts": {
    "status": 403,
    "note": "scope prompts:read",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/prompts"
@@ -3204,7 +3212,7 @@
   "get_api_prompts_id": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/prompts/{id}"
@@ -3212,7 +3220,7 @@
   "get_api_providers": {
    "status": 403,
    "note": "scope providers:read",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/providers"
@@ -3220,7 +3228,7 @@
   "get_api_providers_id": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/providers/{id}"
@@ -3228,7 +3236,7 @@
   "get_api_providers_search": {
    "status": 403,
    "note": "scope providers:read",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/providers/search"
@@ -3236,7 +3244,7 @@
   "get_api_providers_template_csv": {
    "status": 403,
    "note": "scope providers:read",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/providers/template.csv"
@@ -3244,7 +3252,7 @@
   "get_api_provision_v1": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/provision/v1"
@@ -3252,7 +3260,7 @@
   "get_api_provision_v1_id": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/provision/v1/{id}"
@@ -3260,7 +3268,7 @@
   "get_api_provision_v1_id_lines": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/provision/v1/{id}/lines"
@@ -3268,7 +3276,7 @@
   "get_api_qualified_persons_v1": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/qualified-persons/v1"
@@ -3276,7 +3284,7 @@
   "get_api_qualified_persons_v1_id": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/qualified-persons/v1/{id}"
@@ -3294,7 +3302,7 @@
      "label"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/record-extractors/rules"
@@ -3326,7 +3334,7 @@
      "value"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/record-extractors/summary/config"
@@ -3337,7 +3345,7 @@
    "keys": [
     "items"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/record-extractors/summary/feedback"
@@ -3358,7 +3366,7 @@
     "warningDetails",
     "warnings"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/record-extractors/summary/health"
@@ -3366,7 +3374,7 @@
   "get_api_record_transfer_v1_candidates": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/record-transfer/v1/candidates"
@@ -3374,7 +3382,7 @@
   "get_api_record_transfer_v1_candidates_id": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/record-transfer/v1/candidates/{id}"
@@ -3382,7 +3390,7 @@
   "get_api_records_recordId_attachments": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/records/{recordId}/attachments"
@@ -3390,7 +3398,7 @@
   "get_api_records_unclassified": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/records/unclassified"
@@ -3401,7 +3409,7 @@
    "keys": [
     "items"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/reported-placements"
@@ -3409,7 +3417,7 @@
   "get_api_reported_placements_divergence": {
    "status": 400,
    "note": "パラメータが要る: month (YYYY-MM) は必須です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/reported-placements/divergence"
@@ -3420,7 +3428,7 @@
    "keys": [
     "roles"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/reported-placements/summary"
@@ -3428,7 +3436,7 @@
   "get_api_search": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/search"
@@ -3436,7 +3444,7 @@
   "get_api_search_index_status": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/search/index-status"
@@ -3447,7 +3455,7 @@
    "keys": [
     "items"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/self-inspections"
@@ -3455,7 +3463,7 @@
   "get_api_self_inspections_id": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/self-inspections/{id}"
@@ -3463,7 +3471,7 @@
   "get_api_service_actuals_v1": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/service-actuals/v1"
@@ -3471,7 +3479,7 @@
   "get_api_service_actuals_v1_cross_service_summary": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/service-actuals/v1/cross-service-summary"
@@ -3479,7 +3487,7 @@
   "get_api_service_actuals_v1_imports": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/service-actuals/v1/imports"
@@ -3487,7 +3495,7 @@
   "get_api_service_actuals_v1_imports_batchId": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/service-actuals/v1/imports/{batchId}"
@@ -3495,7 +3503,7 @@
   "get_api_service_actuals_v1_item_candidates": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/service-actuals/v1/item-candidates"
@@ -3503,7 +3511,7 @@
   "get_api_service_actuals_v1_users_insuredNumber": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/service-actuals/v1/users/{insuredNumber}"
@@ -3514,7 +3522,7 @@
    "keys": [
     "items"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/service-code-master/v1"
@@ -3522,7 +3530,7 @@
   "get_api_service_code_master_v1_id": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/service-code-master/v1/{id}"
@@ -3530,7 +3538,7 @@
   "get_api_settings": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/settings"
@@ -3538,7 +3546,7 @@
   "get_api_settings_api_keys": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/settings/api-keys"
@@ -3546,24 +3554,51 @@
   "get_api_shifts_plans": {
    "status": 200,
    "shape": "array",
-   "keys": [],
-   "at": "2026-09-14",
+   "keys": [
+    "createdAt",
+    "createdBy",
+    "facilityId",
+    "finalizedAt",
+    "finalizedBy",
+    "id",
+    "organizationId",
+    "publishedAt",
+    "revision",
+    "status",
+    "targetMonth",
+    "updatedAt"
+   ],
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/shifts/plans"
   },
   "get_api_shifts_plans_id": {
-   "status": 0,
-   "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "status": 200,
+   "shape": "object",
+   "keys": [
+    "assignments",
+    "conflicts",
+    "plan"
+   ],
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/shifts/plans/{id}"
   },
   "get_api_shifts_plans_id_history": {
-   "status": 0,
-   "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "status": 200,
+   "shape": "array",
+   "keys": [
+    "after",
+    "before",
+    "changedAt",
+    "changedBy",
+    "id",
+    "planId",
+    "reason"
+   ],
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/shifts/plans/{id}/history"
@@ -3571,8 +3606,22 @@
   "get_api_shifts_preferences": {
    "status": 200,
    "shape": "array",
-   "keys": [],
-   "at": "2026-09-14",
+   "keys": [
+    "constraints",
+    "createdAt",
+    "facilityId",
+    "id",
+    "note",
+    "organizationId",
+    "preferredDays",
+    "status",
+    "submittedAt",
+    "targetMonth",
+    "unavailableDays",
+    "updatedAt",
+    "userId"
+   ],
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/shifts/preferences"
@@ -3598,7 +3647,7 @@
     "updatedAt",
     "workHours"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/shifts/shift-types"
@@ -3607,7 +3656,7 @@
    "status": 200,
    "shape": "array",
    "keys": [],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/shifts/staffing-requirements"
@@ -3641,7 +3690,7 @@
      "updatedAt"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/sources"
@@ -3652,7 +3701,7 @@
    "keys": [
     "items"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/sources/{sourceId}/extractions"
@@ -3663,7 +3712,7 @@
    "keys": [
     "items"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/sources/{sourceId}/ocr"
@@ -3677,7 +3726,7 @@
     "text",
     "title"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/sources/{sourceId}/text"
@@ -3685,7 +3734,7 @@
   "get_api_staffing_fte_v1": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/staffing-fte/v1"
@@ -3696,7 +3745,7 @@
    "keys": [
     "items"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/staffing-standards"
@@ -3717,7 +3766,7 @@
      "standardWeeklyHours"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/staffing-standards/catalog"
@@ -3725,7 +3774,7 @@
   "get_api_staffing_standards_facilityId_serviceTypeCode": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/staffing-standards/{facilityId}/{serviceTypeCode}"
@@ -3733,7 +3782,7 @@
   "get_api_staffing_standards_facilityId_serviceTypeCode_compliance": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/staffing-standards/{facilityId}/{serviceTypeCode}/compliance"
@@ -3741,7 +3790,7 @@
   "get_api_subjects_master_users_insuredNumber_files": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/subjects/master-users/{insuredNumber}/files"
@@ -3749,7 +3798,7 @@
   "get_api_subjects_master_users_insuredNumber_folder": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/subjects/master-users/{insuredNumber}/folder"
@@ -3757,7 +3806,7 @@
   "get_api_system_settings": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/system-settings"
@@ -3765,7 +3814,7 @@
   "get_api_system_settings_care_plan": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/system-settings/care-plan"
@@ -3773,7 +3822,7 @@
   "get_api_system_settings_company_ai_preamble": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/system-settings/company-ai-preamble"
@@ -3781,7 +3830,7 @@
   "get_api_system_settings_corporation": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/system-settings/corporation"
@@ -3789,7 +3838,7 @@
   "get_api_system_settings_filing": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/system-settings/filing"
@@ -3797,7 +3846,7 @@
   "get_api_system_settings_google_workspace": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/system-settings/google-workspace"
@@ -3805,7 +3854,7 @@
   "get_api_system_settings_hrm_job_classes": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/system-settings/hrm-job-classes"
@@ -3813,7 +3862,7 @@
   "get_api_system_settings_important_matters_doc": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/system-settings/important-matters-doc"
@@ -3821,7 +3870,7 @@
   "get_api_system_settings_notifications": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/system-settings/notifications"
@@ -3829,7 +3878,7 @@
   "get_api_system_settings_personal_doc": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/system-settings/personal-doc"
@@ -3837,7 +3886,7 @@
   "get_api_system_settings_record_summary": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/system-settings/record-summary"
@@ -3845,7 +3894,7 @@
   "get_api_system_settings_secrets_status": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/system-settings/secrets-status"
@@ -3853,7 +3902,7 @@
   "get_api_system_settings_user_folders": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/system-settings/user-folders"
@@ -3861,7 +3910,7 @@
   "get_api_training_attendance": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/training/attendance"
@@ -3869,7 +3918,7 @@
   "get_api_training_plans": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/training/plans"
@@ -3880,7 +3929,7 @@
    "keys": [
     "items"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/trainings"
@@ -3888,7 +3937,7 @@
   "get_api_trainings_id": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/trainings/{id}"
@@ -3910,7 +3959,7 @@
     "updatedAt",
     "versionNo"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/transport/plans"
@@ -3968,7 +4017,7 @@
      "vehicleId"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/transport/plans/{id}"
@@ -3984,7 +4033,7 @@
     "serviceDate",
     "unassigned"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/transport/plans/{id}/crew-view"
@@ -3999,7 +4048,7 @@
     "vehicleCount",
     "warningsCount"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/transport/plans/{id}/kpi"
@@ -4022,7 +4071,7 @@
      "wheelchairUsed"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/transport/plans/{id}/suggest"
@@ -4044,7 +4093,7 @@
     "updatedAt",
     "wheelchairCapacity"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/transport/vehicles"
@@ -4066,7 +4115,7 @@
     "updatedAt",
     "wheelchairCapacity"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/transport/vehicles/{id}"
@@ -4074,7 +4123,7 @@
   "get_api_user_detail": {
    "status": 400,
    "note": "パラメータが要る: facilityId is required",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/user-detail"
@@ -4082,7 +4131,7 @@
   "get_api_user_detail_insuredNumber_record_timeline": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/user-detail/{insuredNumber}/record-timeline"
@@ -4094,7 +4143,7 @@
     "groups",
     "ok"
    ],
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/user-groups"
@@ -4102,7 +4151,7 @@
   "get_api_user_groups_id": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/user-groups/{id}"
@@ -4110,7 +4159,7 @@
   "get_api_users": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/users"
@@ -4118,7 +4167,7 @@
   "get_api_users_id": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/users/{id}"
@@ -4126,7 +4175,7 @@
   "get_api_users_id_groups": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/users/{id}/groups"
@@ -4157,7 +4206,7 @@
      "withinGeofence"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/visit-checkins"
@@ -4179,7 +4228,7 @@
      "temporary"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/visit-checkins/orphans"
@@ -4206,7 +4255,7 @@
      "validTo"
     ]
    },
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/api/visit-nursing-instructions/v1"
@@ -4214,7 +4263,7 @@
   "get_api_workspace_governance_diagnose_id": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/workspace-governance/diagnose/{id}"
@@ -4222,7 +4271,7 @@
   "get_api_workspace_governance_permission_drift": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/workspace-governance/permission-drift"
@@ -4230,7 +4279,7 @@
   "get_api_workspace_governance_policy": {
    "status": 401,
    "note": "認証が必要です",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/api/workspace-governance/policy"
@@ -4238,7 +4287,7 @@
   "get_mcp": {
    "status": 405,
    "note": "この MCP サーバはサーバ発のストリームを持ちません。POST /mcp を使ってください。",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/mcp"
@@ -4246,7 +4295,7 @@
   "get_oauth_authorize": {
    "status": 400,
    "note": "パラメータが要る: ",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "session",
    "method": "GET",
    "path": "/oauth/authorize"
@@ -4254,7 +4303,7 @@
   "get_public_feedback_attachments_id_fileId": {
    "status": 0,
    "note": "パス変数を埋める値が取れない",
-   "at": "2026-09-14",
+   "at": "2026-09-27",
    "ns": "app",
    "method": "GET",
    "path": "/public/feedback-attachments/{id}/{fileId}"

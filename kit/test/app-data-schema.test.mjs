@@ -46,6 +46,14 @@ test('validateManifest: schema の不備は error、apps:admin は error、isPub
   assert.equal(r4.ok, false); assert.match(r4.errors[0], /tokenDelivery\.secretManager\.secret/);
 });
 
+test('validateManifest: scope の上限がある appId (jinji) で上限の外を書くと warning (CPOS は取込で黙って捨てる)', () => {
+  const jinji = { appId: 'jinji', name: 'x', url: 'https://jinji.example' };
+  const r = validateManifest({ ...jinji, apiTokenScopes: ['employees:read', 'employees:write'] });
+  assert.equal(r.ok, true); assert.ok(r.warnings.some((w) => /jinji に付けられる scope/.test(w) && /付けられないもの: employees:write\)/.test(w)), r.warnings.join('\n'));
+  assert.ok(!validateManifest({ ...jinji, apiTokenScopes: ['employees:read', 'facilities:read'] }).warnings.some((w) => /付けられる scope/.test(w)));
+  assert.ok(!validateManifest({ ...jinji, appId: 'demo', apiTokenScopes: ['employees:write'] }).warnings.some((w) => /付けられる scope/.test(w)), '上限の無い appId は何も言わない');
+});
+
 test('KIT 模擬サーバ: manifest に schema があれば、合わない data の作成・更新を 400 (issues 付き) にする', async () => {
   const dir = mkdtempSync(join(tmpdir(), 'cpos-kit-schema-'));
   const manifest = join(dir, 'cpos.manifest.json');

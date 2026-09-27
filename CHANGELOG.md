@@ -5,6 +5,88 @@ v1 の間は API の削除をしない (deprecated の印だけ)。
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-09-27
+
+### CPOS 00278-7tl (2026-09-27) に追随
+生成元: CPOS OpenAPI 1.0.0 (revision 00201-58l → 00278-7tl、1,418 operations)。本物での検証: 呼んだ 270 / 200 116 / 後退 0。
+
+- 生成: 増えた 46 / 消えた 0 / 署名が変わった 4。
+  <details><summary>一覧</summary>
+
+  - `GET /api/auth/impersonation` → `cpos.app.auth.getImpersonation`
+  - `POST /api/auth/impersonation` → `cpos.app.auth.postImpersonation`
+  - `DELETE /api/auth/impersonation` → `cpos.app.auth.deleteImpersonation`
+  - `GET /api/auth/impersonation/candidates` → `cpos.app.auth.getImpersonationCandidates`
+  - `GET /api/build-info` → `cpos.session.buildInfo.get`
+  - `POST /api/chat/google` → `cpos.app.chat.postGoogle`
+  - `POST /api/data-browser/exports` → `cpos.session.dataBrowser.postExports`
+  - `POST /api/welfare-equipment/v2/products/eligibility-from-usage` → `cpos.app.welfareEquipment.postV2ProductsEligibilityFromUsage`
+  - `GET /api/welfare-equipment/v2/assignments` → `cpos.app.welfareEquipment.getV2Assignments`
+  - `POST /api/welfare-equipment/v2/assignments` → `cpos.app.welfareEquipment.postV2Assignments`
+  - `GET /api/welfare-equipment/v2/assignments/{assignmentId}` → `cpos.app.welfareEquipment.getV2AssignmentsByAssignmentId`
+  - `POST /api/welfare-equipment/v2/assignments/bulk` → `cpos.app.welfareEquipment.postV2AssignmentsBulk`
+  - `PATCH /api/welfare-equipment/v2/placements/{placementId}` → `cpos.app.welfareEquipment.patchV2PlacementsByPlacementId`
+  - `POST /api/welfare-equipment/v2/imports/roster-repair` → `cpos.app.welfareEquipment.postV2ImportsRosterRepair`
+  - `GET /api/welfare-equipment/v2/imports/{importId}/persons` → `cpos.app.welfareEquipment.getV2ImportsByImportIdPersons`
+  - `POST /api/welfare-equipment/v2/imports/reassign-person` → `cpos.app.welfareEquipment.postV2ImportsReassignPerson`
+  - `POST /api/welfare-equipment/v2/imports/{importId}/prune-absent` → `cpos.app.welfareEquipment.postV2ImportsByImportIdPruneAbsent`
+  - `POST /api/welfare-equipment/v2/reason-templates` → `cpos.app.welfareEquipment.postV2ReasonTemplates`
+  - `GET /api/welfare-equipment/v2/exports` → `cpos.app.welfareEquipment.getV2Exports`
+  - `GET /api/welfare-equipment/v2/exports/{dataset}` → `cpos.app.welfareEquipment.getV2ExportsByDataset`
+  - `GET /api/app-data/lifecycle-health` → `cpos.session.appData.getLifecycleHealth`
+  - `POST /api/app-data/{appId}/{resource}/{id}/unvoid` → `cpos.app.appData.postByAppIdByResourceByIdUnvoid`
+  - `POST /api/device/records/{id}/classify` → `cpos.app.device.postRecordsByIdClassify`
+  - `POST /api/device/records/{id}/unvoid` → `cpos.app.device.postRecordsByIdUnvoid`
+  - `POST /api/master-users/{insuredNumber}/geocode` → `cpos.app.masterUsers.postByInsuredNumberGeocode`
+  - `POST /api/master-users/assignments/dedupe` → `cpos.session.masterUsers.postAssignmentsDedupe`
+  - `POST /api/care-documents/v1/maintenance/backfill-master-user-id` → `cpos.app.careDocuments.postV1MaintenanceBackfillMasterUserId`
+  - `GET /api/care-service-actuals/v1/metrics.csv` → `cpos.app.careServiceActuals.getV1MetricsCsv`
+  - `GET /api/user-id-maintenance/v1/unlinked-app-data` → `cpos.app.userIdMaintenance.getV1UnlinkedAppData`
+  - `POST /api/user-id-maintenance/v1/unlinked-app-data/link` → `cpos.app.userIdMaintenance.postV1UnlinkedAppDataLink`
+  - `DELETE /api/platform/facility-assignments/membership/{userId}/{facilityId}` → `cpos.session.platform.deleteFacilityAssignmentsMembershipByUserIdByFacilityId`
+  - `POST /api/platform/facility-assignments/backfill-user-facilities` → `cpos.session.platform.postFacilityAssignmentsBackfillUserFacilities`
+  - `POST /api/care-records/v1/records/{id}/classify` → `cpos.app.careRecords.postV1RecordsByIdClassify`
+  - `POST /api/care-records/v1/records/{id}/unvoid` → `cpos.app.careRecords.postV1RecordsByIdUnvoid`
+  - `POST /api/maintenance/purge-user-test-data` → `cpos.session.maintenance.postPurgeUserTestData`
+  - `POST /api/record-app/records/{id}/classify` → `cpos.app.recordApp.postRecordsByIdClassify`
+  - `POST /api/record-app/records/{id}/unvoid` → `cpos.app.recordApp.postRecordsByIdUnvoid`
+  - `PUT /api/apps/{id}/scopes` → `cpos.session.apps.putByIdScopes`
+  - `POST /api/facilities/{id}/geocode` → `cpos.app.facilities.postByIdGeocode`
+  - `POST /api/facilities/{facilityId}/staff/sync-names-from-users` → `cpos.app.facilities.postByFacilityIdStaffSyncNamesFromUsers`
+  - `GET /api/platform/sales/pipeline` → `cpos.app.platform.getSalesPipeline`
+  - `GET /api/platform/sales/referral-outcomes` → `cpos.app.platform.getSalesReferralOutcomes`
+  - `POST /api/platform/geo/travel-matrix` → `cpos.app.platform.postGeoTravelMatrix`
+  - `POST /api/platform/geo/geocode` → `cpos.app.platform.postGeoGeocode`
+  - `POST /api/platform/geo/geocode-missing` → `cpos.app.platform.postGeoGeocodeMissing`
+  - `POST /api/platform/audit-events` → `cpos.app.platform.postAuditEvents`
+  - (署名) `GET /api/care-records/v1/records` → `cpos.app.careRecords.getV1Records`
+  - (署名) `GET /api/care-records/v1/records/updates` → `cpos.app.careRecords.getV1RecordsUpdates`
+  - (署名) `GET /api/device/records` → `cpos.session.device.getRecords`
+  - (署名) `GET /api/record-app/records` → `cpos.app.recordApp.getRecords`
+  </details>
+- **利用者を masterUserId で持つ (CPOS 2026-09-26 の利用者キー移行)。** CPOS は AppData の行を「封筒」の `insuredNumber` でだけ本人に結ぶ。利用者ごとの一覧、統合や番号変更への追随、保存時の `masterUserId` の付与は、どれも封筒しか見ない。`data.masterUserId` だけの行は、CPOS の整備画面でも本人に結べない (候補を data の氏名でしか出さないため)。
+  - client: `appData.create / update / list / upsertBy` に任意の `{ user }` (masterUserId) を足した。create / update は `body.insuredNumber` として、list は `?insuredNumber=` として送る。`user` を渡さなければ、送る本文は今までと同じ。
+  - client の `upsertBy`: `user` を付けると、本人の行だけを CPOS 側で絞ってから探す。封筒の無い古い行は、`data[keyField] === user` のときだけ拾って本人に結ぶ (別の人の行は付け替えない)。探すときの一覧は `Cache-Control: no-cache` で CPOS のキャッシュを素通しする (最大 30 秒古く見えて二重に作るのを防ぐ)。
+  - client の型: `AppDataRecord` に封筒の `insuredNumber` / `masterUserId` を足した。
+  - client: `displayInsuredNumber(user)` を足した。帳票・画面に出してよい番号を返す。CPOS が値を返せばそれを使い、返さない API では仮番号 (`tmp-*`) と `mu_` + 6 文字以上を出さない (CPOS の正本と同じ規則)。
+  - KIT 模擬サーバ: 封筒の扱いを本物に合わせた (保存キーへの揃え、保存時の mu の付与、一覧は送った値・今の番号・過去の番号で引く、PUT の付け直しと null での解除、PUT は data を省ける)。
+  - KIT 模擬サーバ: `platform/master-users/{key}`・`name-map`・`facilities/{facilityId}/users` (`displayInsuredNumber` が載る) を足した。利用者検索の `q` が番号にも当たる。形はどれも本物で実測したもの。
+  - 雛形: 送られた `masterUserId` がその事業所の利用者かを確かめ、違えば 400。メモは `{ user }` で本人に結ぶ。
+  - スキル・標準ブロック・GLOSSARY: 利用者は `masterUserId` で指す。`insuredNumber` は変わる保存キーなのでキーにしない。番号しか持たないデータは name-map で mu に寄せてから結ぶ。
+  - 元は kimuchi の PR #6 (TK-004 として出されたもの)。本物での実測と CPOS のコードとの照合で、模擬サーバの 4 か所を直して取り込んだ。
+- `create`: 新しいアプリに書く `@cpos/kit` の依存を、kit の版の系統 (`#semver:^0.<minor>`) にした (`^0.1` 固定だったので、0.2.0 を出しても新しいアプリに 0.1 系が入るところだった)。
+- `/api/health`: 雛形と模擬サーバの応答を、CPOS と同じ形 `{ status, app, appEnv, revision, timestamp }` にした (CPOS の APP_HEALTH の規約。コミットの SHA は載せない)。
+- manifest: appId `jinji` は CPOS が scope の上限を 3 つに固定している。上限の外を書くと `validate` が warning を出す (CPOS は取込で黙って捨てる)。
+- `token` の案内: トークンの入れ替えを「発行 → .env / Secret Manager に入れ直し → `verify:staging` → 古いトークンを失効」の順にした (発行しただけではアプリに届かない)。ステージングに登録・発行するときはステージングの CPOS で行う。
+- スキル: ステージングだけ 403 になる原因は古いトークン。`apps:fleet` の rotate のたびに CPOS が manifest を取りに来る。ステージングの secret は `<secret>-staging`。
+- 判断を保留したもの (候補): なりすまし表示 (view-as) を app-kit に通すか、監査イベント、geo・営業・unvoid のレシピ化。いまの app-kit は `cpos_session` だけを転送するので、なりすまし中の管理者は本人として見える (壊れはしない)。
+- **既存アプリへの影響**
+  - **既存アプリにこの版を入れるには、依存を `github:loogo-inc/cpos-kit#semver:^0.2` に書き換えて `npm install` する。** 0.x の間は minor が変わると別系統なので、`^0.1` のままでは 0.1.0 のまま。入れた後は `npx github:loogo-inc/cpos-kit update` で標準ブロックとスキルを新しくする。
+  - KIT 模擬サーバの利用者が 20 人から 22 人になった (番号が変わった人・仮番号の人を足した)。件数を固定しているテストは直す必要がある。
+  - KIT 模擬サーバの capabilities から、模擬に無い機能のキーが消えた。本物の規約どおりで、無い機能はキーごと無い。
+  - 雛形の `/api/health` から `ok: true` が無くなった。
+  - 既存の AppData の行は、封筒が空のままだと利用者ごとの一覧に出ない。`upsertBy(…, { user })` を使えば、次の保存で本人に結ばれる。
+
 ### Added
 - `docs` — CPOS の API 一覧を Redoc の画面で見る (kit が持つ OpenAPI の写し。ログイン不要)。
 

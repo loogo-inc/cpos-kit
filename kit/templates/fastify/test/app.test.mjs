@@ -61,7 +61,10 @@ test('cpos.manifest.json と /api/health はログイン無しで見える。形
   assert.equal(res.statusCode, 200);
   assert.equal(res.json().appId, '{{appId}}');
   assert.deepEqual(readManifest(new URL('../cpos.manifest.json', import.meta.url)).errors, []);
-  assert.equal((await inject('GET', '/api/health')).statusCode, 200);
+  const health = await inject('GET', '/api/health');
+  assert.equal(health.statusCode, 200);
+  const h = health.json();   // CPOS と同じ形 (status / app / appEnv / revision / timestamp)
+  assert.equal(h.status, 'ok'); assert.equal(h.app, '{{appId}}'); assert.ok(['production', 'staging', 'unknown'].includes(h.appEnv)); assert.ok(h.revision === null || typeof h.revision === 'string'); assert.ok(!Number.isNaN(Date.parse(h.timestamp)));
 });
 
 test('未ログインは画面が CPOS へ 302、API は 401 (何も見せない)', async () => {
@@ -126,6 +129,7 @@ test('メモは利用者 1 人に 1 件、直せて、取り消せて、別の�
   assert.equal(second.statusCode, 201);
   const mine = (await inject('GET', q('/api/notes', main.id), { cookie })).json().filter((n) => n.data.masterUserId === users[0].masterUserId);
   assert.equal(mine.length, 1, '同じ利用者に 2 回保存しても 1 件');
+  if (!env.external) assert.equal(mine[0].masterUserId, users[0].masterUserId, 'メモは本人に紐づいている (封筒の利用者)');
   assert.equal(mine[0].data.text, '2 回目');
   const id = mine[0].id;
   const updated = await inject('PUT', `/api/notes/${id}`, { cookie, body: { facilityId: main.id, text: '直した' } });
@@ -136,6 +140,15 @@ test('メモは利用者 1 人に 1 件、直せて、取り消せて、別の�
   assert.equal((await inject('DELETE', q(`/api/notes/${id}`, main.id), { cookie })).statusCode, 204);
   assert.ok(!(await inject('GET', q('/api/notes', main.id), { cookie })).json().some((n) => n.id === id));
   written.length = 0;
+});
+
+test('その事業所の利用者でない masterUserId ではメモを作らない (400)', async () => {
+  const cookie = sessionFor({ mode: 'all' });
+  const res = await inject('POST', '/api/notes', { cookie, body: { facilityId: main.id, masterUserId: 'mu_no_such_person', text: 'x' } });
+  assert.equal(res.statusCode, 400, res.body);
+  const mine = (await inject('GET', q('/api/users', main.id), { cookie })).json();
+  const theirs = (await inject('GET', q('/api/users', other.id), { cookie })).json().find((u) => !mine.some((m) => m.masterUserId === u.masterUserId));
+  if (theirs) assert.equal((await inject('POST', '/api/notes', { cookie, body: { facilityId: main.id, masterUserId: theirs.masterUserId, text: 'x' } })).statusCode, 400, 'よその事業所の利用者');
 });
 
 test('本文が壊れていれば 400 で、CPOS には行かない', async () => {

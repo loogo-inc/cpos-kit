@@ -82,7 +82,7 @@ npm レジストリに登録していない (`private: true`) ので、名前で
 ```
 npx github:loogo-inc/cpos-kit create …                              ✗ 404
 npx github:loogo-inc/cpos-kit create …       ○ GitHub から取って実行
-npm install github:loogo-inc/cpos-kit#semver:^0.1   ○ 依存として固定 (以後プロジェクト内では npx github:loogo-inc/cpos-kit … が使える)
+npm install github:loogo-inc/cpos-kit#semver:^0.2   ○ 依存として固定 (以後プロジェクト内では npx github:loogo-inc/cpos-kit … が使える)
 ```
 
 ## 開発

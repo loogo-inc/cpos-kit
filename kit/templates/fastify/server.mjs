@@ -34,6 +34,14 @@ const APP_ID = '{{appId}}';
 const APP_NAME = '{{name}}';
 const RESOURCE = 'notes'; // cpos.manifest.json の resources に宣言してある名前
 
+// CPOS と同じ形の /api/health (CPOS の docs/APP_HEALTH.md)。デプロイの後に「どの版が配信されているか」を確かめる口。
+// revision は Cloud Run のリビジョン名 (それ以外では null)。コミットの SHA は載せない
+function health() {
+  const e = String(process.env.APP_ENV ?? '').trim().toLowerCase();
+  const appEnv = e === 'production' || e === 'prod' ? 'production' : e === 'staging' || e === 'stg' ? 'staging' : 'unknown';
+  return { status: 'ok', app: APP_ID, appEnv, revision: process.env.K_REVISION?.trim() || null, timestamp: new Date().toISOString() };
+}
+
 export function createApp({ cposBaseUrl, cposToken, cposFetch, appDataAppId, sessionSecret, appUrl, loginMode, oauthClientId, defaultFacilityId, logger = false }) {
   // cposFetch: テストでソケット無しの KIT 模擬サーバ (createFakeCpos().fetch) を差し込む。省略時は本物の fetch。
   const cpos = createCposClient({ baseUrl: cposBaseUrl, token: tokenResolver({ file: process.env.{{APP}}_CPOS_APP_TOKEN_FILE, fallback: () => cposToken }) /* ファイル (Secret Manager の mount) があれば 60 秒ごとに読み直す。トークン入替に追随 */, clientName: `${APP_ID}/0.1.0`, fetch: cposFetch });
@@ -66,6 +74,13 @@ export function createApp({ cposBaseUrl, cposToken, cposFetch, appDataAppId, ses
     return { facility, facilities };
   }
 
+  // 渡された masterUserId が、その事業所の利用者か確かめる。よその事業所の人・存在しない人の
+  // メモを作らない (CPOS は受け取った利用者の参照を、本人に着地しなくてもそのまま行に付けてしまう)。
+  async function userInFacility(facilityId, masterUserId) {
+    if (typeof masterUserId !== 'string' || !masterUserId) return false;
+    return (await cpos.masterUsers.list({ facilityId })).some((u) => u.masterUserId === masterUserId);
+  }
+
   // CPOS の失敗は hint ごとそのまま返す (開発中はこれが一番の手がかり)
   app.setErrorHandler((e, req, reply) => {
     if (e instanceof CposApiError || e instanceof CposClientError) return reply.code(e.status ?? 500).send({ ok: false, error: e.error ?? e.message, message: e.message, hint: e.hint, requiredScope: e.requiredScope });
@@ -75,7 +90,7 @@ export function createApp({ cposBaseUrl, cposToken, cposFetch, appDataAppId, ses
   });
 
   app.get('/cpos.manifest.json', async (req, reply) => reply.type('application/json; charset=utf-8').send(manifest));
-  app.get('/api/health', async () => ({ ok: true }));
+  app.get('/api/health', async () => health());
   app.get('/api/me', async (req) => ({ ok: true, user: req.session.user, organizationId: req.session.organizationId, facilityScope: req.session.facilityScope, via: req.session.via ?? 'cookie' }));
   app.get('/api/facilities', async (req) => (await visibleFacilities(req.session)).map((f) => ({ id: f.id, name: f.name })));
   app.get('/api/users', async (req) => {
@@ -90,7 +105,9 @@ export function createApp({ cposBaseUrl, cposToken, cposFetch, appDataAppId, ses
     const body = req.body ?? {};
     if (!body.masterUserId || typeof body.text !== 'string') return reply.code(400).send({ ok: false, error: 'masterUserId と text が必要です' });
     const { facility } = await resolveFacility(req.session, body.facilityId);
-    const rec = await notes.upsertBy(RESOURCE, 'masterUserId', { masterUserId: body.masterUserId, text: body.text.slice(0, 500) }, { facilityId: facility.id });
+    if (!(await userInFacility(facility.id, body.masterUserId))) return reply.code(400).send({ ok: false, error: 'この事業所の利用者に masterUserId が見つかりません' });
+    // user: 行を本人に紐づける (CPOS の利用者ごとの画面・統合・番号変更の追随は、data の中ではなくこちらを見る)
+    const rec = await notes.upsertBy(RESOURCE, 'masterUserId', { masterUserId: body.masterUserId, text: body.text.slice(0, 500) }, { facilityId: facility.id, user: body.masterUserId });
     return reply.code(201).send(rec);
   });
   app.get('/api/notes/:id', async (req) => {
@@ -127,7 +144,8 @@ export function createApp({ cposBaseUrl, cposToken, cposFetch, appDataAppId, ses
   app.post('/notes', async (req, reply) => {
     const form = req.body ?? {};
     const { facility } = await resolveFacility(req.session, form.facilityId);
-    await notes.upsertBy(RESOURCE, 'masterUserId', { masterUserId: form.masterUserId, text: String(form.text ?? '').slice(0, 500) }, { facilityId: facility.id });
+    if (!(await userInFacility(facility.id, form.masterUserId))) return reply.code(400).send({ ok: false, error: 'この事業所の利用者に masterUserId が見つかりません' });
+    await notes.upsertBy(RESOURCE, 'masterUserId', { masterUserId: form.masterUserId, text: String(form.text ?? '').slice(0, 500) }, { facilityId: facility.id, user: form.masterUserId });
     return reply.redirect(`/?facilityId=${encodeURIComponent(facility.id)}`, 303);
   });
   // form の POST を読む (Fastify は JSON しか既定で読まない)

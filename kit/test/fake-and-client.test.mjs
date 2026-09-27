@@ -28,14 +28,14 @@ test('facilityId を省くと CPOS に行く前に止まる', async () => {
 
 test('事業所の利用者一覧。存在しない事業所は 403 (fail-close)', async () => {
   const users = await app().masterUsers.list({ facilityId: 'fac_sakura' });
-  assert.equal(users.length, 12);
+  assert.equal(users.length, 14);
   assert.equal((await app().masterUsers.list({ facilityId: 'fac_sakura', q: '佐藤' })).length, 1);
   await assert.rejects(app().masterUsers.list({ facilityId: 'fac_nowhere' }), (e) => e instanceof CposApiError && e.status === 404 && /見つかりません/.test(e.error));
   assert.equal(users[0].masterUserId, 'mu_0001');
   const staff = await app().staffAccounts.list();
   assert.equal(staff.length, 3);
   const all = await app().raw('GET', '/api/platform/master-users');
-  assert.equal(all.length, 20, 'facilityId 省略は許可された全事業所 (本物の挙動)');
+  assert.equal(all.length, 22, 'facilityId 省略は許可された全事業所 (本物の挙動)');
 });
 
 test('Cookie ログインは allowedFacilityIds で絞られる', async () => {
@@ -44,7 +44,7 @@ test('Cookie ログインは allowedFacilityIds で絞られる', async () => {
   assert.deepEqual(me.facilityScope.allowedFacilityIds, ['fac_sakura']);
   assert.equal((await staff.facilities.list()).length, 1);
   await assert.rejects(staff.masterUsers.list({ facilityId: 'fac_momiji' }), (e) => e.status === 403 && e.code === 'facility_forbidden');
-  assert.equal((await staff.raw('GET', '/api/platform/master-users')).length, 12, '省略時は許可された事業所だけ');
+  assert.equal((await staff.raw('GET', '/api/platform/master-users')).length, 14, '省略時は許可された事業所だけ');
   const none = createCposClient({ baseUrl: fake.baseUrl, cookie: 'cpos_session=acc_none' });
   assert.equal((await none.facilities.list()).length, 0);
 });

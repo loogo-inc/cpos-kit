@@ -41,9 +41,11 @@ test('app-kit: 事業所の範囲が読めなければ unknown = 見せない (f
 });
 
 test('app-kit: セッションは封じられ、書き換えも期限切れも弾く', () => {
-  const s = sealSession({ user: { id: 'u1' }, exp: Math.floor(Date.now() / 1000) + 60 }, SECRET);
-  assert.ok(!s.includes('u1'), '中身がそのまま見えない');
-  assert.equal(unsealSession(s, SECRET).user.id, 'u1');
+  // 暗号文は base64url のランダムな文字列で、短い値 ('u1' 等) は偶然含まれうる (約 2%)。偶然には現れない長さの値で見る
+  const id = 'user-plain-id-0123456789';
+  const s = sealSession({ user: { id }, exp: Math.floor(Date.now() / 1000) + 60 }, SECRET);
+  assert.ok(!s.includes(id) && !s.includes(Buffer.from(id).toString('base64url').slice(0, 12)), '中身がそのまま見えない');
+  assert.equal(unsealSession(s, SECRET).user.id, id);
   assert.equal(unsealSession(s, 'ちがう秘密-16文字以上あるもの'), null, '別の秘密では読めない');
   assert.equal(unsealSession(s.slice(0, -4) + 'AAAA', SECRET), null, '書き換えは弾く');
   assert.equal(unsealSession('こわれた値', SECRET), null, '壊れた cookie で落ちない');

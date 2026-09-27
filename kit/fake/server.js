@@ -179,6 +179,43 @@ function buildFakeCpos(opts = {}) {
   const accountById = new Map(seed.accounts.map((a) => [a.id, a]));
   const tokenByValue = new Map((seed.appTokens ?? []).filter((t) => t.token).map((t) => [t.token, t]));
 
+  // ---- 利用者の参照 (本物と同じく、番号・masterUserId・過去の番号・仮番号のどれでも本人に着地する) ----
+  // seed の insuredNumber は「保存キー」(本物と同じ。番号が変わると変わり、番号の無い人は tmp-* か mu そのもの)。
+  // pastInsuredNumbers は模擬サーバだけが読む欄 (本物の identifier alias の代わり)。応答には出さない。
+  const userKeys = (u) => [...new Set([u.insuredNumber, u.masterUserId, ...(u.pastInsuredNumbers ?? [])].filter(Boolean))];
+  const userByRef = (ref) => {
+    const r = typeof ref === 'string' ? ref.trim() : '';
+    return r ? seed.users.find((u) => userKeys(u).includes(r)) ?? null : null;
+  };
+  // 一覧の絞り込みに使うキー。本人に着地すれば「送った値・今の保存キー・過去の番号・仮番号」、しなければ送った値だけ。
+  // 本人の mu は、送った値か保存キーが mu のときだけ入る (本物と同じ。番号で引くと封筒が mu の古い行は当たらない)
+  const keysForRef = (ref) => {
+    const r = typeof ref === 'string' ? ref.trim() : '';
+    if (!r) return [];
+    const u = userByRef(r);
+    return u ? [...new Set([r, u.insuredNumber, ...(u.pastInsuredNumbers ?? [])].filter(Boolean))] : [r];
+  };
+  // 帳票に出してよい本物の番号。仮番号 (tmp-*) と mu を保存キーにしている人は null (本物と同じ規則: tmp- 始まりか mu_ + 6 文字以上)
+  const displayInsuredNumberOf = (u) => { const v = (u.insuredNumber ?? '').trim(); return v && !/^tmp-/.test(v) && !/^mu_[A-Za-z0-9_-]{6,}$/.test(v) ? v : null; };
+  const publicUser = (u) => { const { pastInsuredNumbers: _omit, ...rest } = u; return rest; };
+  // AppData の封筒の利用者。本人に着地すれば保存キーと mu に揃え、しなければ受け取った値のまま mu なし (本物と同じ)。
+  // mu はアプリの申告を入れず、ここで引いた本人の値だけを入れる
+  const envelopePerson = (ref) => {
+    const u = userByRef(ref);
+    return u ? { insuredNumber: u.insuredNumber, masterUserId: u.masterUserId ?? null, resolved: true } : { insuredNumber: String(ref).trim(), masterUserId: null, resolved: false };
+  };
+  const nonEmpty = (v) => typeof v === 'string' && v.trim() !== '';
+  // 保存時の付与 (本物はリポジトリ層で、ルートの後にもう一度引く)。封筒に番号があって mu が空なら本人の mu を付ける。
+  // 保存キーが mu_* ならそのまま mu に入れる (名簿に居なくても)
+  const stampMasterUserId = (rec) => {
+    if (typeof rec.masterUserId === 'string' && rec.masterUserId.startsWith('mu_')) return rec;
+    if (!nonEmpty(rec.insuredNumber)) return rec;
+    const u = userByRef(rec.insuredNumber);
+    if (u?.masterUserId) rec.masterUserId = u.masterUserId;
+    else if (rec.insuredNumber.startsWith('mu_')) rec.masterUserId = rec.insuredNumber;
+    return rec;
+  };
+
   // 本物と同じ文面でスコープ不足を返す (platform 系の 403)
   function requireScope(actor, res, scope) {
     const have = actor.scopes ?? [];
@@ -366,7 +403,7 @@ function buildFakeCpos(opts = {}) {
     // デバッグ
     if (path === '/__fake/state') return json(res, 200, { seed: { organizationId: seed.organizationId, facilities: seed.facilities.length, users: seed.users.length, accounts: seed.accounts.map((a) => a.id) }, appData: [...state.appData.entries()].map(([k, v]) => ({ key: k, count: v.size })), requests: state.requests.slice(-50) });
     if (m === 'POST' && path === '/__fake/reset') { state.appData.clear(); state.requests.length = 0; return json(res, 200, { ok: true }); }
-    if (path === '/api/health') return json(res, 200, { ok: true, fake: true });
+    if (path === '/api/health') return json(res, 200, { status: 'ok', app: 'cpos', appEnv: 'unknown', revision: null, timestamp: new Date().toISOString(), fake: true }); // 本物と同じ 5 項目 + fake
 
     // 以下は認証必須
     const actor = actorOf(req);
@@ -381,8 +418,11 @@ function buildFakeCpos(opts = {}) {
       return json(res, 200, { ok: true, authMethod: actor.authMethod, organizationId: actor.organizationId, token: actor.authMethod === 'session' ? null : { authMethod: 'api_token', id: 'tok_fake', name: 'fake token', tokenType: actor.tokenType, audience: null, tokenPreview: '****', scopes: actor.scopes, allowedFacilityIds: actor.allowedFacilityIds, expiresAt: null, lastUsedAt: null }, user: actor.user });
     }
     if (m === 'GET' && path === '/api/capabilities') {
-      // 本物 (ステージングで確認) と同じ形。値は seed の capabilities があればそれ、無ければ本物の 2026-09-07 時点の既定
-      return json(res, 200, seed.capabilities ?? { server: 'cpos', features: { careSchedules: { coVisitors: true, occurrences: true, cancel: true }, careDocuments: { revertCanonical: true, templates: true }, appData: { ownerOnly: true, userRef: true, attachments: true, confidential: true }, masterUsers: { masterUserId: true, identifierAliases: true, merge: true, changeInsuredNumber: true }, formTemplates: { importExport: true, serviceTypeFiltering: true }, externalPartners: { ensureOverwrite: true }, filing: { masterUserUpsert: true } } });
+      // 本物 (ステージングで確認) と同じ形。本物の規約は「その機能があるときだけキーを載せる (値は常に true。無いキー = 無い)」。
+      // 模擬サーバは自分が持つ機能だけを載せる: 予定の発生 (同行者の欄つき)、AppData の封筒の利用者 (番号・mu・過去番号・仮番号)、
+      // 利用者の masterUserId と別名 (過去番号・仮番号で引ける)。予定の取消・書類・添付・機密・本人限定・利用者の統合や番号変更などは
+      // 持たないので載せない (載せると「この CPOS でできる」と誤って判断させる)。seed の capabilities があればそれを返す
+      return json(res, 200, seed.capabilities ?? { server: 'cpos', features: { careSchedules: { occurrences: true, coVisitors: true }, appData: { userRef: true }, masterUsers: { masterUserId: true, identifierAliases: true } } });
     }
     if (m === 'GET' && path === '/api/platform/facilities') {
       if (!requireScope(actor, res, 'facilities:read')) return;
@@ -394,13 +434,64 @@ function buildFakeCpos(opts = {}) {
       if (!requireScope(actor, res, 'master-users:read')) return;
       const fc = facilityCheck(actor, req, { required: false });
       if (fc.error) return fail(res, ...fc.error);
-      const q = (url.searchParams.get('query') ?? url.searchParams.get('q') ?? '').trim();
+      const q = (url.searchParams.get('query') ?? url.searchParams.get('q') ?? '').trim().toLowerCase();
       const allowed = actor.allowedFacilityIds;
       let items = seed.users.filter((u) => (fc.facilityId ? u.facilityIds.includes(fc.facilityId) : allowed === null || u.facilityIds.some((id) => allowed.includes(id))));
-      if (q) items = items.filter((u) => u.name.includes(q) || (u.furigana ?? '').includes(q));
+      // 本物と同じく、番号 (保存キー)・氏名・ふりがなの部分一致
+      if (q) items = items.filter((u) => u.insuredNumber.includes(q) || u.name.toLowerCase().includes(q) || (u.furigana ?? '').toLowerCase().includes(q));
       const limit = Number(url.searchParams.get('limit'));
       if (limit > 0) items = items.slice(0, limit);
-      return json(res, 200, items);
+      return json(res, 200, items.map(publicUser));
+    }
+    // 番号 → 氏名・masterUserId の対応表。過去の番号・仮番号も kind: 'alias' で載る (本物 2026-09-14 実測の形)。
+    // 番号でしか利用者を持たないデータ (実績など) を本人 (masterUserId) に寄せるのに使う
+    if (m === 'GET' && path === '/api/platform/master-users/name-map') {
+      if (!requireScope(actor, res, 'master-users:read')) return;
+      const fc = facilityCheck(actor, req, { required: false });
+      if (fc.error) return fail(res, ...fc.error);
+      const includeAliases = url.searchParams.get('includeAliases') !== 'false';
+      const includeInactive = url.searchParams.get('includeInactive') === 'true';
+      const allowed = actor.allowedFacilityIds;
+      const users = seed.users.filter((u) => (includeInactive || u.isActive !== false) && (fc.facilityId ? u.facilityIds.includes(fc.facilityId) : allowed === null || u.facilityIds.some((id) => allowed.includes(id))));
+      const items = users.map((u) => ({ masterUserId: u.masterUserId ?? null, insuredNumber: u.insuredNumber, name: u.name, currentInsuredNumber: u.insuredNumber, kind: 'current' }));
+      if (includeAliases) {
+        for (const u of users) for (const old of u.pastInsuredNumbers ?? []) items.push({ masterUserId: u.masterUserId ?? null, insuredNumber: old, name: u.name, currentInsuredNumber: u.insuredNumber, kind: 'alias' });
+      }
+      return json(res, 200, { items });
+    }
+    // 利用者 1 人。:insuredNumber には masterUserId・現在の番号・過去の番号・仮番号のどれを渡してもよい (本物と同じ)
+    const muOne = path.match(/^\/api\/platform\/master-users\/([^/]+)$/);
+    if (m === 'GET' && muOne) {
+      if (!requireScope(actor, res, 'master-users:read')) return;
+      const u = userByRef(decodeURIComponent(muOne[1]));
+      if (!u) return fail(res, 404, 'not_found', 'Not found', 'masterUserId・現在の番号・過去の番号・仮番号のどれでも引けます。どれにも当たらない値です');
+      const fid = req.headers['x-cpos-facility-id'] || url.searchParams.get('facilityId');
+      if (fid) {
+        const fc = facilityCheck(actor, req, { required: true });
+        if (fc.error) return fail(res, ...fc.error);
+        if (!u.facilityIds.includes(fc.facilityId)) return fail(res, 404, 'not_in_facility', `利用者 ${u.insuredNumber} は事業所 ${fc.facilityId} に所属していません`);
+      } else if (Array.isArray(actor.allowedFacilityIds) && !u.facilityIds.some((id) => actor.allowedFacilityIds.includes(id))) {
+        return fail(res, 404, 'not_in_facility', `利用者 ${u.insuredNumber} は許可された事業所に所属していません`);
+      }
+      return json(res, 200, publicUser(u));
+    }
+    // アプリ向けの事業所の利用者一覧 (本物 2026-09-14 実測の形)。帳票に出してよい番号 displayInsuredNumber はここに載る
+    // (仮番号・mu を保存キーにしている人は null)。認証だけでスコープは見ない。範囲外の事業所は 403、無い事業所は 404 (本物と同じ)
+    const facUsers = path.match(/^\/api\/platform\/facilities\/([^/]+)\/users$/);
+    if (m === 'GET' && facUsers) {
+      const fid = decodeURIComponent(facUsers[1]);
+      if (!facilityById.has(fid)) return json(res, 404, { ok: false, error: 'facility-not-found' });
+      if (Array.isArray(actor.allowedFacilityIds) && !actor.allowedFacilityIds.includes(fid)) return json(res, 403, { ok: false, error: 'facility-access-denied' });
+      const raw = (url.searchParams.get('activeOnly') ?? '').toLowerCase();
+      const activeOnly = !(raw === 'false' || raw === '0');   // 本物の既定は稼働中だけ
+      const users = seed.users.filter((u) => u.facilityIds.includes(fid) && !(activeOnly && u.status === 'discharged')).map((u) => ({
+        id: u.insuredNumber, insuredNumber: u.insuredNumber || null, masterUserId: u.masterUserId ?? null, displayInsuredNumber: displayInsuredNumberOf(u),
+        name: u.name, furigana: u.furigana ?? null, careLevel: u.careLevel ?? null, gender: u.gender ?? null, birthDate: u.birthDate ?? null,
+        address: u.address ?? null, postalCode: u.postalCode ?? null, phone: u.phone ?? null, insurerNumber: u.insurerNumber ?? null,
+        certificationStartDate: u.certificationStartDate ?? null, certificationEndDate: u.certificationEndDate ?? null,
+        careBurdenRatio: u.careBurdenRatio ?? null, careBurdenRatioValidTo: u.careBurdenRatioValidTo ?? null, extras: {}
+      }));
+      return json(res, 200, { ok: true, users });
     }
     // 事業所の職員。profession に職種が入る (nurse / care_manager / physical_therapist / care_worker …)。
     // 「看護師が誰か」はここで分かる。項目名はステージングの実測に合わせている。
@@ -674,7 +765,10 @@ function buildFakeCpos(opts = {}) {
       const store = state.appData.get(key);
       const visible = () => [...store.values()].filter((r) => !fc.facilityId || r.facilityId === fc.facilityId || r.facilityId === null);
       if (!id && m === 'GET') {
-        const items = visible();
+        // ?insuredNumber= は封筒の利用者で絞る。番号・mu・過去の番号・仮番号のどれで来ても、本人の全キーで引く (本物と同じ。
+        // キーが変わる前に保存した行も落とさない)。封筒に利用者の無い行 (data の中にしか本人がいない行) は当たらない
+        const refKeys = keysForRef(url.searchParams.get('insuredNumber'));
+        const items = refKeys.length ? visible().filter((r) => typeof r.insuredNumber === 'string' && refKeys.includes(r.insuredNumber)) : visible();
         const paginated = url.searchParams.get('paginated') === 'true' || url.searchParams.has('cursor');
         if (!paginated) return json(res, 200, items);
         const limit = Math.min(500, Math.max(1, Number(url.searchParams.get('limit')) || 100));
@@ -687,8 +781,12 @@ function buildFakeCpos(opts = {}) {
         if (body.__invalid || !body.data || typeof body.data !== 'object') return fail(res, 400, 'data_required', 'data (object) が必要です', 'POST の本文は { "data": { ... } } です。cpos.appData(appId).create(resource, data) を使えば形は合います');
         if (schemaMismatch(res, appId, resource, body.data)) return;
         const now = new Date().toISOString();
-        const rec = { id: randomUUID(), organizationId: actor.organizationId, facilityId: body.facilityId ?? fc.facilityId ?? '' /* 本物は組織単位の記録を facilityId: "" で返す (2026-09-08 ステージング確認) */, createdBy: actor.user?.id ?? 'api-token', status: 'active', data: body.data, createdAt: now, updatedAt: now };
-        store.set(rec.id, rec);
+        // 封筒の利用者 (本文の insuredNumber。番号・mu・過去の番号・仮番号のどれでも)。本人に着地すれば保存キーに揃えて mu を付ける。
+        // insuredNumber が無く masterUserId だけ来たときは、それで本人を引けたときだけ付ける (2026-09-26 に CPOS に入る挙動)
+        const person = nonEmpty(body.insuredNumber) ? envelopePerson(body.insuredNumber)
+          : nonEmpty(body.masterUserId) && userByRef(body.masterUserId) ? envelopePerson(body.masterUserId) : null;
+        const rec = { id: randomUUID(), organizationId: actor.organizationId, facilityId: body.facilityId ?? fc.facilityId ?? '' /* 本物は組織単位の記録を facilityId: "" で返す (2026-09-08 ステージング確認) */, insuredNumber: person?.insuredNumber ?? null, masterUserId: person?.masterUserId ?? null, createdBy: actor.user?.id ?? 'api-token', status: 'active', data: body.data, createdAt: now, updatedAt: now };
+        store.set(rec.id, stampMasterUserId(rec));
         return json(res, 201, rec);
       }
       if (id && m === 'GET') {
@@ -700,9 +798,24 @@ function buildFakeCpos(opts = {}) {
         const rec = store.get(id);
         if (!rec) return fail(res, 404, 'not_found', `${resource}/${id} はありません`);
         const body = await readBody(req);
-        if (body.__invalid || !body.data || typeof body.data !== 'object') return fail(res, 400, 'data_required', 'data (object) が必要です');
-        if (schemaMismatch(res, appId, resource, body.data)) return;
-        rec.data = body.data; rec.updatedAt = new Date().toISOString();
+        // data は省ける (本物と同じ。封筒だけ付け直すとき)。送るなら object
+        if (body.__invalid || (body.data !== undefined && (!body.data || typeof body.data !== 'object'))) return fail(res, 400, 'data_required', 'data (object) が必要です');
+        if (body.data !== undefined && schemaMismatch(res, appId, resource, body.data)) return;
+        // 封筒の利用者。送らなければ今のまま。insuredNumber を送れば保存キーに揃え、別の人にしたら mu も付け直す。
+        // null / "" は紐づけを外す。masterUserId だけ変えて来たら、それで本人を引けたときだけ付け替える
+        // (2026-09-26 に CPOS に入る挙動。それより前の CPOS は PUT の insuredNumber を揃えずにそのまま入れる)
+        if (nonEmpty(body.insuredNumber)) {
+          const p = envelopePerson(body.insuredNumber);
+          if (p.resolved) { rec.insuredNumber = p.insuredNumber; rec.masterUserId = p.masterUserId; }
+          else if (p.insuredNumber !== rec.insuredNumber) { rec.insuredNumber = p.insuredNumber; rec.masterUserId = null; }
+        } else if (body.insuredNumber !== undefined) {
+          rec.insuredNumber = body.insuredNumber ?? null; rec.masterUserId = null;
+        } else if (nonEmpty(body.masterUserId) && body.masterUserId !== rec.masterUserId) {
+          const p = envelopePerson(body.masterUserId);
+          if (p.resolved) { rec.insuredNumber = p.insuredNumber; rec.masterUserId = p.masterUserId; }
+        }
+        if (body.data !== undefined) rec.data = body.data;
+        stampMasterUserId(rec); rec.updatedAt = new Date().toISOString();
         return json(res, 200, rec);
       }
       if (id && m === 'DELETE') {

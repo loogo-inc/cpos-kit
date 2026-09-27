@@ -26,7 +26,7 @@ cpos-kit の問題ではないが、必ず先に確かめること。
 ## 1. kit を入れる
 
 ```
-npm install github:loogo-inc/cpos-kit#semver:^0.1
+npm install github:loogo-inc/cpos-kit#semver:^0.2
 ```
 
 入れたあとは、そのプロジェクトの中でだけ `npx github:loogo-inc/cpos-kit …` が使える

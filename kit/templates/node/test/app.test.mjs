@@ -34,6 +34,13 @@ test('cpos.manifest.json を配信していて、形が正しい', async () => {
   assert.deepEqual(readManifest(new URL('../cpos.manifest.json', import.meta.url)).errors, []);
 });
 
+test('/api/health は CPOS と同じ形 (status / app / appEnv / revision / timestamp)', async () => {
+  const res = await app.inject('GET', '/api/health');
+  assert.equal(res.status, 200);
+  const h = await res.json();
+  assert.equal(h.status, 'ok'); assert.equal(h.app, '{{appId}}'); assert.ok(['production', 'staging', 'unknown'].includes(h.appEnv)); assert.ok(h.revision === null || typeof h.revision === 'string'); assert.ok(!Number.isNaN(Date.parse(h.timestamp)));
+});
+
 test('事業所の一覧が取れ、事業所を指定して利用者一覧が取れる', async () => {
   const facilities = await (await app.inject('GET', '/api/facilities')).json();
   assert.ok(facilities.some((f) => f.id === main.id));
@@ -62,8 +69,18 @@ test('メモを保存すると利用者 1 人に 1 件で、事業所をまた�
   const mine = (await (await app.inject('GET', q('/api/notes', main.id))).json()).filter((n) => n.data.masterUserId === users[0].masterUserId);
   assert.equal(mine.length, 1, '同じ利用者に 2 回保存しても 1 件');
   assert.equal(mine[0].data.text, '2 回目');
+  if (!env.external) assert.equal(mine[0].masterUserId, users[0].masterUserId, 'メモは本人に紐づいている (封筒の利用者)');
   const theirs = await (await app.inject('GET', q('/api/notes', other.id))).json();
   assert.ok(!theirs.some((n) => n.data.masterUserId === users[0].masterUserId), '別の事業所からは見えない');
+});
+
+test('その事業所の利用者でない masterUserId ではメモを作らない (400)', async () => {
+  const post = (masterUserId) => app.inject('POST', '/api/notes', { headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ facilityId: main.id, masterUserId, text: 'x' }) });
+  const res = await post('mu_no_such_person');
+  assert.equal(res.status, 400, await res.text());
+  const mine = await (await app.inject('GET', q('/api/users', main.id))).json();
+  const theirs = (await (await app.inject('GET', q('/api/users', other.id))).json()).find((u) => !mine.some((m) => m.masterUserId === u.masterUserId));
+  if (theirs) assert.equal((await post(theirs.masterUserId)).status, 400, 'よその事業所の利用者');
 });
 
 test('見てよい事業所に無い ID は CPOS に行く前に止まり、理由が返る', async () => {
