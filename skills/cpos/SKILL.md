@@ -305,6 +305,6 @@ await cpos.app.transport.postPlans({ facilityId, body: { ... } });              
 - **KIT 模擬サーバに応答があるのは一部だけ** (api.d.ts の JSDoc に「模擬サーバ: あり / 無し」。shifts の計画・割当・勤務区分、employees / qualified-persons / trainings / fte / staffing-standards は 2026-09-14 から あり)。無いものは 501。画面には「CPOS との接続を担当者が確認中です」と出し、ステージングにつないで確かめる (`npm run verify:staging`)。
 - **api.d.ts に無いもの** だけ「CPOS に無い」。アプリ専用のデータとして AppData に持つか、asks.md に「CPOS にあるか確認」と書く。
 - **スコープ**: `npx github:loogo-inc/cpos-kit scopes --used` がソースが呼ぶメソッドから必要なスコープを出し、manifest に足りないものを示す。`npx github:loogo-inc/cpos-kit scopes 送迎` で語から引く。CPOS が知るスコープは 160 種 + アプリ固有の雛形 4 種 (`app-data:<appId>:read/write/delete`、`apps:<appId>:ai:run`) で、それ以外の文字列を発行しても要求する API が無い。
-- **kit を上げる**: `npm update @cpos/kit` → `npx github:loogo-inc/cpos-kit update` (kit が置いたファイルを今の版に。`--check` で差分だけ)。外すなら `npx github:loogo-inc/cpos-kit remove --apply` (置いたものだけ取り除く)。
+- **kit を上げる**: `npx github:loogo-inc/cpos-kit update` (git をきれいにしてから)。kit のファイルと依存を上げてコミットし、`docs/cpos/UPGRADE.md` に CHANGELOG の差分を書く。頼まれて実装を直すときは UPGRADE.md の「既存アプリへの影響」を 1 つずつ見て、直すか、要らない理由を書き、`npm test` を通してコミット。外すなら `npx github:loogo-inc/cpos-kit remove --apply` (置いたものだけ取り除く)。
 - **API を画面で眺める**: `npx github:loogo-inc/cpos-kit docs` (Redoc。検索で絞れる)。
 - **kit と接続先の版の確認**: `npx github:loogo-inc/cpos-kit doctor` が kit の持つ OpenAPI の revision と接続先を比べ、増えた・消えた・変わった operation を出す。

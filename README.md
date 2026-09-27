@@ -29,7 +29,7 @@ npm test
    - 「送迎計画を日付で一覧にして、車両ごとに並べる。CPOS の transport の API を使う」
    AI は client のメソッド (`cpos.app.*`) で CPOS を呼び、必要なスコープを manifest に足し、模擬サーバで `npm test` を緑にするところまでやる。CPOS に無い機能はメモ (`docs/cpos/asks.md`) に残し、その画面だけ「準備中」にして、ほかは作り切る。最後に「どうしますか」と人に聞く (勝手に写しを作らない)。場面ごとの頼み方と AI の返答の例は [USAGE.md](USAGE.md)。
 4. **本物 (ステージング) につなぐ**: 管理者から URL と App Token を受け取り、`npx github:loogo-inc/cpos-kit connect` で `.env` に入れる (トークンはチャットやコードに貼らない。ファイルに置いてパスを伝える)。`npm run verify:staging` で読み取りと AppData の作る→取る→消すを確かめる。足りないスコープは `npx github:loogo-inc/cpos-kit scopes --used` が示す。
-5. **登録して公開**: アプリを https で公開し、管理者に `cpos.manifest.json` の URL を CPOS に登録してもらう。以後、CPOS が変わっても `npm update @cpos/kit && npx github:loogo-inc/cpos-kit update` で追随できる。
+5. **登録して公開**: アプリを https で公開し、管理者に `cpos.manifest.json` の URL を CPOS に登録してもらう。以後、CPOS が変わっても `npx github:loogo-inc/cpos-kit update` の 1 回で追随できる (kit を上げてコミットし、実装を直すかを聞く)。
 
 ## 誰のためのものか
 
@@ -73,7 +73,7 @@ await cpos.session.apps.get();                                     // 管理画�
 - `npx github:loogo-inc/cpos-kit scopes --used` で、ソースが呼ぶメソッドから必要なスコープを出し `cpos.manifest.json` と照合する。`npx github:loogo-inc/cpos-kit scopes` で CPOS が知る全スコープ。
 - `npx github:loogo-inc/cpos-kit docs` で CPOS の API 一覧を見やすい画面 (Redoc) でブラウザに出す (ログイン不要。kit が持つ OpenAPI の写し)。
 - `npx github:loogo-inc/cpos-kit doctor` で、kit が持つ OpenAPI の版と接続先 CPOS の版を比べる (増えた / 消えた / 変わった operation)。
-- kit を上げるのは 2 段: `npm update @cpos/kit` (git の semver タグで新しい版に) → `npx github:loogo-inc/cpos-kit update` (AGENTS.md の標準ブロック・skills・Stop hook・ci.yml を今の版に。人が書いた部分は触らない。`--check` で差分だけ)。外すのは `npx github:loogo-inc/cpos-kit remove --apply` (kit が置いたものだけ取り除く。コード・manifest・依存には触らない)。
+- kit を上げるのは `npx github:loogo-inc/cpos-kit update` の 1 回 (git をきれいにしてから)。kit が置いたファイル (AGENTS.md の標準ブロック・skills・Stop hook・ci.yml。人が書いた部分は触らない) と `@cpos/kit` の依存を今の版にし、`npm install` → `npm test` → 1 コミット。版が上がったら `docs/cpos/UPGRADE.md` に CHANGELOG の差分を書き、「最新の CPOS に合わせて実装を直しますか？」と聞いて AI (Claude Code / Codex) に頼む。`--check` で差分だけ。外すのは `npx github:loogo-inc/cpos-kit remove --apply` (kit が置いたものだけ取り除く。コード・manifest・依存には触らない)。
 
 ## `npx github:loogo-inc/cpos-kit …` は動かない
 

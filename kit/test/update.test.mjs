@@ -61,3 +61,46 @@ test('update: 自前の同名スキル (中に @cpos/kit が無い) と、symlin
   assert.equal(readFileSync(join(shared, 'cpos/SKILL.md'), 'utf8'), '---\nname: cpos\n---\n共有 @cpos/kit の古い写し\n');
   assert.match(readFileSync(join(dir, '.github/skills/cpos/SKILL.md'), 'utf8'), /^---\nname: cpos/);
 });
+
+test('update: package.json の @cpos/kit を今の kit の系統 (^0.<minor>) に上げる。semver でない依存は触らない', () => {
+  const dir = join(mkdtempSync(join(tmpdir(), 'cpos-kit-update-dep-')), 'app');
+  const c = run(tmpdir(), 'create', dir, '--name', 'upd', '--app-id', 'upd', '--sample', 'none', '--yes', '--kit-dep', 'github:example/cpos-kit#semver:^0.0');
+  assert.equal(c.status, 0, c.stderr);
+  const pj = join(dir, 'package.json');
+  const range = () => JSON.parse(readFileSync(pj, 'utf8')).dependencies['@cpos/kit'];
+  let r = run(dir, 'update', '--check'); assert.equal(r.status, 1, r.stdout); assert.match(r.stdout, /package\.json  \(@cpos\/kit を \^0\.0 → \^0\.\d+/);
+  assert.equal(range(), 'github:example/cpos-kit#semver:^0.0', '--check は書き換えない');
+  r = run(dir, 'update', '--no-install'); assert.equal(r.status, 0, r.stdout + r.stderr);
+  assert.match(range(), /^github:example\/cpos-kit#semver:\^0\.\d+$/); assert.notEqual(range(), 'github:example/cpos-kit#semver:^0.0');
+  assert.equal(run(dir, 'update', '--check').status, 0, '上げた後は差分なし');
+  // git+file など semver でない依存は触らない
+  const j = JSON.parse(readFileSync(pj, 'utf8')); j.dependencies['@cpos/kit'] = 'git+file:///somewhere/cpos-kit'; writeFileSync(pj, JSON.stringify(j, null, 2) + '\n');
+  r = run(dir, 'update', '--no-install'); assert.match(r.stdout, /semver の範囲ではないので触らない/); assert.equal(range(), 'git+file:///somewhere/cpos-kit');
+});
+
+test('update: git がきれいでなければ何も書かずに止まる。きれいなら更新を 1 コミットし、版が上がれば UPGRADE.md に CHANGELOG の差分を書く', () => {
+  const dir = join(mkdtempSync(join(tmpdir(), 'cpos-kit-update-git-')), 'app');
+  assert.equal(run(tmpdir(), 'create', dir, '--name', 'upd', '--app-id', 'upd', '--sample', 'none', '--yes', '--kit-dep', 'github:example/cpos-kit#semver:^0.1').status, 0);
+  const git = (...a) => spawnSync('git', a, { cwd: dir, encoding: 'utf8' });
+  git('init', '-q'); git('-c', 'user.name=t', '-c', 'user.email=t@example.com', 'commit', '-q', '--allow-empty', '-m', 'root');
+  git('add', '-A'); git('-c', 'user.name=t', '-c', 'user.email=t@example.com', 'commit', '-q', '-m', 'init');
+  // 入っている kit を 0.1.0 に見立てる (node_modules は .gitignore 済み)
+  mkdirSync(join(dir, 'node_modules', '@cpos', 'kit'), { recursive: true });
+  writeFileSync(join(dir, 'node_modules', '@cpos', 'kit', 'package.json'), JSON.stringify({ name: '@cpos/kit', version: '0.1.0' }));
+  // 汚れていれば止まる
+  writeFileSync(join(dir, 'README.md'), 'dirty\n');
+  let r = run(dir, 'update', '--no-install', '--no-ai');
+  assert.notEqual(r.status, 0); assert.match(r.stderr + r.stdout, /コミットしていない変更があります/);
+  assert.match(readFileSync(join(dir, 'package.json'), 'utf8'), /semver:\^0\.1"/, '止まったときは何も書かない');
+  git('checkout', '-q', '.');
+  // きれいなら: 依存を上げ、UPGRADE.md を書き、1 コミット
+  const env = { ...process.env, GIT_AUTHOR_NAME: 't', GIT_AUTHOR_EMAIL: 't@example.com', GIT_COMMITTER_NAME: 't', GIT_COMMITTER_EMAIL: 't@example.com' };
+  r = spawnSync(process.execPath, [cli, 'update', '--no-install', '--no-ai'], { cwd: dir, encoding: 'utf8', env });
+  assert.equal(r.status, 0, r.stdout + r.stderr);
+  assert.match(r.stdout, /コミットしました: cpos-kit 0\.1\.0 → \d+\.\d+\.\d+ に更新/);
+  assert.equal(git('status', '--porcelain').stdout.trim(), '', 'コミット後はきれい');
+  const up = readFileSync(join(dir, 'docs/cpos/UPGRADE.md'), 'utf8');
+  assert.match(up, /cpos-kit の更新: 0\.1\.0 →/); assert.match(up, /## \[0\.2\.0\]/); assert.ok(!/## \[0\.1\.0\]/.test(up), '旧版の節は入れない');
+  assert.match(up, /AI への依頼/); assert.match(r.stdout, /AI ツールでこのフォルダを開き/, '--no-ai / 端末でなければ依頼文を出すだけ');
+  assert.match(git('show', '--stat', '--format=%s', 'HEAD').stdout, /docs\/cpos\/UPGRADE\.md[\s\S]*package\.json/);
+});

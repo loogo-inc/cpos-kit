@@ -5,6 +5,18 @@ v1 の間は API の削除をしない (deprecated の印だけ)。
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-09-27
+
+### Changed
+- `update` の 1 回で、既存アプリを新しい kit と CPOS に合わせるところまで進む:
+  - 始める前に git がきれいか確かめる (汚れていれば何も書かずに止まる。`--allow-dirty` で続行)。
+  - kit のファイルと依存を上げ、`npm install` → `npm test` が通れば「cpos-kit <旧> → <新> に更新」で 1 コミット (落ちたらコミットしない)。
+  - 版が上がったら `docs/cpos/UPGRADE.md` に、旧版より後の CHANGELOG と AI への依頼文を書く。
+  - 端末なら「最新の CPOS に合わせて実装を直しますか？」と聞き、y なら Claude Code (`claude`) か Codex (`codex`) を依頼文で起動する (AI が直してテストを通し、コミットする)。端末でなければ依頼文を出すだけ。`--no-test` / `--no-ai` で省ける。
+
+### Fixed
+- `update`: `package.json` の `@cpos/kit` の依存を、今の kit の系統 (`#semver:^0.<minor>`) に上げて `npm install` するようにした (`--no-install` で省ける)。これまでは AI 向けのファイルだけが新しくなり、依存は `^0.1` のままだったので、コードの kit は 0.1.0 のまま食い違っていた。**既存のアプリは `npx github:loogo-inc/cpos-kit update` の 1 回で新しい版に上がる** (0.2.0 の節にある「依存を手で書き換える」手順は不要になった)。semver の範囲でない依存 (`git+file` など) は触らない。
+
 ## [0.2.0] - 2026-09-27
 
 ### CPOS 00278-7tl (2026-09-27) に追随

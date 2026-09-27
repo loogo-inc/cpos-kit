@@ -13,7 +13,7 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, realpathSync, statSyn
 import { basename, dirname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createInterface } from 'node:readline/promises';
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const kitRoot = resolve(here, '..', '..'); // リポジトリ (= パッケージ) のルート
@@ -51,7 +51,9 @@ function help() {
   token [path]     本物の CPOS につなぐための App Token の取り方 (manifest から必要なスコープを読む)
   connect          ステージングの URL とトークンを聞いて .env に書く (書く前に疎通とスコープを確かめる)。--url <URL> --token-file <パス> は端末でないとき用
   scopes [語]      CPOS が知る全スコープと、それを要求する API。--used でこのアプリのソースから必要なスコープを出し manifest と照合
-  update [--check] kit が置いたファイル (AGENTS.md の標準ブロック、skills、Stop hook、ci.yml) を今の kit の版に更新する。--check は差分を見るだけ
+  update [--check] kit が置いたファイル (AGENTS.md の標準ブロック、skills、Stop hook、ci.yml) と @cpos/kit の依存を今の版にし、npm install → npm test → 1 コミット。
+                   版が上がったら docs/cpos/UPGRADE.md (CHANGELOG の差分) を書き、「最新の CPOS に合わせて実装を直しますか？」と聞いて AI (claude / codex) に頼む。
+                   始める前に git がきれいなこと (--allow-dirty で省く)。--check は差分を見るだけ、--no-install / --no-test / --no-ai
   remove [--apply] kit が置いたもの (標準ブロック、作業規律、skills、Stop hook、ci.yml) を取り除く。既定は一覧だけ。コードと @cpos/kit には触らない
   docs [--port N]  CPOS の API を見やすい画面 (Redoc) でブラウザに出す。kit が持つ OpenAPI の写し (ログイン不要)
   doctor           kit が持つ CPOS API の版と、接続先 CPOS の版を比べる (増えた / 消えた / 変わった operation)
@@ -739,6 +741,16 @@ async function scopesCmd() {
 async function update() {
   const cwd = process.cwd();
   const check = args.includes('--check');
+  // git がきれいなことを前提にする。kit の更新を 1 コミットにまとめ、そのあと AI に実装を直してもらうので、
+  // 直す前の状態 (= 人の変更が混ざっていない状態) に戻れるようにする
+  const git = (...a) => spawnSync('git', a, { cwd, encoding: 'utf8' });
+  const inGit = git('rev-parse', '--is-inside-work-tree').stdout?.trim() === 'true';
+  if (!check && inGit && !args.includes('--allow-dirty') && git('status', '--porcelain').stdout.trim()) {
+    die('コミットしていない変更があります。先にコミットしてから update してください',
+      'update は kit の更新を 1 コミットにまとめ、そのあと AI に実装を直してもらいます。直す前の状態に戻れるよう、始める前に git をきれいにします (このまま続けるなら --allow-dirty)');
+  }
+  const installedKit = () => { try { return JSON.parse(readFileSync(resolve(cwd, 'node_modules', '@cpos', 'kit', 'package.json'), 'utf8')).version; } catch { return null; } };
+  const oldVersion = installedKit();
   const mf = resolve(cwd, 'cpos.manifest.json');
   let appId = opt('--app-id'), name = opt('--name');
   if ((!appId || !name) && existsSync(mf)) { try { const m = JSON.parse(readFileSync(mf, 'utf8')); appId ??= m.appId; name ??= m.name; } catch {} }
@@ -797,12 +809,111 @@ async function update() {
       } catch { skipped.push(`${rel}  (JSON として読めない)`); }
     }
   }
+  // 4. package.json の @cpos/kit の依存を、この kit の版の系統に (0.x の間は minor が変わると ^ が届かない。
+  //    ^0.1 のままだと、update で AI 向けファイルだけ新しくなり、コードの kit は古いまま食い違う)
+  let installNeeded = false;
+  {
+    const rel = 'package.json'; const p = resolve(cwd, rel);
+    if (existsSync(p)) {
+      try {
+        const text = readFileSync(p, 'utf8'); const j = JSON.parse(text);
+        for (const sec of ['dependencies', 'devDependencies']) {
+          const cur = j[sec]?.['@cpos/kit']; if (typeof cur !== 'string') continue;
+          const m = cur.match(/^(.*#semver:)(\S+)$/);
+          if (!m) { skipped.push(`${rel}  (@cpos/kit が ${cur}。semver の範囲ではないので触らない)`); continue; }
+          if (m[2] === kitRange()) { same.push(`${rel} (@cpos/kit ${m[2]})`); continue; }
+          j[sec]['@cpos/kit'] = m[1] + kitRange();
+          changed.push(`${rel}  (@cpos/kit を ${m[2]} → ${kitRange()}。npm install で kit ${pkg.version} が入る)`);
+          if (!check) { writeFileSync(p, JSON.stringify(j, null, /^\{\n\t/.test(text) ? '\t' : 2) + '\n'); installNeeded = true; }
+        }
+      } catch { skipped.push(`${rel}  (JSON として読めない)`); }
+    }
+  }
   out(`kit ${pkg.version} に合わせる${check ? ' (--check: 書き換えない)' : ''}`);
   out(`${check ? '差分があるもの' : '更新したもの'} (${changed.length}):`); for (const c of changed) out(`  ${check ? '!' : '~'} ${c}`);
   if (same.length) out(`変更なし (${same.length}): ${same.join(', ')}`);
   for (const s of skipped) out(`  - ${s}`);
-  if (check && changed.length) process.exitCode = 1;
-  else if (!check && changed.length) out('\n更新の中身は git diff で見てください。npm update @cpos/kit の後にこれを回すと、kit の版と AI 向けファイルが揃います');
+  const npm = (a) => spawnSync('npm', a, { cwd, encoding: 'utf8', shell: process.platform === 'win32' });
+  const tail = (r) => String((r.stdout ?? '') + (r.stderr ?? '')).trim().split('\n').slice(-8).join('\n');
+  let installed = false;
+  if (installNeeded && !args.includes('--no-install')) {
+    out('npm install (@cpos/kit を新しい版に) …');
+    const r = npm(['install', '--no-audit', '--no-fund']);
+    if (r.status !== 0) { out(`  npm install が失敗しました。手で npm install を打ってください:\n${tail(r)}`); process.exitCode = 1; return; }
+    installed = true; out('  入りました');
+  }
+  if (check) { if (changed.length) process.exitCode = 1; return; }
+  if (!changed.length) return;
+  const newVersion = installed ? (installedKit() ?? pkg.version) : pkg.version;
+  // 新しい kit でアプリのテストが通るか (通らなければコミットしない。直すのは人か AI)
+  if (installed && !args.includes('--no-test')) {
+    let hasTest = false; try { hasTest = !!JSON.parse(readFileSync(resolve(cwd, 'package.json'), 'utf8')).scripts?.test; } catch {}
+    if (hasTest) {
+      out('npm test (新しい kit で) …');
+      const r = npm(['test']);
+      if (r.status !== 0) {
+        out(`  テストが落ちました。コミットしていません:\n${tail(r)}`);
+        out(`  直すには AI に「docs/cpos/UPGRADE.md を読んで、cpos-kit ${newVersion} に合わせてテストが通るように直して」と頼む。戻すなら git checkout . && npm install`);
+        writeUpgradeNotes(cwd, oldVersion, newVersion);
+        process.exitCode = 1; return;
+      }
+      out('  通りました');
+    }
+  }
+  const notes = oldVersion && oldVersion !== newVersion ? writeUpgradeNotes(cwd, oldVersion, newVersion) : null;
+  if (notes) out(`  ~ ${notes}  (${oldVersion} → ${newVersion} の CHANGELOG。このあと実装を直すときに読む)`);
+  if (inGit) {
+    git('add', '-A');
+    const msg = oldVersion && oldVersion !== newVersion ? `cpos-kit ${oldVersion} → ${newVersion} に更新 (kit が置いたファイルと依存)` : `cpos-kit ${newVersion} に合わせる (kit が置いたファイル)`;
+    const c = git('commit', '-q', '-m', msg);
+    out(c.status === 0 ? `コミットしました: ${msg}` : `コミットできませんでした (git commit):\n${tail(c)}`);
+  } else out('git のリポジトリではないのでコミットしていません (戻せるように git init を勧めます)');
+  if (notes) await offerUpgradeByAi(cwd, newVersion);
+}
+
+// 旧版より後、新版までの CHANGELOG の節を docs/cpos/UPGRADE.md に書く。書いたパス (相対) を返す
+function writeUpgradeNotes(cwd, from, to) {
+  const src = [resolve(kitRoot, 'CHANGELOG.md'), resolve(kitRoot, 'sync', 'public', 'CHANGELOG.md')].find((p) => existsSync(p));
+  if (!src || !from) return null;
+  const num = (v) => String(v).split('.').map((x) => Number(x) || 0);
+  const cmp = (a, b) => { const x = num(a), y = num(b); for (let i = 0; i < 3; i++) if (x[i] !== y[i]) return x[i] - y[i]; return 0; };
+  const text = readFileSync(src, 'utf8');
+  const parts = text.split(/^(?=## \[)/m).filter((p) => { const v = p.match(/^## \[(\d+\.\d+\.\d+)\]/)?.[1]; return v && cmp(v, from) > 0 && cmp(v, to) <= 0; });
+  if (!parts.length) return null;
+  const rel = 'docs/cpos/UPGRADE.md';
+  mkdirSync(resolve(cwd, 'docs', 'cpos'), { recursive: true });
+  writeFileSync(resolve(cwd, rel), `# cpos-kit の更新: ${from} → ${to} (${new Date().toISOString().slice(0, 10)})
+
+\`npx github:loogo-inc/cpos-kit update\` が書いた。kit が置いたファイル (AGENTS.md の標準ブロック・スキル) と依存はもう新しい。
+残りは**アプリのコード**。下の CHANGELOG の「既存アプリへの影響」と、このアプリが使う機能 (AppData・利用者・health・ログイン等) に関わる項目を 1 つずつ見て直す。
+
+## AI への依頼 (そのまま貼ってよい)
+
+${upgradePrompt(to)}
+
+## CHANGELOG (${from} より後)
+
+${parts.join('').trim()}
+`);
+  return rel;
+}
+
+function upgradePrompt(to) {
+  return `docs/cpos/UPGRADE.md を読んで、このアプリを cpos-kit ${to} と今の CPOS に合わせて直してください。CHANGELOG の「既存アプリへの影響」と、このアプリが使っている機能に関わる項目を 1 つずつ見て、直す必要があるものは直し、要らないものは理由を UPGRADE.md の末尾に 1 行ずつ書いてください。npm test を通してから「cpos-kit ${to} に合わせて実装を直す」でコミットしてください。`;
+}
+
+// 「最新の CPOS に合わせて実装を直しますか？」。y なら Claude Code か Codex を依頼文で起動する。端末でなければ依頼文を出すだけ
+async function offerUpgradeByAi(cwd, to) {
+  const prompt = upgradePrompt(to);
+  const which = (cmd) => spawnSync(process.platform === 'win32' ? 'where' : 'which', [cmd], { encoding: 'utf8' }).status === 0;
+  if (args.includes('--no-ai') || yes || !process.stdin.isTTY) { out(`\n次: AI ツールでこのフォルダを開き、次のように頼む:\n  ${prompt}`); return; }
+  // Ctrl+D (入力の終わり) で readline は例外を投げる。落とさずに「いいえ」と同じに扱う
+  const a = String(await ask('\n最新の CPOS に合わせて実装を直しますか？ AI に頼みます (y/N)', 'n').catch(() => 'n')).toLowerCase();
+  if (a !== 'y' && a !== 'yes') { out(`あとで直すときは、AI ツールで次のように頼む:\n  ${prompt}`); return; }
+  const tool = ['claude', 'codex'].find(which);
+  if (!tool) { out(`Claude Code (claude) も Codex (codex) も見つかりません。使っている AI ツールで次のように頼んでください:\n  ${prompt}`); return; }
+  out(`${tool} を起動します (直し終わったら、AI がテストを通してコミットします。戻すなら git reset --hard HEAD)`);
+  spawnSync(tool, [prompt], { cwd, stdio: 'inherit', shell: process.platform === 'win32' });
 }
 
 // ---- remove --------------------------------------------------------------
