@@ -21,7 +21,7 @@ npm test
 
 ## 大まかな使い方
 
-1. **作る**: `npx github:loogo-inc/cpos-kit create my-app` → 名前・appId・見本 (node / fastify / none)・作業規律・**接続先 (staging = ステージング [原則] / mock = 模擬サーバ)** を聞かれる。staging なら URL とトークンをその場で `.env` に書き疎通を確かめる。`npm install && npm run dev` で起動 (起動ログに「接続先: ステージング / 模擬サーバ」が出る)。
+1. **作る**: `npx github:loogo-inc/cpos-kit create my-app` → 名前・appId・見本 (node / fastify / none)・作業規律・**接続先 (staging = ステージング [原則] / mock = 模擬サーバ)**・**画面の作り 2 問** (事業所の選択をヘッダで行うか / そのヘッダを上に貼り付けるか) を聞かれる。staging なら URL とトークンをその場で `.env` に書き疎通を確かめる。`npm install && npm run dev` で起動 (起動ログに「接続先: ステージング / 模擬サーバ」が出る)。
 2. **AI ツールで開く** (Claude Code / Cursor / Codex / Copilot)。CPOS の呼び方と約束は最初から読み込まれている (`AGENTS.md` の標準ブロックとスキル `cpos`)。依頼は普通の日本語でよい (`/cpos` は任意。付けると CPOS のレシピを確実に読み込む)。
 3. **作りたいものを書いて頼む**: `docs/PRODUCT.md` に 1 段落。依頼は「誰が・何を・CPOS のどのデータで」を書く。例:
    - 「事業所を選ぶと、その事業所の利用者一覧が出る画面。利用者ごとにメモを保存できる。テストも」
@@ -30,6 +30,18 @@ npm test
    AI は client のメソッド (`cpos.app.*`) で CPOS を呼び、必要なスコープを manifest に足し、模擬サーバで `npm test` を緑にするところまでやる。CPOS に無い機能はメモ (`docs/cpos/asks.md`) に残し、その画面だけ「準備中」にして、ほかは作り切る。最後に「どうしますか」と人に聞く (勝手に写しを作らない)。場面ごとの頼み方と AI の返答の例は [USAGE.md](USAGE.md)。
 4. **本物 (ステージング) につなぐ**: 管理者から URL と App Token を受け取り、`npx github:loogo-inc/cpos-kit connect` で `.env` に入れる (トークンはチャットやコードに貼らない。ファイルに置いてパスを伝える)。`npm run verify:staging` で読み取りと AppData の作る→取る→消すを確かめる。足りないスコープは `npx github:loogo-inc/cpos-kit scopes --used` が示す。
 5. **登録して公開**: アプリを https で公開し、管理者に `cpos.manifest.json` の URL を CPOS に登録してもらう。以後、CPOS が変わっても `npx github:loogo-inc/cpos-kit update` の 1 回で追随できる (kit を上げてコミットし、実装を直すかを聞く)。
+
+## 画面 (見た目と操作を揃える)
+
+アプリごとに「使い方」がばらつかないように、**画面の決まりと共通スタイルも kit が配る**。
+
+- **決まり**: `AGENTS.md` の「画面のガイドライン」(推奨。強制ではない)。AI がこれを読んで画面を作る。要らなければ `create --design no` / `adopt --design no`、あとから `remove --apply`。
+- **見本**: `node_modules/@cpos/kit/kit/ui/examples/*.html` (`today` / `user` / `settings` / `users` / `record`)。**ブラウザでそのまま開ける。画面を作るときはこれを真似る。**
+- **スタイル**: `@cpos/kit/ui/cpos-ui.css` (雛形は `/cpos-ui.css` で配信済み)。色を変えるなら `theme.css` を後ろで読み、`--cpos-*` の変数だけ上書きする。
+- **文字の大きさ**: 端末の設定に追随。さらに `/cpos-ui.js` + `<div data-cpos-text-size></div>` で 標準 / 大 / 特大 を選べる (その端末に覚える)。
+- **ロゴ**: アプリのフォルダに `logo.svg` を置くとヘッダのアプリ名の隣に出る。
+- 主な決め: 意思決定のボタンは右・取消は左 / 検索は打つたびに即絞り込み / 必須は赤い「必須」の文字 / 誤りは欄の直下 / 保存は保存バー / 確認は取り消せない操作だけ (`window.confirm` は使わない) / 値が無い項目は「未設定」/ 本文 16px・押せる領域 44px・幅 360px で横スクロールしない。
+- kit を上げたときに規約が変わっていれば、`update` が「この画面を基礎 UI に合わせますか」と 1 回聞く (断ってよい)。
 
 ## 誰のためのものか
 

@@ -1,86 +1,87 @@
 <!doctype html><html lang="ja"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>訪問記録デモ</title>
+<title>確認</title>
 <link rel="stylesheet" href="../cpos-ui.css">
+<script src="../cpos-ui.js" defer></script>
 </head><body>
 <div class="cpos-savebar" id="savebar" hidden><span>未保存の変更があります</span><span class="cpos-actions"><button class="cpos-btn" type="button" id="discard">破棄</button><button class="cpos-btn primary" type="button" id="saveall">保存</button></span></div>
-<header class="cpos-appbar"><h1>訪問記録デモ</h1>
-<form class="cpos-facility" method="get" action="/"><label class="cpos-sr" for="fac">事業所</label><select id="fac" name="facilityId" onchange="this.form.submit()"><option value="fac_sakura" selected>さくら訪問介護</option><option value="fac_momiji">もみじデイサービス</option></select></form></header>
+<header class="cpos-appbar"><span class="cpos-brand"><h1>確認</h1></span>
+<details class="cpos-facility"><summary title="事業所を切り替える"><span class="cpos-sr">事業所: </span>さくら訪問介護</summary><div class="cpos-facility-list"><a href="?facilityId=fac_sakura" aria-current="true">さくら訪問介護</a><a href="?facilityId=fac_momiji">もみじデイサービス</a></div></details></header>
 <main class="cpos-page">
   <form class="cpos-search" method="get" action="/" id="searchform"><input type="hidden" name="facilityId" value="fac_sakura"><label class="cpos-sr" for="q">利用者を探す</label><input id="q" name="q" value="" placeholder="氏名・ふりがなで探す" autocomplete="off"><noscript><button class="cpos-btn" type="submit">探す</button></noscript></form>
-  <div class="cpos-chips"><a class="cpos-chip" href="/?facilityId=fac_sakura&only=none">メモがまだの人</a>
+  <div class="cpos-chips"><a class="cpos-chip" href="?facilityId=fac_sakura&only=none">メモがまだの人</a>
   <span class="cpos-chip" aria-disabled="true">14 人</span></div>
   <div class="cpos-card"><table class="cpos-table"><thead><tr><th>利用者</th><th>要介護度</th><th>メモ (利用者 1 人に 1 件)</th></tr></thead><tbody><tr><td data-label="利用者">佐藤 一郎</td>
 <td data-label="要介護度">要介護2</td>
 <td data-label="メモ"><form class="cpos-memo" method="post" action="/notes"><input type="hidden" name="facilityId" value="fac_sakura"><input type="hidden" name="masterUserId" value="mu_0001">
 <label class="cpos-sr" for="memo-mu_0001">佐藤 一郎 のメモ</label>
 <input id="memo-mu_0001" name="text" value="" data-initial="" placeholder="訪問時に気をつけること">
-<button class="cpos-btn primary cpos-memo-save" type="submit">保存</button></form></td></tr><tr><td data-label="利用者">鈴木 花</td>
+<button class="cpos-btn cpos-memo-save" type="submit">保存</button></form></td></tr><tr><td data-label="利用者">鈴木 花</td>
 <td data-label="要介護度">要介護3</td>
 <td data-label="メモ"><form class="cpos-memo" method="post" action="/notes"><input type="hidden" name="facilityId" value="fac_sakura"><input type="hidden" name="masterUserId" value="mu_0002">
 <label class="cpos-sr" for="memo-mu_0002">鈴木 花 のメモ</label>
 <input id="memo-mu_0002" name="text" value="" data-initial="" placeholder="訪問時に気をつけること">
-<button class="cpos-btn primary cpos-memo-save" type="submit">保存</button></form></td></tr><tr><td data-label="利用者">高橋 清</td>
+<button class="cpos-btn cpos-memo-save" type="submit">保存</button></form></td></tr><tr><td data-label="利用者">高橋 清</td>
 <td data-label="要介護度">要支援2</td>
 <td data-label="メモ"><form class="cpos-memo" method="post" action="/notes"><input type="hidden" name="facilityId" value="fac_sakura"><input type="hidden" name="masterUserId" value="mu_0003">
 <label class="cpos-sr" for="memo-mu_0003">高橋 清 のメモ</label>
 <input id="memo-mu_0003" name="text" value="" data-initial="" placeholder="訪問時に気をつけること">
-<button class="cpos-btn primary cpos-memo-save" type="submit">保存</button></form></td></tr><tr><td data-label="利用者">田中 美代子</td>
+<button class="cpos-btn cpos-memo-save" type="submit">保存</button></form></td></tr><tr><td data-label="利用者">田中 美代子</td>
 <td data-label="要介護度">要介護4</td>
 <td data-label="メモ"><form class="cpos-memo" method="post" action="/notes"><input type="hidden" name="facilityId" value="fac_sakura"><input type="hidden" name="masterUserId" value="mu_0004">
 <label class="cpos-sr" for="memo-mu_0004">田中 美代子 のメモ</label>
 <input id="memo-mu_0004" name="text" value="" data-initial="" placeholder="訪問時に気をつけること">
-<button class="cpos-btn primary cpos-memo-save" type="submit">保存</button></form></td></tr><tr><td data-label="利用者">伊藤 正</td>
+<button class="cpos-btn cpos-memo-save" type="submit">保存</button></form></td></tr><tr><td data-label="利用者">伊藤 正</td>
 <td data-label="要介護度">要介護1</td>
 <td data-label="メモ"><form class="cpos-memo" method="post" action="/notes"><input type="hidden" name="facilityId" value="fac_sakura"><input type="hidden" name="masterUserId" value="mu_0005">
 <label class="cpos-sr" for="memo-mu_0005">伊藤 正 のメモ</label>
 <input id="memo-mu_0005" name="text" value="" data-initial="" placeholder="訪問時に気をつけること">
-<button class="cpos-btn primary cpos-memo-save" type="submit">保存</button></form></td></tr><tr><td data-label="利用者">渡辺 ふみ</td>
+<button class="cpos-btn cpos-memo-save" type="submit">保存</button></form></td></tr><tr><td data-label="利用者">渡辺 ふみ</td>
 <td data-label="要介護度">要介護5</td>
 <td data-label="メモ"><form class="cpos-memo" method="post" action="/notes"><input type="hidden" name="facilityId" value="fac_sakura"><input type="hidden" name="masterUserId" value="mu_0006">
 <label class="cpos-sr" for="memo-mu_0006">渡辺 ふみ のメモ</label>
 <input id="memo-mu_0006" name="text" value="" data-initial="" placeholder="訪問時に気をつけること">
-<button class="cpos-btn primary cpos-memo-save" type="submit">保存</button></form></td></tr><tr><td data-label="利用者">山本 健</td>
+<button class="cpos-btn cpos-memo-save" type="submit">保存</button></form></td></tr><tr><td data-label="利用者">山本 健</td>
 <td data-label="要介護度">要支援1</td>
 <td data-label="メモ"><form class="cpos-memo" method="post" action="/notes"><input type="hidden" name="facilityId" value="fac_sakura"><input type="hidden" name="masterUserId" value="mu_0007">
 <label class="cpos-sr" for="memo-mu_0007">山本 健 のメモ</label>
 <input id="memo-mu_0007" name="text" value="" data-initial="" placeholder="訪問時に気をつけること">
-<button class="cpos-btn primary cpos-memo-save" type="submit">保存</button></form></td></tr><tr><td data-label="利用者">中村 よし子</td>
+<button class="cpos-btn cpos-memo-save" type="submit">保存</button></form></td></tr><tr><td data-label="利用者">中村 よし子</td>
 <td data-label="要介護度">要介護2</td>
 <td data-label="メモ"><form class="cpos-memo" method="post" action="/notes"><input type="hidden" name="facilityId" value="fac_sakura"><input type="hidden" name="masterUserId" value="mu_0008">
 <label class="cpos-sr" for="memo-mu_0008">中村 よし子 のメモ</label>
 <input id="memo-mu_0008" name="text" value="" data-initial="" placeholder="訪問時に気をつけること">
-<button class="cpos-btn primary cpos-memo-save" type="submit">保存</button></form></td></tr><tr><td data-label="利用者">小林 勇</td>
+<button class="cpos-btn cpos-memo-save" type="submit">保存</button></form></td></tr><tr><td data-label="利用者">小林 勇</td>
 <td data-label="要介護度">要介護3</td>
 <td data-label="メモ"><form class="cpos-memo" method="post" action="/notes"><input type="hidden" name="facilityId" value="fac_sakura"><input type="hidden" name="masterUserId" value="mu_0009">
 <label class="cpos-sr" for="memo-mu_0009">小林 勇 のメモ</label>
 <input id="memo-mu_0009" name="text" value="" data-initial="" placeholder="訪問時に気をつけること">
-<button class="cpos-btn primary cpos-memo-save" type="submit">保存</button></form></td></tr><tr><td data-label="利用者">加藤 静</td>
+<button class="cpos-btn cpos-memo-save" type="submit">保存</button></form></td></tr><tr><td data-label="利用者">加藤 静</td>
 <td data-label="要介護度">要介護2</td>
 <td data-label="メモ"><form class="cpos-memo" method="post" action="/notes"><input type="hidden" name="facilityId" value="fac_sakura"><input type="hidden" name="masterUserId" value="mu_0010">
 <label class="cpos-sr" for="memo-mu_0010">加藤 静 のメモ</label>
 <input id="memo-mu_0010" name="text" value="" data-initial="" placeholder="訪問時に気をつけること">
-<button class="cpos-btn primary cpos-memo-save" type="submit">保存</button></form></td></tr><tr><td data-label="利用者">吉田 茂</td>
+<button class="cpos-btn cpos-memo-save" type="submit">保存</button></form></td></tr><tr><td data-label="利用者">吉田 茂</td>
 <td data-label="要介護度">要介護1</td>
 <td data-label="メモ"><form class="cpos-memo" method="post" action="/notes"><input type="hidden" name="facilityId" value="fac_sakura"><input type="hidden" name="masterUserId" value="mu_0011">
 <label class="cpos-sr" for="memo-mu_0011">吉田 茂 のメモ</label>
 <input id="memo-mu_0011" name="text" value="" data-initial="" placeholder="訪問時に気をつけること">
-<button class="cpos-btn primary cpos-memo-save" type="submit">保存</button></form></td></tr><tr><td data-label="利用者">山田 千代</td>
+<button class="cpos-btn cpos-memo-save" type="submit">保存</button></form></td></tr><tr><td data-label="利用者">山田 千代</td>
 <td data-label="要介護度">要介護4</td>
 <td data-label="メモ"><form class="cpos-memo" method="post" action="/notes"><input type="hidden" name="facilityId" value="fac_sakura"><input type="hidden" name="masterUserId" value="mu_0012">
 <label class="cpos-sr" for="memo-mu_0012">山田 千代 のメモ</label>
 <input id="memo-mu_0012" name="text" value="" data-initial="" placeholder="訪問時に気をつけること">
-<button class="cpos-btn primary cpos-memo-save" type="submit">保存</button></form></td></tr><tr><td data-label="利用者">森 和夫</td>
+<button class="cpos-btn cpos-memo-save" type="submit">保存</button></form></td></tr><tr><td data-label="利用者">森 和夫</td>
 <td data-label="要介護度">要介護1</td>
 <td data-label="メモ"><form class="cpos-memo" method="post" action="/notes"><input type="hidden" name="facilityId" value="fac_sakura"><input type="hidden" name="masterUserId" value="mu_0021">
 <label class="cpos-sr" for="memo-mu_0021">森 和夫 のメモ</label>
 <input id="memo-mu_0021" name="text" value="" data-initial="" placeholder="訪問時に気をつけること">
-<button class="cpos-btn primary cpos-memo-save" type="submit">保存</button></form></td></tr><tr><td data-label="利用者">池田 ミツ</td>
+<button class="cpos-btn cpos-memo-save" type="submit">保存</button></form></td></tr><tr><td data-label="利用者">池田 ミツ</td>
 <td data-label="要介護度">要介護4</td>
 <td data-label="メモ"><form class="cpos-memo" method="post" action="/notes"><input type="hidden" name="facilityId" value="fac_sakura"><input type="hidden" name="masterUserId" value="mu_0022">
 <label class="cpos-sr" for="memo-mu_0022">池田 ミツ のメモ</label>
 <input id="memo-mu_0022" name="text" value="" data-initial="" placeholder="訪問時に気をつけること">
-<button class="cpos-btn primary cpos-memo-save" type="submit">保存</button></form></td></tr></tbody></table></div>
+<button class="cpos-btn cpos-memo-save" type="submit">保存</button></form></td></tr></tbody></table></div>
   <p class="cpos-sub">接続先 CPOS: <code>http://127.0.0.1:4300</code></p>
 </main>
 
@@ -91,8 +92,18 @@
  const sync = () => { bar.hidden = dirty().length === 0; };
  document.addEventListener('input', (e) => { if (e.target.matches('.cpos-memo input[name=text]')) sync(); });
  document.getElementById('discard').addEventListener('click', () => { document.querySelectorAll('.cpos-memo input[name=text]').forEach((i) => { i.value = i.dataset.initial; }); sync(); });
- document.getElementById('saveall').addEventListener('click', () => { const f = dirty()[0]?.closest('form'); if (f) f.submit(); });
- addEventListener('beforeunload', (e) => { if (dirty().length) { e.preventDefault(); e.returnValue = ''; } });
+ let saving = false;   // 自分の保存で「このページを離れますか」を出さない
+ document.getElementById('saveall').addEventListener('click', async () => {
+   const rows = dirty(); if (!rows.length) return;
+   saving = true;
+   for (const input of rows) {           // 変わった行だけ送る
+     const form = input.closest('form');
+     await fetch(form.action, { method: 'POST', body: new URLSearchParams(new FormData(form)) });
+   }
+   location.href = location.pathname + location.search.replace(/[?&]saved=d+/, '') + (location.search ? '&' : '?') + 'saved=' + rows.length;
+ });
+ document.querySelectorAll('.cpos-memo').forEach((f) => f.addEventListener('submit', () => { saving = true; }));
+ addEventListener('beforeunload', (e) => { if (!saving && dirty().length) { e.preventDefault(); e.returnValue = ''; } });
  const snack = document.getElementById('snack'); if (snack) setTimeout(() => snack.remove(), 5000);
  // 決め 3: 打つたびに絞り込む (検索ボタンを置かない)。Enter も同じ結果。未保存があるときは邪魔しない
  const qi = document.getElementById('q'); let t;

@@ -14,6 +14,7 @@ import { basename, dirname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createInterface } from 'node:readline/promises';
 import { execFileSync, spawnSync } from 'node:child_process';
+import { select } from './select.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const kitRoot = resolve(here, '..', '..'); // リポジトリ (= パッケージ) のルート
@@ -47,15 +48,16 @@ function help() {
                    --apply --replace <パス> = 見比べた上でそのファイルだけ kit のもので置き換える (同名の自前スキルが kit のを隠すとき・kit のスキルを上げるとき)
   fake             KIT 模擬サーバを起動する (http://127.0.0.1:4300)
   validate [path]  cpos.manifest.json を検証する
-  guide / --guide  次に何をすればいいかを 1 画面で出す (manifest・スコープ・登録・トークン・ログイン)
+  guide [--commands]  次に何をすればいいかを 1 画面で出す。--commands は打つコマンドの一覧だけ
   token [path]     本物の CPOS につなぐための App Token の取り方 (manifest から必要なスコープを読む)
   connect          ステージングの URL とトークンを聞いて .env に書く (書く前に疎通とスコープを確かめる)。--url <URL> --token-file <パス> は端末でないとき用
   scopes [語]      CPOS が知る全スコープと、それを要求する API。--used でこのアプリのソースから必要なスコープを出し manifest と照合
   update [--check] kit が置いたファイル (AGENTS.md の標準ブロック、skills、Stop hook、ci.yml) と @cpos/kit の依存を今の版にし、npm install → npm test → 1 コミット。
                    版が上がったら docs/cpos/UPGRADE.md (CHANGELOG の差分) を書き、「最新の CPOS に合わせて実装を直しますか？」と聞いて AI (claude / codex) に頼む。
-                   画面の規約が変わったときは、それとは別に「この画面を基礎 UI に合わせますか？」と聞く (規約を入れていない人には聞かない)。
+                   画面のガイドラインが変わったときは、それとは別に「この画面を基礎 UI に合わせますか？」と聞く (断ってよい。入れていない人には聞かない)。
                    始める前に git がきれいなこと (--allow-dirty で省く)。--check は差分を見るだけ、--no-install / --no-test / --no-ai
-  remove [--apply] kit が置いたもの (標準ブロック、作業規律、画面の規約、skills、Stop hook、ci.yml) を取り除く。既定は一覧だけ。コードと @cpos/kit には触らない
+  remove [--apply] kit が置いたもの (標準ブロック、作業規律、画面のガイドライン、skills、Stop hook、ci.yml) を取り除く。既定は一覧だけ。コードと @cpos/kit には触らない
+  ui [--open]      画面の作り方 (見本の場所・スタイル・ロゴ・色・よく落とす所)。--open で見本をブラウザに
   docs [--port N]  CPOS の API を見やすい画面 (Redoc) でブラウザに出す。kit が持つ OpenAPI の写し (ログイン不要)
   doctor           kit が持つ CPOS API の版と、接続先 CPOS の版を比べる (増えた / 消えた / 変わった operation)
   tickets          チケット台帳 (後から入れる。init を打つまで何も動かない)
@@ -67,8 +69,9 @@ function help() {
     --name <表示名>  --app-id <appId>  --sample none|node|fastify  --discipline yes|no  --kit-dep <package.json に書く依存>  --yes
     --sample fastify = Fastify + CPOS ログイン付き (公開できる形)。node = 依存ゼロの最小サーバ (ログイン無し、模擬サーバ専用)
     --discipline yes = AI の作業規律「止まる前に証拠」を AGENTS.md に 10 行 + Claude Code の Stop hook を入れる (既定)
-    --design yes = 画面の規約 (ばらつかせない 17 の決め) を AGENTS.md に入れ、見本の画面を共通 CSS (/cpos-ui.css) で組む (既定)
-    --facility-pinned yes = 事業所の切り替えをヘッダに固定表示する (既定 no。規約では決めない = アプリの判断)
+    --design yes = 画面のガイドライン (kit/agents/design.md。推奨であって強制ではない) を AGENTS.md に入れ、見本の画面を共通 CSS (/cpos-ui.css) で組む (既定)
+    --facility-in-header yes|no = 事業所の選択をヘッダで行う (既定 yes。no ならヘッダに事業所を出さない)
+    --facility-pinned yes|no    = そのヘッダを上に貼り付ける (既定 no)。規約では決めない = アプリの判断
 
   connect の注意: トークンは引数で渡さない (シェルの履歴に残る)。--token-file で 1 行のファイルを指す`);
 }
@@ -79,6 +82,8 @@ function help() {
 function disciplineText() { return readFileSync(resolve(kitRoot, 'kit', 'agents', 'discipline.md'), 'utf8'); }
 // 画面の規約 (kit/agents/design.md)。標準ブロック・作業規律と同じく別マーカーで注入する。押し付けない: --design no で入れない
 function designText() { return readFileSync(resolve(kitRoot, 'kit', 'agents', 'design.md'), 'utf8'); }
+// ガイドラインの見出しから「揃えたい N の形」を読む (数字を人が書き写さない。ずれの元)
+function designHeading() { return designText().match(/### (揃えたい [^\n(]*形)/)?.[1]?.trim() ?? '画面のガイドライン'; }
 function disciplineSettings(extra = {}) {
   const prompt = readFileSync(resolve(kitRoot, 'kit', 'agents', 'stop-judge.prompt.md'), 'utf8').replace(/^<!--[\s\S]*?-->\n/, '');
   return JSON.stringify({
@@ -88,25 +93,61 @@ function disciplineSettings(extra = {}) {
   }, null, 2) + '\n';
 }
 async function askDesign() {
-  const v = opt('--design') ?? (await ask('画面の規約 (ばらつかせない 12 の決め + 共通 CSS) を入れますか (yes / no)', 'yes', (x) => (['yes', 'no'].includes(x) ? null : 'yes か no')));
-  if (!['yes', 'no'].includes(v)) die(`--design は yes か no です (いま ${v})`);
-  return v === 'yes';
+  return (await choose(`画面のガイドライン (${designHeading()} + 共通 CSS) を入れますか`, [
+    { value: 'yes', label: 'AGENTS.md に規約、画面は /cpos-ui.css で規約どおりに' },
+    { value: 'no', label: '入れない' }
+  ], 'yes', '--design')) === 'yes';
+}
+
+// 画面まわりの質問。規約で全アプリに強制せず、アプリごとに選ぶもの。
+// 「何を聞いていて、答えると何が変わるか」を先に言う (2026-09-28 所有者の指摘)
+function designIntro() {
+  out('\n― 画面の作りを 2 つだけ決めます ―');
+  out('  規約 (AGENTS.md の「画面の規約」) で全アプリに決めてしまうと困るものだけを、ここで聞きます。');
+  out('  答えは雛形の画面に反映され、あとから server.mjs で書き換えられます。');
+}
+
+async function askFacilityInHeader() {
+  return (await choose('1/2 事業所の選択をヘッダ (画面の上) で行いますか', [
+    { value: 'yes', label: 'ヘッダにいまの事業所名を出し、押すと一覧から切り替え (複数の事業所を行き来するアプリ向け)' },
+    { value: 'no', label: 'ヘッダに事業所を出さない。最初の 1 つの事業所で動く (1 事業所だけ・事業所に関係ないアプリ向け)' }
+  ], 'yes', '--facility-in-header')) === 'yes';
 }
 
 async function askFacilityPinned() {
-  const v = opt('--facility-pinned') ?? (await ask('事業所の切り替えをヘッダに固定表示しますか (スクロールしても見える。狭い画面では縦を 60px ほど使う) (yes / no)', 'no', (x) => (['yes', 'no'].includes(x) ? null : 'yes か no')));
-  if (!['yes', 'no'].includes(v)) die(`--facility-pinned は yes か no です (いま ${v})`);
-  return v === 'yes';
+  return (await choose('2/2 そのヘッダを画面の上に貼り付けますか (スクロールしても残る)', [
+    { value: 'no', label: 'ふつうに流れる' },
+    { value: 'yes', label: '長い一覧でも「どの事業所か」が常に見える。狭い画面では縦を 60px ほど使う' }
+  ], 'no', '--facility-pinned')) === 'yes';
 }
 
 async function askDiscipline() {
-  const v = opt('--discipline') ?? (await ask('AI の作業規律「止まる前に証拠」を入れますか (yes = AGENTS.md に 10 行 + Claude Code の Stop hook / no = 入れない)', 'yes', (x) => (['yes', 'no'].includes(x) ? null : 'yes か no')));
-  if (!['yes', 'no'].includes(v)) die(`--discipline は yes か no です (いま ${v})`);
-  return v === 'yes';
+  return (await choose('AI の作業規律「止まる前に証拠」を入れますか', [
+    { value: 'yes', label: 'AGENTS.md に 10 行 + Claude Code の Stop hook' },
+    { value: 'no', label: '入れない' }
+  ], 'yes', '--discipline')) === 'yes';
 }
 
 // ---- create ------------------------------------------------------------
 const APP_ID_RE = /^[a-z0-9][a-z0-9_-]{0,63}$/;
+
+// 選択式の質問。端末なら ↑↓ + Enter で選ぶ (select.mjs)。引数 (flag) で答えを先に渡せる。
+// --yes と端末でないとき (CI・AI が打つとき) は既定。raw mode が使えない端末と CPOS_KIT_PLAIN=1 は文字で答える
+async function choose(question, choices, fallback, flag) {
+  const values = choices.map((c) => c.value);
+  const v = flag ? opt(flag) : undefined;
+  if (v !== undefined) {
+    if (!values.includes(v)) die(`${flag} は ${values.join(' か ')} です (いま ${v})`);
+    return v;
+  }
+  if (yes || !process.stdin.isTTY) return fallback;
+  if (typeof process.stdin.setRawMode !== 'function' || process.env.CPOS_KIT_PLAIN) {
+    const text = `${question}\n${choices.map((c) => `    ${c.value} = ${c.label}`).join('\n')}\n  (${values.join(' / ')})`;
+    return ask(text, fallback, (x) => (values.includes(x) ? null : values.join(' か ')));
+  }
+  out('');
+  return select(question, choices, fallback);
+}
 
 async function ask(question, fallback, validate) {
   if (yes) return fallback;
@@ -162,17 +203,28 @@ async function create() {
   const name = opt('--name') ?? (await ask('アプリの表示名 (例: 送迎メモ)', basename(dest)));
   const appId = opt('--app-id') ?? (await ask('appId = CPOS 上でこのアプリを指す ID (AppData の置き場と権限の名前になる。CPOS 登録時も同じ値。英小文字・数字・-・_。迷ったらこのまま)', defaultId, (v) => (APP_ID_RE.test(v) ? null : '英小文字で始め、英小文字・数字・-・_ で 64 字まで')));
   if (!APP_ID_RE.test(appId)) die(`appId "${appId}" の形式が違います`, '英小文字で始め、英小文字・数字・-・_ で 64 字まで');
-  const sample = opt('--sample') ?? (await ask('見本のコードを入れますか (none = 入れない / node = 依存ゼロの最小サーバ / fastify = Fastify + CPOS ログイン付き)', 'fastify', (v) => (['none', 'node', 'fastify'].includes(v) ? null : 'none か node か fastify')));
-  if (!['none', 'node', 'fastify'].includes(sample)) die(`--sample は none か node か fastify です (いま ${sample})`);
+  const sample = await choose('見本のコードを入れますか', [
+    { value: 'fastify', label: 'Fastify + CPOS ログイン付き' },
+    { value: 'node', label: '依存ゼロの最小サーバ' },
+    { value: 'none', label: '入れない' }
+  ], 'fastify', '--sample');
   const discipline = await askDiscipline();
   const design = await askDesign();
-  const facilityPinned = design && sample !== 'none' ? await askFacilityPinned() : false;
+  let facilityInHeader = false, facilityPinned = false;
+  if (design && sample !== 'none') {
+    if (!yes && !opt('--facility-in-header') && !opt('--facility-pinned')) designIntro();
+    facilityInHeader = await askFacilityInHeader();
+    facilityPinned = facilityInHeader ? await askFacilityPinned() : false;
+  }
   // 接続先。原則はステージング (本物の応答で作る)。URL とトークンがまだ無ければ模擬サーバ (後で connect で切り替える)。
   // ここまでが質問。ファイルはこの後で書くので、途中で止めても何も残らない
   const APP = appId.toUpperCase().replace(/[^A-Z0-9]+/g, '_');
   let mode = opt('--connect') ?? ((opt('--url') || opt('--token-file')) ? 'staging' : null);
   if (mode && !['staging', 'mock'].includes(mode)) die('--connect は staging か mock');
-  if (!mode) mode = yes ? 'mock' : await ask('接続先 (staging = ステージングにつないで作る [原則] / mock = 模擬サーバで手元だけ。URL とトークンがまだ無ければ mock)', 'staging', (v) => (['staging', 'mock'].includes(v) ? null : 'staging か mock'));
+  if (!mode) mode = yes ? 'mock' : await choose('接続先', [
+    { value: 'staging', label: 'ステージングにつないで作る (原則)' },
+    { value: 'mock', label: '模擬サーバで手元だけ (URL とトークンがまだ無ければこちら)' }
+  ], 'staging');
   let base = opt('--url') ?? null, token = null;
   if (mode === 'staging') {
     const tf = opt('--token-file');
@@ -193,6 +245,7 @@ async function create() {
     name,
     appId,
     appbarClass: facilityPinned ? ' cpos-pinned' : '',
+    facilityInHeader: String(facilityInHeader),
     APP: appId.toUpperCase().replace(/[^A-Z0-9]+/g, '_'),
     kitDep,
     authNote: sample === 'fastify'
@@ -261,7 +314,8 @@ async function create() {
   }
 
   out(`\nできました: ${dest}  (${written.length} ファイル)`);
-  out(`  表示名: ${name}   appId: ${appId}   見本: ${sample}   作業規律: ${discipline ? 'あり (AGENTS.md + Claude の Stop hook)' : 'なし'}   画面の規約: ${design ? `あり (AGENTS.md + /cpos-ui.css${facilityPinned ? '、事業所をヘッダに固定' : ''})` : 'なし'}   @cpos/kit: ${kitDep}`);
+  out(`  表示名: ${name}   appId: ${appId}   見本: ${sample}   作業規律: ${discipline ? 'あり (AGENTS.md + Claude の Stop hook)' : 'なし'}   画面の規約: ${design ? `あり (AGENTS.md + /cpos-ui.css)` : 'なし'}   事業所: ${!design || sample === 'none' ? '—' : facilityInHeader ? (facilityPinned ? 'ヘッダで選ぶ (貼り付け)' : 'ヘッダで選ぶ') : 'ヘッダに出さない'}   @cpos/kit: ${kitDep}`);
+  if (design && sample !== 'none') out(`  画面の 2 問は後から変えられます: server.mjs の const FACILITY_IN_HEADER (いま ${facilityInHeader}) と <header class="cpos-appbar${facilityPinned ? ' cpos-pinned' : ''}">。まとめて見るなら npx github:loogo-inc/cpos-kit ui`);
   out(`  接続先: ${mode === 'staging' ? 'ステージング (.env に書いた。本物の応答で作る)' : mode === 'mock' ? '模擬サーバ (手元だけ。架空データ。ステージングは後で connect)' : '未設定 (接続に失敗。connect で入れるか、npm run dev:mock)'}`);
   out('\n次:');
   out(`  cd ${dirArg}`);
@@ -489,7 +543,24 @@ function guide(appId, name, { afterCreate = false } = {}) {
   const APP = appId.toUpperCase().replace(/[^A-Z0-9]+/g, '_');
   const L = [];
   if (afterCreate) L.push('');
-  L.push(`— ${name} (appId ${appId}) の進め方 ——————————————————`);
+  L.push(`— ${name} (appId ${appId}) ——————————————————`);
+  L.push('');
+  L.push('打つコマンドはこれだけ (上から順に使う)');
+  L.push('');
+  L.push('  npm run dev            動かす (接続先は .env)          npm run dev:mock  模擬サーバで動かす');
+  L.push('  npm test               テスト (緑にしてから「できた」)  npm start         本番と同じ起動');
+  L.push('  npx github:loogo-inc/cpos-kit ui              画面の作り方 (見本・スタイル・ロゴ・色)。--open で見本をブラウザに');
+  L.push('  npx github:loogo-inc/cpos-kit scopes --used    使う API から必要なスコープを出す');
+  L.push('  npx github:loogo-inc/cpos-kit validate         cpos.manifest.json を確かめる');
+  L.push('  npx github:loogo-inc/cpos-kit connect          ステージング (本物) につなぐ');
+  L.push('  npm run verify:staging                         本物で読み書きを確かめる');
+  L.push('  npx github:loogo-inc/cpos-kit update           kit を新しい版に上げる');
+  L.push('  npx github:loogo-inc/cpos-kit guide            この画面をもう一度');
+  L.push('');
+  L.push('  (npx が使えない環境では npm run guide / npm run validate / npm run connect)');
+  if (args.includes('--commands')) { out(L.join('\n')); return; }
+  L.push('');
+  L.push('—— それぞれの詳しい話 ——————————————————');
   L.push('');
   L.push('【1】動かす (接続先は .env。原則ステージング = 本物の応答で作る。模擬サーバは自分で選んだときだけ: npm run dev:mock)');
   L.push('    npm install && npm run dev        KIT 模擬サーバと一緒に起動');
@@ -521,6 +592,14 @@ function guide(appId, name, { afterCreate = false } = {}) {
   L.push('');
   L.push('    ※ 登録しないと API が動かない、ではない。通るかはトークンのスコープが決める。');
   L.push('      登録はそのスコープを持つトークンを発行してもらうための入口 (＋ランチャー掲載)。');
+  L.push('');
+  L.push('【4.5】見た目を自分のものにする (任意)');
+  L.push('    ロゴ: フォルダ直下に logo.svg を置くとヘッダのアプリ名の隣に出る (置かなければ名前だけ。左のメニューには重ねて出さない)');
+  L.push('    色: public/theme.css を作り <link> を cpos-ui.css の後ろに足して、--cpos-color-primary などの変数だけ上書きする');
+  L.push('    事業所: server.mjs の const FACILITY_IN_HEADER (true = ヘッダで選ぶ / false = 出さない。create の質問の答え)');
+  L.push('    上に固定: <header class="cpos-appbar cpos-pinned"> にする (既定は固定しない。長い一覧で範囲を見失うときだけ)');
+  L.push('    画面の決まりは AGENTS.md の「画面の規約」。見本は node_modules/@cpos/kit/kit/ui/examples/ (ブラウザでそのまま開ける)');
+  L.push('    まとめて見る: npx github:loogo-inc/cpos-kit ui   (--open で見本をブラウザに)');
   L.push('');
   L.push('【5】画面に利用者のログインを付ける (公開するなら必須)');
   L.push('    --sample fastify の見本には最初から付いている (fastifyLoginGate)。node の見本には無い。');
@@ -648,7 +727,7 @@ async function adopt() {
     if (settingsHas) out('  ! .claude/settings.json は既にあるので触りません。Stop hook を入れるには kit/agents/stop-judge.prompt.md を hooks.Stop に type: prompt で足す');
   }
   if (design) {
-    out('\n画面の規約「ばらつかせない 12 の決め」(--design no で入れない):');
+    out(`\n画面のガイドライン「${designHeading()}」(推奨。--design no で入れない):`);
     for (const [f] of willDesign) out(`  + ${f}  (節を末尾に足す)`);
     if (!willDesign.length) out('  (無し)');
     out('  スタイルは配らない (このプロジェクトの作りに合わせて `@cpos/kit/ui/cpos-ui.css` を配信するか、規約どおりに自分で書く)');
@@ -686,6 +765,41 @@ async function adopt() {
   else if (claudeNeedsLine) { writeFileSync(cl, readFileSync(cl, 'utf8').replace(/\n*$/, '\n\n') + '@AGENTS.md\n'); out('  追記しました: CLAUDE.md (@AGENTS.md の 1 行)'); }
   out('\n元に戻すには: git checkout . && git clean -fd (コミット前なら)');
   out('次: npm install <kit の場所> して、npx github:loogo-inc/cpos-kit validate を通す');
+}
+
+// ---- ui ----------------------------------------------------------------
+// 画面まわりの「どこに何があるか」を 1 画面で出す (読み取り専用)。--open で見本をブラウザで開く
+function uiCmd() {
+  const cwd = process.cwd();
+  const local = resolve(cwd, 'node_modules', '@cpos', 'kit', 'kit', 'ui');
+  const base = existsSync(local) ? local : resolve(kitRoot, 'kit', 'ui');
+  const ex = resolve(base, 'examples');
+  out(`— 画面 (UI) ——————————————————
+
+決まり   AGENTS.md の「画面のガイドライン」(推奨。外れてよいが理由を 1 行)。AI はここを読む
+見本     ${ex}
+         today.html 今日やること / user.html 1 件の詳細 / settings.html 設定と自分 / users.html 一覧 + 入力 / record.html 1 件の入力
+         ブラウザでそのまま開ける。画面を作るときはこれを真似る
+スタイル ${resolve(base, 'cpos-ui.css')}   (アプリは /cpos-ui.css で配信済み)
+文字拡縮 ${resolve(base, 'cpos-ui.js')}    (<script src="/cpos-ui.js" defer> と <div data-cpos-text-size></div>)
+
+自分のものにする
+  ロゴ     このフォルダに logo.svg を置く (ヘッダのアプリ名の隣に出る)
+  色       theme.css を作り cpos-ui.css の後ろで読み、--cpos-color-primary などの変数だけ上書きする
+  事業所   server.mjs の const FACILITY_IN_HEADER (true = ヘッダで選ぶ / false = 出さない)
+  上に固定 <header class="cpos-appbar cpos-pinned"> にする (既定は固定しない)
+
+よく落とす所 (ガイドラインより)
+  意思決定のボタンは右・取消は左 / 1 画面に primary は 1 つ / 検索は打つたびに即絞り込み (ボタンを置かない)
+  必須は赤い「必須」の文字 / 誤りは欄の直下 / 保存は保存バー / 確認は取り消せない操作だけ (window.confirm を使わない)
+  値が無い項目は「未設定」/ 本文 16px・押せる領域 44px・幅 360px で横スクロールしない
+
+  見本をブラウザで開く: npx github:loogo-inc/cpos-kit ui --open`);
+  if (args.includes('--open')) {
+    const opener = process.platform === 'darwin' ? 'open' : process.platform === 'win32' ? 'start' : 'xdg-open';
+    const r = spawnSync(opener, [resolve(ex, 'today.html')], { stdio: 'ignore', shell: process.platform === 'win32' });
+    out(r.status === 0 ? '\n開きました (today.html)' : `\n開けませんでした。手で開く: ${resolve(ex, 'today.html')}`);
+  }
 }
 
 // ---- scopes --------------------------------------------------------------
@@ -910,10 +1024,11 @@ async function update() {
     out(c.status === 0 ? `コミットしました: ${msg}` : `コミットできませんでした (git commit):\n${tail(c)}`);
   } else out('git のリポジトリではないのでコミットしていません (戻せるように git init を勧めます)');
   if (notes) await offerUpgradeByAi(cwd, newVersion);
-  // 画面の規約 (基礎 UI) は CPOS 追随とは別に聞く。見た目と操作が変わるので、断れるようにする。
+  // 画面のガイドライン (基礎 UI) は CPOS 追随とは別に聞く。見た目と操作が変わるので、断れるようにする。
   // 規約を入れていない人 (create/adopt で --design no、または remove した人) には聞かない = 押し付けない
+  warnEditedUi(cwd);
   if (designHad && designChanged) await offerDesignByAi(cwd, newVersion);
-  else if (!designHad && notes) out('\n画面の規約 (ばらつかせない 17 の決め) は入っていません。入れるなら: npx github:loogo-inc/cpos-kit adopt --apply --design yes');
+  else if (!designHad && notes) out(`\n画面のガイドライン (${designHeading()}) は入っていません。入れるなら: npx github:loogo-inc/cpos-kit adopt --apply --design yes`);
 }
 
 // 旧版より後、新版までの CHANGELOG の節を docs/cpos/UPGRADE.md に書く。書いたパス (相対) を返す
@@ -948,15 +1063,34 @@ function upgradePrompt(to) {
   return `docs/cpos/UPGRADE.md を読んで、このアプリを cpos-kit ${to} と今の CPOS に合わせて直してください。CHANGELOG の「既存アプリへの影響」と、このアプリが使っている機能に関わる項目を 1 つずつ見て、直す必要があるものは直し、要らないものは理由を UPGRADE.md の末尾に 1 行ずつ書いてください。npm test を通してから「cpos-kit ${to} に合わせて実装を直す」でコミットしてください。`;
 }
 
+// アプリの中に cpos-ui.css / .js の写しがあり、kit のものと違うなら知らせる (手で直すと次の update で消える)
+function warnEditedUi(cwd) {
+  const hits = [];
+  for (const name of ['cpos-ui.css', 'cpos-ui.js']) {
+    const mine = resolve(kitRoot, 'kit', 'ui', name);
+    for (const rel of [name, join('public', name), join('static', name), join('assets', name)]) {
+      const p = resolve(cwd, rel);
+      if (!existsSync(p) || !existsSync(mine)) continue;
+      if (readFileSync(p, 'utf8') !== readFileSync(mine, 'utf8')) hits.push(rel);
+    }
+  }
+  if (!hits.length) return;
+  out(`\n! ${hits.join(' / ')} が kit のものと違います (手で直したか、古い版の写し)。`);
+  out('  このままだと、次に kit を上げたときに上書きされて消えます。');
+  out('  変えたいのが色やフォントなら theme.css で --cpos-* を上書きしてください (上書きされません)。');
+  out('  ガイドラインに従わないと決めたなら、AGENTS.md の「画面のガイドライン」の節を <!-- cpos-kit:design:begin --> から');
+  out('  <!-- cpos-kit:design:end --> まで消してください。以後 update は画面について何も言いません。');
+}
+
 function designPrompt(to) {
-  return `AGENTS.md の「画面の規約 (cpos-kit)」が cpos-kit ${to} で変わりました。この規約 (ばらつかせない 17 の決め) に、このアプリの画面を合わせてください。見本は node_modules/@cpos/kit/kit/ui/examples/ にあります (そのままブラウザで開けます)。全部を一度に直さなくてよいので、(1) 見やすさの下限 (viewport・本文 16px・押せる領域 44px・コントラスト) (2) 意思決定ボタンの位置・検索の起動・必須の表し方・確認の出し方 の順に直し、直せない所と理由を docs/cpos/UPGRADE.md の末尾に 1 行ずつ書いてください。npm test を通してから「画面を cpos-kit ${to} の規約に合わせる」でコミットしてください。`;
+  return `AGENTS.md の「画面のガイドライン (cpos-kit)」が cpos-kit ${to} で変わりました (推奨であって強制ではありません)。できる範囲で、このアプリの画面をこれに寄せてください。見本は node_modules/@cpos/kit/kit/ui/examples/ にあります (そのままブラウザで開けます)。全部を一度に直さなくてよいので、(1) 見やすさの下限 (viewport・本文 16px・押せる領域 44px・コントラスト) (2) 意思決定ボタンの位置・検索の起動・必須の表し方・確認の出し方 の順に直し、直せない所と理由を docs/cpos/UPGRADE.md の末尾に 1 行ずつ書いてください。npm test を通してから「画面を cpos-kit ${to} のガイドラインに寄せる」でコミットしてください。**cpos-ui.css / cpos-ui.js は書き換えないでください** (次の update で上書きされます。色やフォントは theme.css で --cpos-* を上書きする)。`;
 }
 
 // 「基礎 UI (画面の規約) に合わせますか？」。CPOS 追随とは別の質問にする (見た目と操作が変わるため)
 async function offerDesignByAi(cwd, to) {
   const prompt = designPrompt(to);
   const which = (cmd) => spawnSync(process.platform === 'win32' ? 'where' : 'which', [cmd], { encoding: 'utf8' }).status === 0;
-  out('\n画面の規約 (基礎 UI) が変わりました。AGENTS.md の本文はもう新しくなっています。');
+  out('\n画面のガイドライン (基礎 UI) が変わりました。AGENTS.md の本文はもう新しくなっています。');
   if (args.includes('--no-ai') || yes || !process.stdin.isTTY) { out(`画面を合わせるときは、AI ツールで次のように頼む:\n  ${prompt}`); return; }
   const a = String(await ask('この画面を基礎 UI に合わせますか？ AI に頼みます (y/N)', 'n').catch(() => 'n')).toLowerCase();
   if (a !== 'y' && a !== 'yes') { out(`あとで合わせるときは、AI ツールで次のように頼む:\n  ${prompt}\n規約そのものが要らないなら: npx github:loogo-inc/cpos-kit remove --apply (画面の規約も外れます)`); return; }
@@ -1175,6 +1309,7 @@ try {
   else if (cmd === 'connect') await connect();
   else if (cmd === 'adopt') await adopt();
   else if (cmd === 'doctor') await doctor();
+  else if (cmd === 'ui') uiCmd();
   else if (cmd === 'docs') await docs();
   else if (cmd === 'update') await update();
   else if (cmd === 'remove') await removeKit();

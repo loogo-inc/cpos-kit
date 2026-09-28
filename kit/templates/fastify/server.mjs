@@ -25,12 +25,15 @@
 // @cpos/kit/client で呼ぶこと、そして利用者の認証を外さないことの 3 つ。
 
 import Fastify from 'fastify';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { randomBytes } from 'node:crypto';
 import { createCposClient, CposApiError, CposClientError, tokenResolver } from '@cpos/kit/client';
 import { fastifyLoginGate, canSeeFacility } from '@cpos/kit/app-kit';
 
 const APP_ID = '{{appId}}';
+// 事業所の選択をヘッダで行うか (create の質問「事業所の選択をグローバル (ヘッダ) で行いますか」の答え)。
+// false のアプリはヘッダに事業所を出さない (1 つの事業所しか扱わない / 画面ごとに決める場合)
+const FACILITY_IN_HEADER = {{facilityInHeader}};
 const APP_NAME = '{{name}}';
 const RESOURCE = 'notes'; // cpos.manifest.json の resources に宣言してある名前
 
@@ -51,6 +54,10 @@ export function createApp({ cposBaseUrl, cposToken, cposFetch, appDataAppId, ses
   // 画面の共通スタイル (規約の実体)。@cpos/kit を上げれば中身も上がる
   const cposUiCss = readFileSync(new URL(import.meta.resolve('@cpos/kit/ui/cpos-ui.css')), 'utf8');
   const cposUiJs = readFileSync(new URL(import.meta.resolve('@cpos/kit/ui/cpos-ui.js')), 'utf8');
+  // ロゴは任意。logo.svg をこのフォルダに置けばヘッダに出る (置かなければアプリ名だけ)
+  const logoPath = new URL('./logo.svg', import.meta.url);
+  const logo = existsSync(logoPath) ? readFileSync(logoPath, 'utf8') : null;
+  const brand = logo ? '<span class="cpos-brand"><img src="/logo.svg" alt="">' : '<span class="cpos-brand">';
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
   const app = Fastify({ logger });
@@ -60,7 +67,7 @@ export function createApp({ cposBaseUrl, cposToken, cposFetch, appDataAppId, ses
   const gate = fastifyLoginGate(app, {
     cposBaseUrl, secret: sessionSecret, appUrl, mode: loginMode ?? 'auto', fetch: cposFetch, appName: APP_NAME,
     oauth: { clientName: APP_NAME, clientId: oauthClientId },
-    publicPaths: ['/api/health', '/cpos.manifest.json', '/cpos-ui.css', '/cpos-ui.js']
+    publicPaths: ['/api/health', '/cpos.manifest.json', '/cpos-ui.css', '/cpos-ui.js', '/logo.svg']
   });
   app.decorate('loginGate', gate);
 
@@ -95,6 +102,7 @@ export function createApp({ cposBaseUrl, cposToken, cposFetch, appDataAppId, ses
   app.get('/cpos.manifest.json', async (req, reply) => reply.type('application/json; charset=utf-8').send(manifest));
   app.get('/cpos-ui.css', async (req, reply) => reply.type('text/css; charset=utf-8').send(cposUiCss));
   app.get('/cpos-ui.js', async (req, reply) => reply.type('text/javascript; charset=utf-8').send(cposUiJs));
+  if (logo) app.get('/logo.svg', async (req, reply) => reply.type('image/svg+xml; charset=utf-8').send(logo));
   app.get('/api/health', async () => health());
   app.get('/api/me', async (req) => ({ ok: true, user: req.session.user, organizationId: req.session.organizationId, facilityScope: req.session.facilityScope, via: req.session.via ?? 'cookie' }));
   app.get('/api/facilities', async (req) => (await visibleFacilities(req.session)).map((f) => ({ id: f.id, name: f.name })));
@@ -152,7 +160,7 @@ export function createApp({ cposBaseUrl, cposToken, cposFetch, appDataAppId, ses
 <td data-label="メモ"><form class="cpos-memo" method="post" action="/notes">${keep}<input type="hidden" name="masterUserId" value="${esc(u.masterUserId)}">
 <label class="cpos-sr" for="memo-${esc(u.masterUserId)}">${esc(u.name)} のメモ</label>
 <input id="memo-${esc(u.masterUserId)}" name="text" value="${esc(text)}" data-initial="${esc(text)}" placeholder="訪問時に気をつけること">
-<button class="cpos-btn primary" type="submit">保存</button></form></td></tr>`;
+<button class="cpos-btn" type="submit">保存</button></form></td></tr>`;
     }).join('');
     const body = users.length
       ? `<table class="cpos-table"><thead><tr><th>利用者</th><th>要介護度</th><th>メモ (利用者 1 人に 1 件)</th></tr></thead><tbody>${rows}</tbody></table>`
@@ -164,9 +172,8 @@ export function createApp({ cposBaseUrl, cposToken, cposFetch, appDataAppId, ses
 <script src="/cpos-ui.js" defer></script>
 </head><body>
 <div class="cpos-savebar" id="savebar" hidden><span>未保存の変更があります</span><span class="cpos-actions"><button class="cpos-btn" type="button" id="discard">破棄</button><button class="cpos-btn primary" type="button" id="saveall">保存</button></span></div>
-<header class="cpos-appbar{{appbarClass}}"><h1>${esc(APP_NAME)}</h1>
-<details class="cpos-facility"><summary title="事業所を切り替える"><span class="cpos-sr">事業所: </span>${esc(facility.name)}</summary>
-<div class="cpos-facility-list">${facilityList}</div></details>
+<header class="cpos-appbar{{appbarClass}}">${brand}<h1>${esc(APP_NAME)}</h1></span>
+${FACILITY_IN_HEADER ? `<details class="cpos-facility"><summary title="事業所を切り替える"><span class="cpos-sr">事業所: </span>${esc(facility.name)}</summary><div class="cpos-facility-list">${facilityList}</div></details>` : ''}
 <details class="cpos-usermenu"><summary>${esc(req.session.user?.name ?? req.session.user?.id)}</summary>
   <div class="cpos-usermenu-list"><a href="/logout">ログアウト</a></div></details></header>
 <main class="cpos-page">
@@ -176,15 +183,25 @@ export function createApp({ cposBaseUrl, cposToken, cposFetch, appDataAppId, ses
   <div class="cpos-card">${body}</div>
   <p class="cpos-sub">接続先 CPOS: <code>${esc(cposBaseUrl)}</code></p>
 </main>
-${req.query.saved ? '<div class="cpos-snackbar" id="snack"><span>メモを保存しました</span></div>' : ''}
+${req.query.saved ? `<div class="cpos-snackbar" id="snack"><span>メモを保存しました (${esc(req.query.saved)} 件)</span></div>` : ''}
 <script>
  const bar = document.getElementById('savebar');
  const dirty = () => [...document.querySelectorAll('.cpos-memo input[name=text]')].filter((i) => i.value !== i.dataset.initial);
  const sync = () => { bar.hidden = dirty().length === 0; };
  document.addEventListener('input', (e) => { if (e.target.matches('.cpos-memo input[name=text]')) sync(); });
  document.getElementById('discard').addEventListener('click', () => { document.querySelectorAll('.cpos-memo input[name=text]').forEach((i) => { i.value = i.dataset.initial; }); sync(); });
- document.getElementById('saveall').addEventListener('click', () => { const f = dirty()[0]?.closest('form'); if (f) f.submit(); });
- addEventListener('beforeunload', (e) => { if (dirty().length) { e.preventDefault(); e.returnValue = ''; } });
+ let saving = false;   // 自分の保存で「このページを離れますか」を出さない
+ document.getElementById('saveall').addEventListener('click', async () => {
+   const rows = dirty(); if (!rows.length) return;
+   saving = true;
+   for (const input of rows) {           // 変わった行だけ送る
+     const form = input.closest('form');
+     await fetch(form.action, { method: 'POST', body: new URLSearchParams(new FormData(form)) });
+   }
+   location.href = location.pathname + location.search.replace(/[?&]saved=\d+/, '') + (location.search ? '&' : '?') + 'saved=' + rows.length;
+ });
+ document.querySelectorAll('.cpos-memo').forEach((f) => f.addEventListener('submit', () => { saving = true; }));
+ addEventListener('beforeunload', (e) => { if (!saving && dirty().length) { e.preventDefault(); e.returnValue = ''; } });
  const snack = document.getElementById('snack'); if (snack) setTimeout(() => snack.remove(), 5000);
  const qi = document.getElementById('q'); let t;
  qi.addEventListener('input', () => { clearTimeout(t); t = setTimeout(() => { if (!dirty().length) document.getElementById('searchform').submit(); }, 300); });

@@ -1,8 +1,8 @@
 {
  "generatedFrom": {
-  "version": "1.0.0",
-  "revision": "00278-7tl",
-  "fetchedAt": "2026-09-27",
+  "version": "0.1.0",
+  "revision": "main@216c45cc",
+  "fetchedAt": "2026-09-28",
   "operations": 1418
  },
  "note": "client が実行時に読む operation の表。kit の保守者が生成器 (gen-api) で spec/cpos-openapi.json から作る。手で編集しない",

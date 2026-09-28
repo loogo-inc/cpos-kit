@@ -5,11 +5,10 @@
 <script src="../cpos-ui.js" defer></script>
 </head><body>
 <!-- 見本 3: 設定と自分。決め 15 (アプリはアプリ固有の設定しか持たない) / 14 (ログアウトは CPOS に返す) /
-     7 (保存バー) / 1 (意思決定は右) / 10b (事業所に関係ない画面なので事業所を出さず、範囲を「自分だけ」と書く)。
+     7 (保存バー) / 1 (意思決定は右) / 10b (事業所に関係ない画面なので事業所を出さない。「設定」は見出しで明らかなので範囲の札も足さない)。
      ここに置かないもの: 氏名・連絡先・パスワード・権限 (CPOS が持つ)、文字の大きさ (端末の設定に従う)。 -->
 <header class="cpos-appbar">
-  <h1>訪問記録</h1>
-  <span class="cpos-scope">自分だけの設定 (事業所に関係しません)</span>
+  <span class="cpos-brand"><img src="logo.svg" alt=""><h1>訪問記録</h1></span>
   <details class="cpos-usermenu" open>
     <summary>山田 花子</summary>
     <div class="cpos-usermenu-list">

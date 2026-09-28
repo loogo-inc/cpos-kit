@@ -2,14 +2,14 @@
  "openapi": "3.1.0",
  "info": {
   "title": "CPOS (Care Planning OS) API",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "CPOS の HTTP API (公式 OpenAPI の写し)。kit の client はこれから生成する。",
-  "x-cpos-revision": "00278-7tl"
+  "x-cpos-revision": "main@216c45cc"
  },
  "x-cpos-kit": {
-  "version": "1.0.0",
-  "revision": "00278-7tl",
-  "fetchedAt": "2026-09-27",
+  "version": "0.1.0",
+  "revision": "main@216c45cc",
+  "fetchedAt": "2026-09-28",
   "operations": 1418,
   "note": "公式 OpenAPI の写し。内部情報 (x-cpos-source 等) を落としてある。kit の保守者が生成器 (gen-api) で作る。手で編集しない"
  },
@@ -79,97 +79,6 @@
      "readOnly": true,
      "phi": "none"
     }
-   }
-  },
-  "/api/auth/impersonation": {
-   "get": {
-    "operationId": "get_api_auth_impersonation",
-    "summary": "(台帳未記載)",
-    "tags": [
-     "未分類"
-    ],
-    "parameters": [],
-    "responses": {
-     "200": {
-      "description": "成功"
-     },
-     "400": {
-      "description": "入力が正しくない (本文の error に日本語の理由)"
-     }
-    },
-    "security": [],
-    "x-cpos-auth": "unknown",
-    "x-cpos-scope": null
-   },
-   "post": {
-    "operationId": "post_api_auth_impersonation",
-    "summary": "(台帳未記載)",
-    "tags": [
-     "未分類"
-    ],
-    "parameters": [],
-    "responses": {
-     "200": {
-      "description": "成功"
-     },
-     "400": {
-      "description": "入力が正しくない (本文の error に日本語の理由)"
-     }
-    },
-    "security": [],
-    "x-cpos-auth": "unknown",
-    "x-cpos-scope": null,
-    "requestBody": {
-     "required": false,
-     "content": {
-      "application/json": {
-       "schema": {
-        "type": "object",
-        "additionalProperties": true
-       }
-      }
-     }
-    }
-   },
-   "delete": {
-    "operationId": "delete_api_auth_impersonation",
-    "summary": "(台帳未記載)",
-    "tags": [
-     "未分類"
-    ],
-    "parameters": [],
-    "responses": {
-     "200": {
-      "description": "成功"
-     },
-     "400": {
-      "description": "入力が正しくない (本文の error に日本語の理由)"
-     }
-    },
-    "security": [],
-    "x-cpos-auth": "unknown",
-    "x-cpos-scope": null
-   }
-  },
-  "/api/auth/impersonation/candidates": {
-   "get": {
-    "operationId": "get_api_auth_impersonation_candidates",
-    "summary": "(台帳未記載)",
-    "tags": [
-     "未分類"
-    ],
-    "parameters": [],
-    "responses": {
-     "200": {
-      "description": "成功"
-     },
-     "400": {
-      "description": "入力が正しくない (本文の error に日本語の理由)"
-     }
-    },
-    "security": [],
-    "x-cpos-auth": "unknown",
-    "x-cpos-scope": null
    }
   },
   "/api/auth/login": {
@@ -69071,6 +68980,97 @@
       }
      }
     }
+   }
+  },
+  "/api/auth/impersonation": {
+   "get": {
+    "operationId": "get_api_auth_impersonation",
+    "summary": "(台帳未記載)",
+    "tags": [
+     "未分類"
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     }
+    },
+    "security": [],
+    "x-cpos-auth": "unknown",
+    "x-cpos-scope": null
+   },
+   "post": {
+    "operationId": "post_api_auth_impersonation",
+    "summary": "(台帳未記載)",
+    "tags": [
+     "未分類"
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     }
+    },
+    "security": [],
+    "x-cpos-auth": "unknown",
+    "x-cpos-scope": null,
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": true
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "operationId": "delete_api_auth_impersonation",
+    "summary": "(台帳未記載)",
+    "tags": [
+     "未分類"
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     }
+    },
+    "security": [],
+    "x-cpos-auth": "unknown",
+    "x-cpos-scope": null
+   }
+  },
+  "/api/auth/impersonation/candidates": {
+   "get": {
+    "operationId": "get_api_auth_impersonation_candidates",
+    "summary": "(台帳未記載)",
+    "tags": [
+     "未分類"
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     }
+    },
+    "security": [],
+    "x-cpos-auth": "unknown",
+    "x-cpos-scope": null
    }
   }
  },

@@ -40,6 +40,20 @@ const users = await cpos.masterUsers.list({ facilityId });  // 利用者 = [{ ma
 - 帳票・画面に番号を出すなら `displayInsuredNumber(u)` (`import { displayInsuredNumber } from '@cpos/kit/client'`)。仮番号を本物の番号として出さない。`cpos.app.platform.getFacilitiesByFacilityIdUsers({ facilityId })` は CPOS が決めた `displayInsuredNumber` を載せて返す。
 - 番号 (過去の番号・仮番号を含む) や masterUserId から本人を引く: `cpos.app.platform.getMasterUsersByInsuredNumber({ insuredNumber: key })`。番号しか持たないデータ (実績 `care-service-actuals` など) は `cpos.app.platform.getMasterUsersNameMap({ facilityId })` (過去の番号・仮番号は `kind: 'alias'`) で `masterUserId` に寄せてから突き合わせる。今の番号との完全一致で結ばない。
 
+## 1.5 画面を作る (見た目と操作の決まり)
+
+決まりは AGENTS.md の「画面のガイドライン」(推奨。外れてよいが理由を 1 行)。場所と作り方は `npx github:loogo-inc/cpos-kit ui` で 1 画面。**画面を作る前に見本を開いて真似る**:
+
+```
+node_modules/@cpos/kit/kit/ui/examples/   today.html / user.html / settings.html / users.html / record.html
+```
+
+- スタイルは `/cpos-ui.css` (雛形が配信済み)。`<link rel="stylesheet" href="/cpos-ui.css">` と `<meta name="viewport" content="width=device-width,initial-scale=1">` を必ず書く。
+- よく使う class: `.cpos-appbar` `.cpos-brand` `.cpos-page` `.cpos-card` `.cpos-table` (狭い幅でカードになる) `.cpos-field` + `.cpos-required` + `.cpos-error` `.cpos-btn primary|danger|text` `.cpos-actions` (右寄せ) `.cpos-savebar` `.cpos-snackbar` `.cpos-dialog` `.cpos-empty` `.cpos-badge` `.cpos-nav` `.cpos-usermenu`。
+- **よく落とす所**: 意思決定のボタンは右 / 検索は打つたびに即絞り込み (ボタンを置かない) / 必須は赤い「必須」の文字 / 保存は保存バー / 確認は取り消せない操作だけ (`window.confirm` は使わない) / 値が無い項目は「未設定」。
+- 文字の大きさは `/cpos-ui.js` + `<div data-cpos-text-size></div>` (設定の画面に置く)。
+- 事業所をヘッダで選ぶかは `server.mjs` の `FACILITY_IN_HEADER`。事業所に関係ない画面 (法人単位・自分の設定) では事業所を出さない。
+
 ## 2. AppData に保存する / 読む
 
 manifest の `resources` に名前を宣言してから使う (例 `notes`)。**名前は英小文字・数字・ハイフンだけ** (`transport-plans` は可、`transportPlans` は CPOS が 400 で拒否)。

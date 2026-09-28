@@ -109,6 +109,14 @@ npx github:loogo-inc/cpos-kit adopt --print > /tmp/block.md
 
 ---
 
+## 3.5 画面の規約 (入れたくなければ入れない)
+
+`adopt --apply` は AGENTS.md に「画面のガイドライン」(推奨。強制ではない) の節も足す。**文だけで、コードとスタイルには触らない。**
+
+- 要らないなら `npx github:loogo-inc/cpos-kit adopt --apply --design no`。あとで `remove --apply` でも外れる。
+- 入れた場合の使い方: 見本は `node_modules/@cpos/kit/kit/ui/examples/` (ブラウザで開ける)、スタイルは `@cpos/kit/ui/cpos-ui.css`。既存アプリには**配信されない**ので、自分のやり方 (静的配信・バンドル・`<link>`) で読むか、規約だけ守って自前の CSS で書く。
+- `update` は、規約が変わった回だけ「この画面を基礎 UI に合わせますか」と聞く。断ってよい (次に規約が変わればまた聞く)。
+
 ## 4. manifest を書く
 
 `cpos.manifest.json` を作る (`adopt` が雛形を置くが、中身は自分で決める)。
