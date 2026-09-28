@@ -1,6 +1,6 @@
 {
   "name": "@cpos/kit",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "private": true,
   "description": "CPOS の上でアプリを作る人に配る共通開発基盤。このリポジトリそのものが npm パッケージ (git 参照で入れる)",
   "type": "module",
@@ -33,7 +33,12 @@
     },
     "./tickets": {
       "default": "./kit/tickets.js"
-    }
+    },
+    "./ui/cpos-ui.css": "./kit/ui/cpos-ui.css",
+    "./ui": {
+      "default": "./kit/ui/cpos-ui.css"
+    },
+    "./ui/cpos-ui.js": "./kit/ui/cpos-ui.js"
   },
   "files": [
     "kit",

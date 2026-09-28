@@ -1,0 +1,57 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>記録を書く (見本)</title>
+<link rel="stylesheet" href="../cpos-ui.css">
+<script src="../cpos-ui.js" defer></script>
+</head><body>
+<!-- 見本: 1 件の入力。決め 1 (意思決定は右) / 5 (必須は赤い「必須」の文字) / 6 (誤りは欄の直下) /
+     7 (保存バー) / 8 (取り消せない操作だけ確認) / 12 (値が無い項目は「未設定」) を 1 画面で見せる -->
+<div class="cpos-savebar" id="savebar" hidden><span>未保存の変更があります</span>
+  <span class="cpos-actions"><button class="cpos-btn" type="button" id="discard">破棄</button><button class="cpos-btn primary" type="submit" form="rec">保存</button></span></div>
+<header class="cpos-appbar"><h1>訪問記録</h1>
+  <form class="cpos-facility" method="get"><label class="cpos-sr" for="fac">事業所</label>
+    <select id="fac" name="facilityId"><option>さくら訪問介護</option><option>もみじデイサービス</option></select></form></header>
+<main class="cpos-page">
+  <div class="cpos-banner">佐藤 一郎 さん (要介護2) の 9月28日 の記録です。</div>
+  <form class="cpos-card" id="rec" method="post" action="/records">
+    <div class="cpos-field">
+      <label for="start">開始時刻 <span class="cpos-required">必須</span></label>
+      <input id="start" name="start" type="time" value="09:00" required>
+    </div>
+    <div class="cpos-field invalid">
+      <label for="body">記録 <span class="cpos-required">必須</span></label>
+      <div class="cpos-hint">やったこと・気づいたことを書いてください。</div>
+      <textarea id="body" name="body" rows="4" aria-describedby="body-error"></textarea>
+      <p class="cpos-error" id="body-error">記録を入力してください。</p>
+    </div>
+    <div class="cpos-field">
+      <label for="next">次回の申し送り</label>
+      <input id="next" name="next" value="" placeholder="未設定">
+    </div>
+    <div class="cpos-actions">
+      <button class="cpos-btn" type="button" id="del">削除</button>
+      <button class="cpos-btn primary" type="submit">保存</button>
+    </div>
+  </form>
+</main>
+<dialog class="cpos-dialog" id="confirm">
+  <h2>記録の削除</h2>
+  <p>9月28日 佐藤 一郎 さんの記録を削除しますか。この操作は元に戻せません。</p>
+  <div class="cpos-actions"><button class="cpos-btn" type="button" id="cancel">やめる</button><button class="cpos-btn danger" type="button">削除する</button></div>
+</dialog>
+<script>
+ // 保存バー: 直したら出て、保存するまで消えない
+ const bar = document.getElementById('savebar');
+ const fields = [...document.querySelectorAll('#rec input, #rec textarea')];
+ fields.forEach((f) => { f.dataset.initial = f.value; });
+ const dirty = () => fields.filter((f) => f.value !== f.dataset.initial);
+ const sync = () => { bar.hidden = dirty().length === 0; };
+ document.addEventListener('input', sync);
+ document.getElementById('discard').addEventListener('click', () => { fields.forEach((f) => { f.value = f.dataset.initial; }); sync(); });
+ addEventListener('beforeunload', (e) => { if (dirty().length) { e.preventDefault(); e.returnValue = ''; } });
+ // 取り消せない操作だけ確認する (ブラウザ既定のダイアログは使わない)
+ const dlg = document.getElementById('confirm');
+ document.getElementById('del').addEventListener('click', () => dlg.showModal());
+ document.getElementById('cancel').addEventListener('click', () => dlg.close());
+</script>
+</body></html>

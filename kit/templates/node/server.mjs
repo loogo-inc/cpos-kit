@@ -40,6 +40,8 @@ export function createApp({ cposBaseUrl, cposToken, defaultFacilityId, cposFetch
   // (app-data:<別名>:*) しか持たないとき (登録前にステージングで試すときに起きる) だけ env で切り替える。
   const notes = cpos.appData(appDataAppId ?? APP_ID);
   const manifest = readFileSync(new URL('./cpos.manifest.json', import.meta.url), 'utf8');
+  const cposUiCss = readFileSync(new URL(import.meta.resolve('@cpos/kit/ui/cpos-ui.css')), 'utf8');
+  const cposUiJs = readFileSync(new URL(import.meta.resolve('@cpos/kit/ui/cpos-ui.js')), 'utf8');
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
   // 事業所は「指定があればそれ、無ければ見てよい事業所の先頭」。固定値を持たない。
@@ -77,6 +79,9 @@ export function createApp({ cposBaseUrl, cposToken, defaultFacilityId, cposFetch
     };
     try {
       if (req.method === 'GET' && url.pathname === '/cpos.manifest.json') return send(200, manifest);
+      // 画面の共通スタイル (規約の実体)。@cpos/kit を上げれば中身も上がる
+      if (req.method === 'GET' && url.pathname === '/cpos-ui.css') return send(200, cposUiCss, 'text/css; charset=utf-8');
+      if (req.method === 'GET' && url.pathname === '/cpos-ui.js') return send(200, cposUiJs, 'text/javascript; charset=utf-8');
       if (req.method === 'GET' && url.pathname === '/api/health') return send(200, health());
       if (req.method === 'GET' && url.pathname === '/api/facilities') {
         return send(200, (await cpos.facilities.list()).map((f) => ({ id: f.id, name: f.name })));
@@ -124,16 +129,63 @@ export function createApp({ cposBaseUrl, cposToken, defaultFacilityId, cposFetch
 
       if (req.method === 'GET' && url.pathname === '/') {
         const { facility, facilities } = await resolveFacility(url.searchParams.get('facilityId'));
-        const [users, list] = await Promise.all([cpos.masterUsers.list({ facilityId: facility.id }), notes.list(RESOURCE, { facilityId: facility.id })]);
+        const saved = url.searchParams.get('saved');
+        const q = (url.searchParams.get('q') ?? '').trim();
+        const only = url.searchParams.get('only') === 'none';   // メモが無い人だけ
+        const [allUsers, list] = await Promise.all([cpos.masterUsers.list({ facilityId: facility.id }), notes.list(RESOURCE, { facilityId: facility.id })]);
         const noteOf = new Map(list.map((n) => [n.data.masterUserId, n.data.text]));
-        const options = facilities.map((f) => `<option value="${esc(f.id)}"${f.id === facility.id ? ' selected' : ''}>${esc(f.name)}</option>`).join('');
-        const rows = users.map((u) => `<tr><td>${esc(u.name)}</td><td>${esc(u.careLevel)}</td>
-<td><form method="post" action="/notes" style="display:flex;gap:4px"><input type="hidden" name="facilityId" value="${esc(facility.id)}"><input type="hidden" name="masterUserId" value="${esc(u.masterUserId)}"><input name="text" value="${esc(noteOf.get(u.masterUserId))}" placeholder="メモ"><button>保存</button></form></td></tr>`).join('');
-        return send(200, `<!doctype html><meta charset="utf-8"><title>{{name}}</title>
-<style>body{font-family:sans-serif;max-width:60em;margin:2em auto;line-height:1.6}table{border-collapse:collapse;width:100%}td,th{border-bottom:1px solid #ddd;padding:6px 8px;text-align:left;vertical-align:top}input{padding:4px}select{padding:4px}</style>
-<h1>{{name}}</h1>
-<form method="get" action="/">事業所: <select name="facilityId" onchange="this.form.submit()">${options}</select> <small>CPOS: <code>${esc(cposBaseUrl)}</code></small></form>
-<table><thead><tr><th>利用者</th><th>要介護度</th><th>メモ (利用者 1 人に 1 件)</th></tr></thead><tbody>${rows}</tbody></table>`, 'text/html; charset=utf-8');
+        const users = allUsers
+          .filter((u) => !q || `${u.name ?? ''}${u.furigana ?? ''}`.includes(q))
+          .filter((u) => !only || !noteOf.get(u.masterUserId));
+        // 事業所は「名前は常に見える / 切り替えは一覧から選ぶ」(決め 10)。JS 無しで動く details + リンク
+    const facilityList = facilities.map((f) => `<a href="/?facilityId=${encodeURIComponent(f.id)}"${f.id === facility.id ? ' aria-current="true"' : ''}>${esc(f.name)}</a>`).join('');
+        const keep = `<input type="hidden" name="facilityId" value="${esc(facility.id)}">`;
+        // 1 行 1 フォーム。直すと保存バーが出る (規約: 保存は保存バー、押し忘れと誤離脱を防ぐ)
+        const rows = users.map((u) => {
+          const text = noteOf.get(u.masterUserId) ?? '';
+          return `<tr><td data-label="利用者">${esc(u.name)}</td>
+<td data-label="要介護度">${esc(u.careLevel ?? '未設定')}</td>
+<td data-label="メモ"><form class="cpos-memo" method="post" action="/notes">${keep}<input type="hidden" name="masterUserId" value="${esc(u.masterUserId)}">
+<label class="cpos-sr" for="memo-${esc(u.masterUserId)}">${esc(u.name)} のメモ</label>
+<input id="memo-${esc(u.masterUserId)}" name="text" value="${esc(text)}" data-initial="${esc(text)}" placeholder="訪問時に気をつけること">
+<button class="cpos-btn primary cpos-memo-save" type="submit">保存</button></form></td></tr>`;
+        }).join('');
+        const body = users.length
+          ? `<table class="cpos-table"><thead><tr><th>利用者</th><th>要介護度</th><th>メモ (利用者 1 人に 1 件)</th></tr></thead><tbody>${rows}</tbody></table>`
+          : `<div class="cpos-empty"><p>${q || only ? '条件に合う利用者はいません。' : 'この事業所には利用者がいません。'}</p><a class="cpos-btn" href="/?facilityId=${encodeURIComponent(facility.id)}">絞り込みをやめる</a></div>`;
+        return send(200, `<!doctype html><html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>{{name}}</title>
+<link rel="stylesheet" href="/cpos-ui.css">
+<script src="/cpos-ui.js" defer></script>
+</head><body>
+<div class="cpos-savebar" id="savebar" hidden><span>未保存の変更があります</span><span class="cpos-actions"><button class="cpos-btn" type="button" id="discard">破棄</button><button class="cpos-btn primary" type="button" id="saveall">保存</button></span></div>
+<header class="cpos-appbar{{appbarClass}}"><h1>{{name}}</h1>
+<details class="cpos-facility"><summary title="事業所を切り替える"><span class="cpos-sr">事業所: </span>${esc(facility.name)}</summary>
+<div class="cpos-facility-list">${facilityList}</div></details></header>
+<main class="cpos-page">
+  <form class="cpos-search" method="get" action="/" id="searchform">${keep}<label class="cpos-sr" for="q">利用者を探す</label><input id="q" name="q" value="${esc(q)}" placeholder="氏名・ふりがなで探す" autocomplete="off"><noscript><button class="cpos-btn" type="submit">探す</button></noscript></form>
+  <div class="cpos-chips"><a class="cpos-chip${only ? ' on' : ''}" href="/?facilityId=${encodeURIComponent(facility.id)}${q ? `&q=${encodeURIComponent(q)}` : ''}${only ? '' : '&only=none'}">メモがまだの人</a>
+  <span class="cpos-chip" aria-disabled="true">${users.length} 人</span></div>
+  <div class="cpos-card">${body}</div>
+  <p class="cpos-sub">接続先 CPOS: <code>${esc(cposBaseUrl)}</code></p>
+</main>
+${saved ? '<div class="cpos-snackbar" id="snack"><span>メモを保存しました</span></div>' : ''}
+<script>
+ // 直したら保存バーを出す。保存するまで消えない (規約: 保存は保存バー)
+ const bar = document.getElementById('savebar');
+ const dirty = () => [...document.querySelectorAll('.cpos-memo input[name=text]')].filter((i) => i.value !== i.dataset.initial);
+ const sync = () => { bar.hidden = dirty().length === 0; };
+ document.addEventListener('input', (e) => { if (e.target.matches('.cpos-memo input[name=text]')) sync(); });
+ document.getElementById('discard').addEventListener('click', () => { document.querySelectorAll('.cpos-memo input[name=text]').forEach((i) => { i.value = i.dataset.initial; }); sync(); });
+ document.getElementById('saveall').addEventListener('click', () => { const f = dirty()[0]?.closest('form'); if (f) f.submit(); });
+ addEventListener('beforeunload', (e) => { if (dirty().length) { e.preventDefault(); e.returnValue = ''; } });
+ const snack = document.getElementById('snack'); if (snack) setTimeout(() => snack.remove(), 5000);
+ // 決め 3: 打つたびに絞り込む (検索ボタンを置かない)。Enter も同じ結果。未保存があるときは邪魔しない
+ const qi = document.getElementById('q'); let t;
+ qi.addEventListener('input', () => { clearTimeout(t); t = setTimeout(() => { if (!dirty().length) document.getElementById('searchform').submit(); }, 300); });
+</script>
+</body></html>`, 'text/html; charset=utf-8');
       }
       if (req.method === 'POST' && url.pathname === '/notes') {
         const chunks = [];
@@ -143,7 +195,7 @@ export function createApp({ cposBaseUrl, cposToken, defaultFacilityId, cposFetch
         const masterUserId = form.get('masterUserId') ?? '';
         if (!(await userInFacility(facility.id, masterUserId))) return send(400, { ok: false, error: 'この事業所の利用者に masterUserId が見つかりません' });
         await notes.upsertBy(RESOURCE, 'masterUserId', { masterUserId, text: (form.get('text') ?? '').slice(0, 500) }, { facilityId: facility.id, user: masterUserId });
-        res.writeHead(303, { Location: `/?facilityId=${encodeURIComponent(facility.id)}` });
+        res.writeHead(303, { Location: `/?facilityId=${encodeURIComponent(facility.id)}&saved=1` });
         return res.end();
       }
       return send(404, { ok: false, error: 'not_found' });

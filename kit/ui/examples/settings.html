@@ -1,0 +1,88 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>設定 (見本)</title>
+<link rel="stylesheet" href="../cpos-ui.css">
+<script src="../cpos-ui.js" defer></script>
+</head><body>
+<!-- 見本 3: 設定と自分。決め 15 (アプリはアプリ固有の設定しか持たない) / 14 (ログアウトは CPOS に返す) /
+     7 (保存バー) / 1 (意思決定は右) / 10b (事業所に関係ない画面なので事業所を出さず、範囲を「自分だけ」と書く)。
+     ここに置かないもの: 氏名・連絡先・パスワード・権限 (CPOS が持つ)、文字の大きさ (端末の設定に従う)。 -->
+<header class="cpos-appbar">
+  <h1>訪問記録</h1>
+  <span class="cpos-scope">自分だけの設定 (事業所に関係しません)</span>
+  <details class="cpos-usermenu" open>
+    <summary>山田 花子</summary>
+    <div class="cpos-usermenu-list">
+      <a href="/me">自分の情報</a><a href="settings.html">設定</a><hr><a href="/logout">ログアウト</a>
+    </div>
+  </details>
+</header>
+
+<nav class="cpos-nav" aria-label="行き先">
+  <a href="today.html"><span class="cpos-nav-icon" aria-hidden="true">●</span>今日</a>
+  <a href="users.html"><span class="cpos-nav-icon" aria-hidden="true">≡</span>利用者</a>
+  <a href="record.html"><span class="cpos-nav-icon" aria-hidden="true">✎</span>記録</a>
+  <a href="#"><span class="cpos-nav-icon" aria-hidden="true">♡</span>お知らせ</a>
+</nav>
+
+<main class="cpos-page">
+  <h2>設定</h2>
+  <p class="cpos-sub">このアプリの設定だけがここにあります。</p>
+
+  <form class="cpos-card" id="settings">
+    <div class="cpos-field">
+      <label for="deffac">最初に開く事業所</label>
+      <div class="cpos-hint">ログインしたときに選ばれている事業所です。</div>
+      <select id="deffac"><option>前回選んだ事業所</option><option>さくら訪問介護</option><option>もみじデイサービス</option></select>
+    </div>
+    <div class="cpos-field">
+      <label for="order">利用者一覧の並び</label>
+      <select id="order"><option>ふりがな順</option><option>訪問時刻順</option><option>未記録が先</option></select>
+    </div>
+    <div class="cpos-actions">
+      <button class="cpos-btn" type="reset">やめる</button>
+      <button class="cpos-btn primary" type="submit">保存</button>
+    </div>
+  </form>
+
+  <div class="cpos-card">
+    <h2>自分の情報</h2>
+    <dl class="cpos-dl">
+      <dt>氏名</dt><dd>山田 花子</dd>
+      <dt>職種</dt><dd>訪問介護員</dd>
+      <dt>見てよい事業所</dt><dd>さくら訪問介護 / もみじデイサービス</dd>
+      <dt>連絡先</dt><dd>未設定</dd>
+    </dl>
+    <div class="cpos-banner">氏名・職種・権限は CPOS が持っています。直すには CPOS で直します (このアプリでは変えられません)。</div>
+    <div class="cpos-actions"><a class="cpos-btn" href="/me">CPOS で自分の情報を見る</a></div>
+  </div>
+
+  <div class="cpos-card">
+    <h2>文字の大きさ</h2>
+    <p>見えにくいときは大きくできます。この端末に覚えます。</p>
+    <div data-cpos-text-size></div>
+    <p class="cpos-sub">お使いの端末の文字サイズの設定にも合わせて変わります
+      (iPhone は「設定 → 画面表示と明るさ → 文字サイズ」、Android は「設定 → ディスプレイ → フォントサイズ」、
+      パソコンはブラウザの拡大 Ctrl と ＋)。ここでの選択はその上に掛かります。</p>
+  </div>
+
+  <div class="cpos-card">
+    <h2>ログアウト</h2>
+    <p>ログアウトすると CPOS のログイン画面に戻ります。</p>
+    <div class="cpos-actions"><a class="cpos-btn" href="/logout">ログアウト</a></div>
+  </div>
+</main>
+
+<div class="cpos-savebar" id="savebar" hidden><span>未保存の変更があります</span>
+  <span class="cpos-actions"><button class="cpos-btn" type="button" id="discard">破棄</button><button class="cpos-btn primary" type="submit" form="settings">保存</button></span></div>
+<script>
+ const bar = document.getElementById('savebar');
+ const fields = [...document.querySelectorAll('#settings select, #settings input')];
+ fields.forEach((f) => { f.dataset.initial = f.value; });
+ const dirty = () => fields.filter((f) => f.value !== f.dataset.initial);
+ const sync = () => { bar.hidden = dirty().length === 0; };
+ document.addEventListener('input', sync);
+ document.getElementById('discard').addEventListener('click', () => { fields.forEach((f) => { f.value = f.dataset.initial; }); sync(); });
+ addEventListener('beforeunload', (e) => { if (dirty().length) { e.preventDefault(); e.returnValue = ''; } });
+</script>
+</body></html>

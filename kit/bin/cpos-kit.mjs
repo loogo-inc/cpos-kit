@@ -53,8 +53,9 @@ function help() {
   scopes [語]      CPOS が知る全スコープと、それを要求する API。--used でこのアプリのソースから必要なスコープを出し manifest と照合
   update [--check] kit が置いたファイル (AGENTS.md の標準ブロック、skills、Stop hook、ci.yml) と @cpos/kit の依存を今の版にし、npm install → npm test → 1 コミット。
                    版が上がったら docs/cpos/UPGRADE.md (CHANGELOG の差分) を書き、「最新の CPOS に合わせて実装を直しますか？」と聞いて AI (claude / codex) に頼む。
+                   画面の規約が変わったときは、それとは別に「この画面を基礎 UI に合わせますか？」と聞く (規約を入れていない人には聞かない)。
                    始める前に git がきれいなこと (--allow-dirty で省く)。--check は差分を見るだけ、--no-install / --no-test / --no-ai
-  remove [--apply] kit が置いたもの (標準ブロック、作業規律、skills、Stop hook、ci.yml) を取り除く。既定は一覧だけ。コードと @cpos/kit には触らない
+  remove [--apply] kit が置いたもの (標準ブロック、作業規律、画面の規約、skills、Stop hook、ci.yml) を取り除く。既定は一覧だけ。コードと @cpos/kit には触らない
   docs [--port N]  CPOS の API を見やすい画面 (Redoc) でブラウザに出す。kit が持つ OpenAPI の写し (ログイン不要)
   doctor           kit が持つ CPOS API の版と、接続先 CPOS の版を比べる (増えた / 消えた / 変わった operation)
   tickets          チケット台帳 (後から入れる。init を打つまで何も動かない)
@@ -66,6 +67,8 @@ function help() {
     --name <表示名>  --app-id <appId>  --sample none|node|fastify  --discipline yes|no  --kit-dep <package.json に書く依存>  --yes
     --sample fastify = Fastify + CPOS ログイン付き (公開できる形)。node = 依存ゼロの最小サーバ (ログイン無し、模擬サーバ専用)
     --discipline yes = AI の作業規律「止まる前に証拠」を AGENTS.md に 10 行 + Claude Code の Stop hook を入れる (既定)
+    --design yes = 画面の規約 (ばらつかせない 17 の決め) を AGENTS.md に入れ、見本の画面を共通 CSS (/cpos-ui.css) で組む (既定)
+    --facility-pinned yes = 事業所の切り替えをヘッダに固定表示する (既定 no。規約では決めない = アプリの判断)
 
   connect の注意: トークンは引数で渡さない (シェルの履歴に残る)。--token-file で 1 行のファイルを指す`);
 }
@@ -74,6 +77,8 @@ function help() {
 // 正本は kit/agents/discipline.md (文、全ツール向け) と kit/agents/stop-judge.prompt.md (Claude Code の Stop hook 用審査文)。
 // create / adopt が同じものを書く。押し付けない: --discipline no で入れない。
 function disciplineText() { return readFileSync(resolve(kitRoot, 'kit', 'agents', 'discipline.md'), 'utf8'); }
+// 画面の規約 (kit/agents/design.md)。標準ブロック・作業規律と同じく別マーカーで注入する。押し付けない: --design no で入れない
+function designText() { return readFileSync(resolve(kitRoot, 'kit', 'agents', 'design.md'), 'utf8'); }
 function disciplineSettings(extra = {}) {
   const prompt = readFileSync(resolve(kitRoot, 'kit', 'agents', 'stop-judge.prompt.md'), 'utf8').replace(/^<!--[\s\S]*?-->\n/, '');
   return JSON.stringify({
@@ -82,6 +87,18 @@ function disciplineSettings(extra = {}) {
     hooks: { Stop: [{ hooks: [{ type: 'prompt', prompt, timeout: 45 }] }] }
   }, null, 2) + '\n';
 }
+async function askDesign() {
+  const v = opt('--design') ?? (await ask('画面の規約 (ばらつかせない 12 の決め + 共通 CSS) を入れますか (yes / no)', 'yes', (x) => (['yes', 'no'].includes(x) ? null : 'yes か no')));
+  if (!['yes', 'no'].includes(v)) die(`--design は yes か no です (いま ${v})`);
+  return v === 'yes';
+}
+
+async function askFacilityPinned() {
+  const v = opt('--facility-pinned') ?? (await ask('事業所の切り替えをヘッダに固定表示しますか (スクロールしても見える。狭い画面では縦を 60px ほど使う) (yes / no)', 'no', (x) => (['yes', 'no'].includes(x) ? null : 'yes か no')));
+  if (!['yes', 'no'].includes(v)) die(`--facility-pinned は yes か no です (いま ${v})`);
+  return v === 'yes';
+}
+
 async function askDiscipline() {
   const v = opt('--discipline') ?? (await ask('AI の作業規律「止まる前に証拠」を入れますか (yes = AGENTS.md に 10 行 + Claude Code の Stop hook / no = 入れない)', 'yes', (x) => (['yes', 'no'].includes(x) ? null : 'yes か no')));
   if (!['yes', 'no'].includes(v)) die(`--discipline は yes か no です (いま ${v})`);
@@ -148,6 +165,8 @@ async function create() {
   const sample = opt('--sample') ?? (await ask('見本のコードを入れますか (none = 入れない / node = 依存ゼロの最小サーバ / fastify = Fastify + CPOS ログイン付き)', 'fastify', (v) => (['none', 'node', 'fastify'].includes(v) ? null : 'none か node か fastify')));
   if (!['none', 'node', 'fastify'].includes(sample)) die(`--sample は none か node か fastify です (いま ${sample})`);
   const discipline = await askDiscipline();
+  const design = await askDesign();
+  const facilityPinned = design && sample !== 'none' ? await askFacilityPinned() : false;
   // 接続先。原則はステージング (本物の応答で作る)。URL とトークンがまだ無ければ模擬サーバ (後で connect で切り替える)。
   // ここまでが質問。ファイルはこの後で書くので、途中で止めても何も残らない
   const APP = appId.toUpperCase().replace(/[^A-Z0-9]+/g, '_');
@@ -173,6 +192,7 @@ async function create() {
   const vars = {
     name,
     appId,
+    appbarClass: facilityPinned ? ' cpos-pinned' : '',
     APP: appId.toUpperCase().replace(/[^A-Z0-9]+/g, '_'),
     kitDep,
     authNote: sample === 'fastify'
@@ -207,12 +227,13 @@ async function create() {
   // AI ツールごとの「必ず読まれるファイル」を、1 つの標準ブロックから書き出す
   const block = render(readFileSync(resolve(kitRoot, 'kit', 'agents', 'standard-block.md'), 'utf8'), vars);
   const disc = discipline ? `\n${disciplineText()}` : '';
-  const agentsMd = `# AGENTS.md — ${name}\n\n作業を始める前に \`docs/handoff/RESUME.md\` を読む。終わるときに書き直す。\n\n${block}${disc}\n## このプロジェクトのルール\n\n\`docs/RULES.md\` を読む。ここには書かない (置き場を 1 つにする)。\n`;
+  const dsg = design ? `\n${designText()}` : '';
+  const agentsMd = `# AGENTS.md — ${name}\n\n作業を始める前に \`docs/handoff/RESUME.md\` を読む。終わるときに書き直す。\n\n${block}${disc}${dsg}\n## このプロジェクトのルール\n\n\`docs/RULES.md\` を読む。ここには書かない (置き場を 1 つにする)。\n`;
   const files = {
     'AGENTS.md': agentsMd,
     'CLAUDE.md': '@AGENTS.md\n',
-    '.cursor/rules/cpos.mdc': `---\ndescription: CPOS 連携の約束 (cpos-kit 標準ブロック)\nalwaysApply: true\n---\n\n${block}${disc}`,
-    '.github/copilot-instructions.md': `${block}${disc}\n\n(このファイルは cpos-kit が AGENTS.md と同じ内容から生成する。手で直さない。)\n`
+    '.cursor/rules/cpos.mdc': `---\ndescription: CPOS 連携の約束 (cpos-kit 標準ブロック)\nalwaysApply: true\n---\n\n${block}${disc}${dsg}`,
+    '.github/copilot-instructions.md': `${block}${disc}${dsg}\n\n(このファイルは cpos-kit が AGENTS.md と同じ内容から生成する。手で直さない。)\n`
   };
   const skill = readFileSync(resolve(kitRoot, 'skills', 'cpos', 'SKILL.md'), 'utf8').replaceAll('<appId>', appId).replaceAll('<APP>', vars.APP);
   for (const dir of ['.claude/skills/cpos', '.agents/skills/cpos', '.github/skills/cpos']) files[`${dir}/SKILL.md`] = skill;
@@ -240,7 +261,7 @@ async function create() {
   }
 
   out(`\nできました: ${dest}  (${written.length} ファイル)`);
-  out(`  表示名: ${name}   appId: ${appId}   見本: ${sample}   作業規律: ${discipline ? 'あり (AGENTS.md + Claude の Stop hook)' : 'なし'}   @cpos/kit: ${kitDep}`);
+  out(`  表示名: ${name}   appId: ${appId}   見本: ${sample}   作業規律: ${discipline ? 'あり (AGENTS.md + Claude の Stop hook)' : 'なし'}   画面の規約: ${design ? `あり (AGENTS.md + /cpos-ui.css${facilityPinned ? '、事業所をヘッダに固定' : ''})` : 'なし'}   @cpos/kit: ${kitDep}`);
   out(`  接続先: ${mode === 'staging' ? 'ステージング (.env に書いた。本物の応答で作る)' : mode === 'mock' ? '模擬サーバ (手元だけ。架空データ。ステージングは後で connect)' : '未設定 (接続に失敗。connect で入れるか、npm run dev:mock)'}`);
   out('\n次:');
   out(`  cd ${dirArg}`);
@@ -580,6 +601,10 @@ async function adopt() {
   ];
   // 作業規律は標準ブロックとは別のマーカーで足す (標準ブロックが既にあるファイルにも足せる)
   const disciplineTo = discipline ? [['AGENTS.md', disciplineText()], ['.github/copilot-instructions.md', disciplineText()]] : [];
+  // 画面の規約も別マーカー (既に標準ブロック・作業規律があるファイルにも足せる)
+  const design = opt('--design', 'yes') !== 'no';
+  const gmark = '<!-- cpos-kit:design:begin';
+  const designTo = design ? [['AGENTS.md', designText()], ['.github/copilot-instructions.md', designText()]] : [];
 
   // --replace <パス>: 既にあるファイルを kit のもので置き換える (人が --show で見比べて決めたときだけ。複数可)
   const replace = args.flatMap((a, i) => (a === '--replace' && args[i + 1] && !args[i + 1].startsWith('--') ? [args[i + 1].replace(/\\/g, '/')] : []));
@@ -605,6 +630,7 @@ async function adopt() {
   const willAppend = appendTo.filter(([f]) => !(existsSync(resolve(cwd, f)) && readFileSync(resolve(cwd, f), 'utf8').includes(marker.begin)));
   const already = appendTo.filter(([f]) => existsSync(resolve(cwd, f)) && readFileSync(resolve(cwd, f), 'utf8').includes(marker.begin)).map(([f]) => f);
   const willDisc = disciplineTo.filter(([f]) => !(existsSync(resolve(cwd, f)) && readFileSync(resolve(cwd, f), 'utf8').includes(dmark)));
+  const willDesign = designTo.filter(([f]) => !(existsSync(resolve(cwd, f)) && readFileSync(resolve(cwd, f), 'utf8').includes(gmark)));
   const settingsHas = existsSync(resolve(cwd, '.claude/settings.json')) && !readFileSync(resolve(cwd, '.claude/settings.json'), 'utf8').includes('stop-judge');
 
   out('足すファイル (既にあるものは触りません):');
@@ -620,6 +646,12 @@ async function adopt() {
     out('\n作業規律「止まる前に証拠」(--discipline no で入れない):');
     for (const [f] of willDisc) out(`  + ${f}  (節を末尾に足す)`);
     if (settingsHas) out('  ! .claude/settings.json は既にあるので触りません。Stop hook を入れるには kit/agents/stop-judge.prompt.md を hooks.Stop に type: prompt で足す');
+  }
+  if (design) {
+    out('\n画面の規約「ばらつかせない 12 の決め」(--design no で入れない):');
+    for (const [f] of willDesign) out(`  + ${f}  (節を末尾に足す)`);
+    if (!willDesign.length) out('  (無し)');
+    out('  スタイルは配らない (このプロジェクトの作りに合わせて `@cpos/kit/ui/cpos-ui.css` を配信するか、規約どおりに自分で書く)');
   }
   if (exists.length || already.length) {
     out('\n既にあるので触らないもの:');
@@ -643,6 +675,11 @@ async function adopt() {
     const p = resolve(cwd, f); mkdirSync(dirname(p), { recursive: true });
     const cur = existsSync(p) ? readFileSync(p, 'utf8').replace(/\n*$/, '\n\n') : '';
     writeFileSync(p, cur + body); out(`  追記しました: ${f} (作業規律)`);
+  }
+  for (const [f, body] of willDesign) {
+    const p = resolve(cwd, f); mkdirSync(dirname(p), { recursive: true });
+    const cur = existsSync(p) ? readFileSync(p, 'utf8').replace(/\n*$/, '\n\n') : '';
+    writeFileSync(p, cur + body); out(`  追記しました: ${f} (画面の規約)`);
   }
   const cl = resolve(cwd, 'CLAUDE.md');
   if (!existsSync(cl)) { writeFileSync(cl, '@AGENTS.md\n'); out('  書きました: CLAUDE.md'); }
@@ -758,6 +795,8 @@ async function update() {
   const vars = { appId, name, APP: appId.toUpperCase().replace(/[^A-Z0-9]+/g, '_'), kitDep: '', firstSteps: '' };
   const block = render(readFileSync(resolve(kitRoot, 'kit', 'agents', 'standard-block.md'), 'utf8'), vars);
   const disc = disciplineText();
+  const dsg = designText();
+  let designHad = false, designChanged = false;   // 画面の規約が入っているか / 今回の更新で変わったか
   const skill = readFileSync(resolve(kitRoot, 'skills', 'cpos', 'SKILL.md'), 'utf8').replaceAll('<appId>', appId).replaceAll('<APP>', vars.APP);
   const ciTemplate = readFileSync(resolve(kitRoot, 'kit', 'templates', 'base', '.github', 'workflows', 'ci.yml'), 'utf8');
   const changed = [], same = [], skipped = [];
@@ -785,7 +824,9 @@ async function update() {
     let text = readFileSync(p, 'utf8'); const before = text;
     const a = swap(text, '<!-- cpos-kit:begin', 'cpos-kit:end -->', block); if (a !== null) text = a;
     const b = swap(text, '<!-- cpos-kit:discipline:begin', 'cpos-kit:discipline:end -->', disc); if (b !== null) text = b;
-    if (a === null && b === null) { skipped.push(`${rel}  (kit のマーカーが無い = 手で書いたもの。触らない)`); continue; }
+    const c = swap(text, '<!-- cpos-kit:design:begin', 'cpos-kit:design:end -->', dsg);
+    if (c !== null) { if (rel === 'AGENTS.md') { designHad = true; designChanged = c !== text; } text = c; }
+    if (a === null && b === null && c === null) { skipped.push(`${rel}  (kit のマーカーが無い = 手で書いたもの。触らない)`); continue; }
     const real = outside(p); if (real) { skipped.push(`${rel}  (symlink でプロジェクトの外 ${real} を指す。触らない)`); continue; }
     if (text === before) same.push(rel); else { changed.push(`${rel}  (マーカーの間を今の版に)`); if (!check) writeFileSync(p, text); }
   }
@@ -869,6 +910,10 @@ async function update() {
     out(c.status === 0 ? `コミットしました: ${msg}` : `コミットできませんでした (git commit):\n${tail(c)}`);
   } else out('git のリポジトリではないのでコミットしていません (戻せるように git init を勧めます)');
   if (notes) await offerUpgradeByAi(cwd, newVersion);
+  // 画面の規約 (基礎 UI) は CPOS 追随とは別に聞く。見た目と操作が変わるので、断れるようにする。
+  // 規約を入れていない人 (create/adopt で --design no、または remove した人) には聞かない = 押し付けない
+  if (designHad && designChanged) await offerDesignByAi(cwd, newVersion);
+  else if (!designHad && notes) out('\n画面の規約 (ばらつかせない 17 の決め) は入っていません。入れるなら: npx github:loogo-inc/cpos-kit adopt --apply --design yes');
 }
 
 // 旧版より後、新版までの CHANGELOG の節を docs/cpos/UPGRADE.md に書く。書いたパス (相対) を返す
@@ -903,6 +948,24 @@ function upgradePrompt(to) {
   return `docs/cpos/UPGRADE.md を読んで、このアプリを cpos-kit ${to} と今の CPOS に合わせて直してください。CHANGELOG の「既存アプリへの影響」と、このアプリが使っている機能に関わる項目を 1 つずつ見て、直す必要があるものは直し、要らないものは理由を UPGRADE.md の末尾に 1 行ずつ書いてください。npm test を通してから「cpos-kit ${to} に合わせて実装を直す」でコミットしてください。`;
 }
 
+function designPrompt(to) {
+  return `AGENTS.md の「画面の規約 (cpos-kit)」が cpos-kit ${to} で変わりました。この規約 (ばらつかせない 17 の決め) に、このアプリの画面を合わせてください。見本は node_modules/@cpos/kit/kit/ui/examples/ にあります (そのままブラウザで開けます)。全部を一度に直さなくてよいので、(1) 見やすさの下限 (viewport・本文 16px・押せる領域 44px・コントラスト) (2) 意思決定ボタンの位置・検索の起動・必須の表し方・確認の出し方 の順に直し、直せない所と理由を docs/cpos/UPGRADE.md の末尾に 1 行ずつ書いてください。npm test を通してから「画面を cpos-kit ${to} の規約に合わせる」でコミットしてください。`;
+}
+
+// 「基礎 UI (画面の規約) に合わせますか？」。CPOS 追随とは別の質問にする (見た目と操作が変わるため)
+async function offerDesignByAi(cwd, to) {
+  const prompt = designPrompt(to);
+  const which = (cmd) => spawnSync(process.platform === 'win32' ? 'where' : 'which', [cmd], { encoding: 'utf8' }).status === 0;
+  out('\n画面の規約 (基礎 UI) が変わりました。AGENTS.md の本文はもう新しくなっています。');
+  if (args.includes('--no-ai') || yes || !process.stdin.isTTY) { out(`画面を合わせるときは、AI ツールで次のように頼む:\n  ${prompt}`); return; }
+  const a = String(await ask('この画面を基礎 UI に合わせますか？ AI に頼みます (y/N)', 'n').catch(() => 'n')).toLowerCase();
+  if (a !== 'y' && a !== 'yes') { out(`あとで合わせるときは、AI ツールで次のように頼む:\n  ${prompt}\n規約そのものが要らないなら: npx github:loogo-inc/cpos-kit remove --apply (画面の規約も外れます)`); return; }
+  const tool = ['claude', 'codex'].find(which);
+  if (!tool) { out(`Claude Code (claude) も Codex (codex) も見つかりません。使っている AI ツールで次のように頼んでください:\n  ${prompt}`); return; }
+  out(`${tool} を起動します (直し終わったら、AI がテストを通してコミットします。戻すなら git reset --hard HEAD)`);
+  spawnSync(tool, [prompt], { cwd, stdio: 'inherit', shell: process.platform === 'win32' });
+}
+
 // 「最新の CPOS に合わせて実装を直しますか？」。y なら Claude Code か Codex を依頼文で起動する。端末でなければ依頼文を出すだけ
 async function offerUpgradeByAi(cwd, to) {
   const prompt = upgradePrompt(to);
@@ -931,8 +994,8 @@ async function removeKit() {
   for (const rel of ['AGENTS.md', '.github/copilot-instructions.md', '.cursor/rules/cpos.mdc']) {
     const p = resolve(cwd, rel); if (!existsSync(p)) continue;
     const cur = readFileSync(p, 'utf8');
-    if (!cur.includes('<!-- cpos-kit:begin') && !cur.includes('<!-- cpos-kit:discipline:begin')) continue;
-    let next = strip(strip(cur, '<!-- cpos-kit:begin', 'cpos-kit:end -->'), '<!-- cpos-kit:discipline:begin', 'cpos-kit:discipline:end -->');
+    if (!cur.includes('<!-- cpos-kit:begin') && !cur.includes('<!-- cpos-kit:discipline:begin') && !cur.includes('<!-- cpos-kit:design:begin')) continue;
+    let next = strip(strip(strip(cur, '<!-- cpos-kit:begin', 'cpos-kit:end -->'), '<!-- cpos-kit:discipline:begin', 'cpos-kit:discipline:end -->'), '<!-- cpos-kit:design:begin', 'cpos-kit:design:end -->');
     next = next.replace(/\n\n\(このファイルは cpos-kit が AGENTS\.md と同じ内容から生成する。手で直さない。\)\n?/, '\n');
     const rest = next.replace(/^---\n[\s\S]*?\n---\n/, '').replace(/^# AGENTS\.md — [^\n]*\n/, '').replace(/作業を始める前に `docs\/handoff\/RESUME\.md` を読む。終わるときに書き直す。/, '').replace(/## このプロジェクトのルール\n+`docs\/RULES\.md` を読む。ここには書かない \(置き場を 1 つにする\)。/, '').trim();
     if (!rest) plan.push({ rel, what: '消す (kit の生成物だけだった)', do: () => rmSync(p) });

@@ -86,7 +86,7 @@ test('OAuth で KIT 模擬サーバのログインを一巡し、以後は自分
   assert.ok(!cookie.includes('cpos_pat_'), 'トークンを cookie に入れない');
   const page = await inject('GET', '/', { cookie });
   assert.equal(page.statusCode, 200);
-  assert.match(page.body, /<select name="facilityId"/, '画面に事業所の一覧がある');
+  assert.match(page.body, /<div class="cpos-facility-list">/, '画面に事業所の一覧がある');
 });
 
 test('ゲートウェイ方式 (同じ cookie ドメイン) でも入れる: cpos_session を CPOS に転送して誰かを聞く', async (t) => {
