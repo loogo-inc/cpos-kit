@@ -1,5 +1,5 @@
 // 生成物。kit の保守者が生成器 (gen-api) で spec/cpos-openapi.json から作る。手で編集しない。
-// 生成元: CPOS OpenAPI 0.1.0 / revision main@216c45cc / 2026-09-28 / 1418 operations
+// 生成元: CPOS OpenAPI 0.1.0 / revision main@52c8f6c9 / 2026-10-08 / 1525 operations
 
 export interface CposApi_app {
   alerts: {
@@ -189,6 +189,11 @@ export interface CposApi_app {
      * POST /api/apps/fleet/sync-manifests / scope apps:admin / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postFleetSyncManifests(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
   };
+  assignmentEndDates: {
+    /** 終了日の無い利用終了の登録と、付ける予定の終了日 (最後に変更された日) の一覧 (書き込みなし)
+     * GET /api/assignment-end-dates/v1/preview / scope master-users:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getV1Preview(args?: { facilityId?: string }): Promise<unknown>;
+  };
   auth: {
     /** 認証: 設定の取得 (config)
      * GET /api/auth/config / 認証 none / 実測 200 (2026-09-27) 応答の項目: appUrl, configured, loginPath / 模擬サーバ: 無し (501) */
@@ -367,10 +372,10 @@ export interface CposApi_app {
     postV1(args: { body: unknown; facilityId?: string }): Promise<unknown>;
     /** 業務文書を 1 件取得
      * GET /api/care-documents/v1/{id} / scope care-documents:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: data, documentDate, documentType, id, insuredNumber, organizationId, serviceDomain, source, status, summary, title, updatedAt / 模擬サーバ: 無し (501) */
-    getV1ById(args: { id: string; view?: string; facilityId?: string }): Promise<unknown>;
+    getV1ById(args: { id: string; view?: string; evidence?: string; facilityId?: string }): Promise<unknown>;
     /** 業務文書を更新
      * PUT /api/care-documents/v1/{id} / scope care-documents:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
-    putV1ById(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    putV1ById(args: { id: string; body: unknown; facilityId?: string }): Promise<unknown>;
     /** 業務文書を削除 (管理操作)
      * DELETE /api/care-documents/v1/{id} / scope care-documents:delete / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     deleteV1ById(args: { id: string; facilityId?: string }): Promise<unknown>;
@@ -383,9 +388,18 @@ export interface CposApi_app {
     /** 業務文書に原本ファイルを添付
      * POST /api/care-documents/v1/{id}/attach-file / scope care-documents:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV1ByIdAttachFile(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 計画をケアプランの版に結び付ける(照合)
+     * POST /api/care-documents/v1/{id}/care-plan-link / scope care-documents:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV1ByIdCarePlanLink(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 汎用 convert (programmatic): { to: json|csv|xlsx|pdf }
      * POST /api/care-documents/v1/{id}/convert / scope care-documents:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV1ByIdConvert(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 送付・回答の記録
+     * POST /api/care-documents/v1/{id}/correspondence / scope care-documents:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV1ByIdCorrespondence(args: { id: string; body: unknown; facilityId?: string }): Promise<unknown>;
+    /** CPOS 上の宛先事業所の確認
+     * POST /api/care-documents/v1/{id}/correspondence/preview-addressee / scope care-documents:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV1ByIdCorrespondencePreviewAddressee(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 正本 (や任意ドキュメント) を下書きとして複製する明示エンドポイント。 cpos-record が「正本を編集」する際に新 draft を作るのに使う。
      * POST /api/care-documents/v1/{id}/duplicate-draft / scope care-documents:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV1ByIdDuplicateDraft(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
@@ -406,7 +420,7 @@ export interface CposApi_app {
     getV1ByIdFilesByFileId(args: { id: string; fileId: string; facilityId?: string }): Promise<unknown>;
     /** 業務文書を正本として確定
      * POST /api/care-documents/v1/{id}/mark-canonical / scope care-documents:approve / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
-    postV1ByIdMarkCanonical(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    postV1ByIdMarkCanonical(args: { id: string; body: unknown; facilityId?: string }): Promise<unknown>;
     /** 添付ファイル (再アップロード) を解析して draft data にマージする。
      * POST /api/care-documents/v1/{id}/parse-attached-file / scope care-documents:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV1ByIdParseAttachedFile(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
@@ -425,9 +439,39 @@ export interface CposApi_app {
     /** 文書の内容を利用者マスタに書き戻す
      * POST /api/care-documents/v1/{id}/write-back-master-user / scope care-documents:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV1ByIdWriteBackMasterUser(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 利用者のケアプランの版と現在有効な版
+     * GET /api/care-documents/v1/care-plan-versions / scope care-documents:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getV1CarePlanVersions(args?: { facilityId?: string }): Promise<unknown>;
+    /** ケアプランを構造化データで登録する
+     * POST /api/care-documents/v1/care-plan-versions / scope care-documents:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV1CarePlanVersions(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** ケアプランの 1 版を正規化して読む
+     * GET /api/care-documents/v1/care-plan-versions/{documentId} / scope care-documents:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getV1CarePlanVersionsByDocumentId(args: { documentId: string; facilityId?: string }): Promise<unknown>;
+    /** 受領したケアプランを確定する
+     * POST /api/care-documents/v1/care-plan-versions/{documentId}/confirm-received / scope care-documents:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV1CarePlanVersionsByDocumentIdConfirmReceived(args: { documentId: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** ケアプランの 2 版の差分
+     * GET /api/care-documents/v1/care-plan-versions/{documentId}/diff / scope care-documents:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getV1CarePlanVersionsByDocumentIdDiff(args: { documentId: string; facilityId?: string }): Promise<unknown>;
+    /** ケアプランを事業所に共有する(原案の提供)
+     * POST /api/care-documents/v1/care-plan-versions/{documentId}/share / scope care-documents:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV1CarePlanVersionsByDocumentIdShare(args: { documentId: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** PDF・画像からケアプランを読み取って下書きを作る
+     * POST /api/care-documents/v1/care-plan-versions/extract-file / scope care-documents:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV1CarePlanVersionsExtractFile(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 連携CSVを1人分取り込む
+     * POST /api/care-documents/v1/care-plan-versions/import-csv/apply / scope care-documents:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV1CarePlanVersionsImportCsvApply(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 連携CSVを1人分下見する
+     * POST /api/care-documents/v1/care-plan-versions/import-csv/preview / scope care-documents:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV1CarePlanVersionsImportCsvPreview(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 被保険者番号でケアプランの版を引く
+     * POST /api/care-documents/v1/care-plan-versions/lookup / scope care-documents:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV1CarePlanVersionsLookup(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 記録・経過などの文脈から業務文書の下書きを AI で作る
      * POST /api/care-documents/v1/draft-from-context / scope care-documents:ai / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
-    postV1DraftFromContext(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
+    postV1DraftFromContext(args: { body: unknown; facilityId?: string }): Promise<unknown>;
     /** SourceHub (ExternalSource: なんでもボックス/取込書類) から CareDocument draft を作る。本文 (OCR/抽出済テキスト) を classifier に通し分類、 data.sourceHubText に温存、原本を linkedDocuments/sourceFiles 
      * POST /api/care-documents/v1/from-source-hub / scope care-documents:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV1FromSourceHub(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
@@ -437,6 +481,9 @@ export interface CposApi_app {
     /** ファイル (PDF / 画像 / Excel) から業務文書の下書きを作る
      * POST /api/care-documents/v1/import-file / scope care-documents:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV1ImportFile(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 事業所あての相談の受信一覧
+     * GET /api/care-documents/v1/inbox / scope care-documents:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getV1Inbox(args?: { facilityId?: string }): Promise<unknown>;
     /** 法令項目レジストリ (GET /v1/:id より前に宣言して :id に食われないこと)
      * GET /api/care-documents/v1/legal-profiles / scope care-documents:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items / 模擬サーバ: 無し (501) */
     getV1LegalProfiles(args?: { facilityId?: string }): Promise<unknown>;
@@ -661,19 +708,19 @@ export interface CposApi_app {
     get(args: { facilityId: string; insuredNumber?: string; serviceDomain?: string; serviceType?: string; status?: string; activeOn?: string; limit?: number }): Promise<unknown>;
     /** ケアスケジュールを登録
      * POST /api/care-schedules / scope care-schedules:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
-    post(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
+    post(args: { body: unknown; facilityId?: string }): Promise<unknown>;
     /** ケアスケジュールを 1 件
      * GET /api/care-schedules/{id} / scope care-schedules:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
     getById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** ケアスケジュールを更新
      * PUT /api/care-schedules/{id} / scope care-schedules:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
-    putById(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    putById(args: { id: string; body: unknown; facilityId?: string }): Promise<unknown>;
     /** ケアスケジュールを削除
      * DELETE /api/care-schedules/{id} / scope care-schedules:delete / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     deleteById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** スケジュールを取りやめる
      * POST /api/care-schedules/{id}/cancel / scope care-schedules:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
-    postByIdCancel(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    postByIdCancel(args: { id: string; body: unknown; facilityId?: string }): Promise<unknown>;
     /** スケジュールからサービス実績を起こす
      * POST /api/care-schedules/{id}/create-actual / scope care-schedules:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postByIdCreateActual(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
@@ -727,6 +774,9 @@ export interface CposApi_app {
     /** 期間内のアプリ記録から実績を一括生成
      * POST /api/care-service-actuals/v1/bulk-from-app-data / scope care-service-actuals:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV1BulkFromAppData(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** since 以降に実績・予定・例外が更新された利用者 (件数と最終更新時刻のみ。日次タスクの差分検出用)
+     * GET /api/care-service-actuals/v1/changed-persons / scope care-service-actuals:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getV1ChangedPersons(args: { since: string; facilityId?: string; serviceDomain?: string; limit?: number; cursor?: string }): Promise<unknown>;
     /** アプリの記録 1 件から実績を生成・更新
      * POST /api/care-service-actuals/v1/from-app-data / scope care-service-actuals:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV1FromAppData(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
@@ -739,9 +789,15 @@ export interface CposApi_app {
     /** 月次の実績指標を CSV で (人事考課アプリの月次KPI取込用。事業所・月が必須)
      * GET /api/care-service-actuals/v1/metrics.csv / scope care-service-actuals:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     getV1MetricsCsv(args?: { facilityId?: string }): Promise<unknown>;
+    /** 月の固定基準の一覧 (事業所 × 月。候補・採用・置き換え済みの全版。凍結した発生枠と単位を含む。氏名は返さない)
+     * GET /api/care-service-actuals/v1/monthly-baselines / scope care-service-actuals:read / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getV1MonthlyBaselines(args: { facilityId: string; serviceMonth: string; serviceDomain?: string; insuredNumber?: string; state?: string }): Promise<unknown>;
     /** 月次締めの状況 (件数のみ。確定はしない)
      * GET /api/care-service-actuals/v1/monthly-close / scope care-service-actuals:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 400 (2026-09-27) パラメータが要る: serviceMonth (YYYY-MM) が必要です / 模擬サーバ: 無し (501) */
     getV1MonthlyClose(args?: { facilityId?: string }): Promise<unknown>;
+    /** 一人一か月の月次比較 (利用者 × 保険区分 × 基準日。当初・改訂後予定、確定実績、未確認、中止、臨時、未来を別々に数える。金額・氏名は返さない)
+     * GET /api/care-service-actuals/v1/monthly-comparison / scope care-service-actuals:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getV1MonthlyComparison(args: { facilityId?: string; serviceMonth: string; serviceDomain?: string; asOf?: string; tz?: string; insuredNumber?: string; includeDays?: boolean; contract?: string; baselineId?: string }): Promise<unknown>;
     /** 日次管理ボード (予定と実績の突合。金額・氏名は返さない)
      * GET /api/care-service-actuals/v1/operations-board / scope care-service-actuals:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 400 (2026-09-27) パラメータが要る: date (YYYY-MM-DD) が必要です / 模擬サーバ: 無し (501) */
     getV1OperationsBoard(args?: { facilityId?: string }): Promise<unknown>;
@@ -852,7 +908,7 @@ export interface CposApi_app {
   facilities: {
     /** 事業所の一覧
      * GET /api/facilities / scope facilities:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: address, areaGrade, businessNumber, careplanFiling, createdAt, facilityCategoryCode, fax, id, isActive, name, nameKana, organizationId … / 模擬サーバ: 無し (501) */
-    get(args?: { facilityId?: string }): Promise<unknown>;
+    get(args?: { activeOnly?: boolean; includeClosed?: boolean; facilityId?: string }): Promise<unknown>;
     /** 事業所を登録
      * POST /api/facilities / scope facilities:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     post(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
@@ -1090,6 +1146,11 @@ export interface CposApi_app {
     /** 事業所設定を JSON から取り込む (?dryRun=true で検証だけ)
      * POST /api/facilities/import.json / scope facilities:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postImportJson(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
+  };
+  facilityChanges: {
+    /** 事業所の変更: Cloud Tasks の作業口。実行を 45 秒まで進め、残りがあれば次のタスクを積む
+     * POST /api/facility-changes/_internal/run / 認証 none / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postInternalRun(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
   };
   facilityFinancials: {
     /** … 人件費率 (super_admin 限定)
@@ -1419,7 +1480,7 @@ export interface CposApi_app {
     getExternalPartnersSearch(args?: { query?: string; kind?: string; activeOnly?: boolean; facilityId?: string }): Promise<unknown>;
     /** 事業所の一覧
      * GET /api/platform/facilities / scope facilities:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: address, areaGrade, businessNumber, createdAt, facilityCategoryCode, fax, id, isActive, name, nameKana, organizationId, phone … / 模擬サーバ: あり */
-    getFacilities(args?: { facilityId?: string }): Promise<unknown>;
+    getFacilities(args?: { includeClosed?: boolean; facilityId?: string }): Promise<unknown>;
     /** 事業所の利用者一覧 (アプリ向けの簡易形)
      * GET /api/platform/facilities/{facilityId}/users / 認証 both / facilityId 必須 / 実測 200 (2026-09-27) 応答の項目: ok, users / 模擬サーバ: あり */
     getFacilitiesByFacilityIdUsers(args: { facilityId: string }): Promise<unknown>;
@@ -1464,7 +1525,7 @@ export interface CposApi_app {
     getLtcWebUsersByInsuredNumberEligibilitySummary(args: { insuredNumber: string; facilityId?: string }): Promise<unknown>;
     /** 利用者マスタの一覧
      * GET /api/platform/master-users / scope master-users:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: address, birthDate, careLevel, careLevelHistory, careManagerName, careManagerOrg, certificationEndDate, certificationStartDate, createdAt, extras, furigana, furiganaKey … / 模擬サーバ: あり */
-    getMasterUsers(args?: { facilityId?: string; query?: string; activeOnly?: boolean; includeFacilities?: boolean; careManagerUserId?: string; careManagerStaffId?: string; careManagerName?: string; limit?: number }): Promise<unknown>;
+    getMasterUsers(args?: { facilityId?: string; query?: string; activeOnly?: boolean; assignedDuring?: string; includeFacilities?: boolean; careManagerUserId?: string; careManagerStaffId?: string; careManagerName?: string; limit?: number }): Promise<unknown>;
     /** 利用者マスタを 1 件
      * GET /api/platform/master-users/{insuredNumber} / scope master-users:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: address, birthDate, careLevel, careLevelHistory, careManagerName, careManagerOrg, certificationEndDate, certificationStartDate, createdAt, extras, furigana, gender … / 模擬サーバ: あり */
     getMasterUsersByInsuredNumber(args: { insuredNumber: string; facilityId?: string }): Promise<unknown>;
@@ -1806,6 +1867,161 @@ export interface CposApi_app {
      * GET /api/reported-placements/summary / scope reported-placements:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: roles / 模擬サーバ: 無し (501) */
     getSummary(args?: { facilityId?: string }): Promise<unknown>;
   };
+  robotics: {
+    /** ロボット連携の契約 (能力・同意目的・作業種別・状態遷移・原則) の自己記述
+     * GET /api/robotics/catalog / scope robots:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getCatalog(args?: { facilityId?: string }): Promise<unknown>;
+    /** ロボット利用の同意の一覧
+     * GET /api/robotics/consents / scope robot-consents:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getConsents(args?: { facilityId?: string; masterUserId?: string; insuredNumber?: string; purpose?: string; status?: string; limit?: number }): Promise<unknown>;
+    /** ロボット利用の同意を記録 (職員の対話操作のみ)
+     * POST /api/robotics/consents / scope robot-consents:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postConsents(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 同意を 1 件
+     * GET /api/robotics/consents/{id} / scope robot-consents:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getConsentsById(args: { id: string; facilityId?: string }): Promise<unknown>;
+    /** 同意を撤回 (職員)
+     * POST /api/robotics/consents/{id}/withdraw / scope robot-consents:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postConsentsByIdWithdraw(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 利用者の同意を確認 (ロボット用。氏名は返さない)
+     * GET /api/robotics/consents/check / scope robots:act / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getConsentsCheck(args: { robotId: string; masterUserId?: string; insuredNumber?: string; purposes: string; facilityId?: string }): Promise<unknown>;
+    /** ロボットが受けた同意の撤回申し出を記録 (職員へアラート)
+     * POST /api/robotics/consents/withdraw-request / scope robots:act / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postConsentsWithdrawRequest(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 作業目的に必要な最小限の利用者情報 (同意がある場合のみ。保存禁止)
+     * GET /api/robotics/context / scope robots:act / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getContext(args: { robotId: string; purpose: string; masterUserId?: string; insuredNumber?: string; date?: string; facilityId?: string }): Promise<unknown>;
+    /** ロボットの稼働ログの一覧 (新しい順)
+     * GET /api/robotics/events / scope robots:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getEvents(args?: { robotId?: string; facilityId?: string; type?: string; from?: string; to?: string; limit?: number }): Promise<unknown>;
+    /** ロボットの稼働ログをまとめて送る (ロボット用。安全停止は職員へアラート)
+     * POST /api/robotics/events / scope robots:act / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postEvents(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 人事相談の引き継ぎを送る (ロボット用。区分と緊急度のみで相談内容は受け取らない)
+     * POST /api/robotics/hr-handoffs / scope robots:act / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postHrHandoffs(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** ロボットからの事故報告の下書きの一覧
+     * GET /api/robotics/incident-drafts / scope robot-reports:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getIncidentDrafts(args?: { facilityId?: string; status?: string; robotId?: string; from?: string; to?: string; limit?: number }): Promise<unknown>;
+    /** 事故・ヒヤリハットを報告 (ロボット用。下書きとして保存し職員へアラート)
+     * POST /api/robotics/incident-drafts / scope robots:act / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postIncidentDrafts(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 事故報告の下書きを 1 件
+     * GET /api/robotics/incident-drafts/{id} / scope robot-reports:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getIncidentDraftsById(args: { id: string; facilityId?: string }): Promise<unknown>;
+    /** 下書きから事故報告 (正本) を作る (職員の対話操作のみ)
+     * POST /api/robotics/incident-drafts/{id}/convert / scope robot-reports:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postIncidentDraftsByIdConvert(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 事故報告の下書きを却下 (職員の対話操作のみ)
+     * POST /api/robotics/incident-drafts/{id}/dismiss / scope robot-reports:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postIncidentDraftsByIdDismiss(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 公開済みナレッジ記事を 1 件 (ロボット用)
+     * GET /api/robotics/knowledge/articles/{id} / scope robots:act / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getKnowledgeArticlesById(args: { id: string; robotId: string; facilityId?: string }): Promise<unknown>;
+    /** 公開済みナレッジ記事の検索 (ロボット用。職員支援の能力が必要)
+     * GET /api/robotics/knowledge/search / scope robots:act / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getKnowledgeSearch(args: { robotId: string; q?: string; category?: string; tags?: string; limit?: number; facilityId?: string }): Promise<unknown>;
+    /** このロボット用トークンに紐づくロボットの一覧
+     * GET /api/robotics/me / scope robots:act / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getMe(args?: { facilityId?: string }): Promise<unknown>;
+    /** ロボットの一覧 (最新の死活情報つき)
+     * GET /api/robotics/robots / scope robots:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getRobots(args?: { facilityId?: string; status?: string; capability?: string }): Promise<unknown>;
+    /** ロボットを登録 (トークンからの登録は停止状態で作られ、有効化は人が行う)
+     * POST /api/robotics/robots / scope robots:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postRobots(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** ロボットを 1 件
+     * GET /api/robotics/robots/{id} / scope robots:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getRobotsById(args: { id: string; facilityId?: string }): Promise<unknown>;
+    /** ロボットの登録内容を更新 (能力・紐づけの変更は人のみ)
+     * PATCH /api/robotics/robots/{id} / scope robots:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    patchRobotsById(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** ロボットを削除 (論理削除。人のみ)
+     * DELETE /api/robotics/robots/{id} / scope robots:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    deleteRobotsById(args: { id: string; facilityId?: string }): Promise<unknown>;
+    /** ロボットの死活通知 (停止中なら停止指示を返す)
+     * POST /api/robotics/robots/{id}/heartbeat / scope robots:act / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postRobotsByIdHeartbeat(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** ロボットに適用される方針 (必要な同意・承認が要る作業・承認の有効期間)
+     * GET /api/robotics/robots/{id}/policy / scope robots:act / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getRobotsByIdPolicy(args: { id: string; facilityId?: string }): Promise<unknown>;
+    /** ロボットの状態を変更 (有効化と廃止は人のみ。停止・保守はトークンでも可)
+     * POST /api/robotics/robots/{id}/status / scope robots:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postRobotsByIdStatus(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** ロボット相談の一覧
+     * GET /api/robotics/sessions / scope robot-sessions:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getSessions(args?: { facilityId?: string; status?: string; sessionType?: string; masterUserId?: string; robotId?: string; from?: string; to?: string; limit?: number }): Promise<unknown>;
+    /** ロボット相談の記録を送る (ロボット用。要約は下書き、兆候は職員へアラート)
+     * POST /api/robotics/sessions / scope robots:act / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postSessions(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** ロボット相談を 1 件
+     * GET /api/robotics/sessions/{id} / scope robot-sessions:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getSessionsById(args: { id: string; facilityId?: string }): Promise<unknown>;
+    /** ロボット相談を確認 (採用で支援経過を作成、または却下。職員の対話操作のみ)
+     * POST /api/robotics/sessions/{id}/review / scope robot-sessions:review / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postSessionsByIdReview(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** ロボット作業の一覧
+     * GET /api/robotics/tasks / scope robot-tasks:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getTasks(args?: { facilityId?: string; date?: string; from?: string; to?: string; status?: string; taskType?: string; robotId?: string; masterUserId?: string; limit?: number }): Promise<unknown>;
+    /** ロボット作業を作成 (下書き)
+     * POST /api/robotics/tasks / scope robot-tasks:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postTasks(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** ロボット作業を 1 件
+     * GET /api/robotics/tasks/{id} / scope robot-tasks:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getTasksById(args: { id: string; facilityId?: string }): Promise<unknown>;
+    /** ロボット作業を編集 (下書き・差し戻しのみ)
+     * PATCH /api/robotics/tasks/{id} / scope robot-tasks:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    patchTasksById(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 作業の中止を報告 (ロボット用。職員へアラート)
+     * POST /api/robotics/tasks/{id}/abort / scope robots:act / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postTasksByIdAbort(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** ロボット作業を承認 (確認項目すべて済み・同意あり。職員の対話操作のみ)
+     * POST /api/robotics/tasks/{id}/approve / scope robot-tasks:approve / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postTasksByIdApprove(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** ロボット作業を取り消す
+     * POST /api/robotics/tasks/{id}/cancel / scope robot-tasks:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postTasksByIdCancel(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 作業を引き受ける (ロボット用。承認の期限内のみ)
+     * POST /api/robotics/tasks/{id}/claim / scope robots:act / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postTasksByIdClaim(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 作業の完了を報告 (ロボット用。結果は下書き扱い)
+     * POST /api/robotics/tasks/{id}/complete / scope robots:act / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postTasksByIdComplete(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 作業の緊急停止を報告 (ロボット用。重大アラート)
+     * POST /api/robotics/tasks/{id}/emergency / scope robots:act / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postTasksByIdEmergency(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 作業の失敗を報告 (ロボット用。職員へアラート)
+     * POST /api/robotics/tasks/{id}/fail / scope robots:act / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postTasksByIdFail(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 作業を一時停止 (ロボット用)
+     * POST /api/robotics/tasks/{id}/pause / scope robots:act / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postTasksByIdPause(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 作業の進み具合を報告 (ロボット用。状態は変えない)
+     * POST /api/robotics/tasks/{id}/progress / scope robots:act / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postTasksByIdProgress(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 終了した作業から支援経過の下書きを作る (職員の対話操作のみ)
+     * POST /api/robotics/tasks/{id}/record-draft / scope robot-tasks:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postTasksByIdRecordDraft(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** ロボット作業を差し戻す (職員の対話操作のみ)
+     * POST /api/robotics/tasks/{id}/reject / scope robot-tasks:approve / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postTasksByIdReject(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 引き受けた作業を手放す (ロボット用)
+     * POST /api/robotics/tasks/{id}/release / scope robots:act / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postTasksByIdRelease(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 作業を再開 (ロボット用)
+     * POST /api/robotics/tasks/{id}/resume / scope robots:act / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postTasksByIdResume(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 作業を開始 (ロボット用。同意と承認をその場で再確認)
+     * POST /api/robotics/tasks/{id}/start / scope robots:act / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postTasksByIdStart(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** ロボット作業を提出 (承認待ち、または承認不要なら実施可)
+     * POST /api/robotics/tasks/{id}/submit / scope robot-tasks:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postTasksByIdSubmit(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** ロボットが今日引き受けられる作業と実行中の作業 (ロボット用)
+     * GET /api/robotics/tasks/queue / scope robots:act / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getTasksQueue(args: { robotId: string; date?: string; facilityId?: string }): Promise<unknown>;
+  };
   selfInspections: {
     /** list (facilityId/from/to/category/
      * GET /api/self-inspections / scope self-inspections:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items / 模擬サーバ: 無し (501) */
@@ -2017,6 +2233,17 @@ export interface CposApi_app {
     /** 送迎車両を削除
      * DELETE /api/transport/vehicles/{id} / scope transport:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     deleteVehiclesById(args: { id: string; facilityId?: string }): Promise<unknown>;
+  };
+  triggers: {
+    /** 定時タスク: アプリ内のバックアップの、時刻を過ぎた戦略を実行して終わるまで待つ (件数だけ返す)
+     * POST /api/triggers/tasks/backup-due / 認証 none / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postTasksBackupDue(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 定時タスク: 事業所の変更 (サテライトの統合・作成) の時刻が来た実行を始め、動いている実行を進める (件数だけ返す)
+     * POST /api/triggers/tasks/facility-changes-due / 認証 none / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postTasksFacilityChangesDue(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 定時タスク: 月の固定基準の候補を事業所ごとに作る (月初の一括。件数だけ返す。採用はしない)
+     * POST /api/triggers/tasks/month-baseline-candidates / 認証 none / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postTasksMonthBaselineCandidates(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
   };
   userGroups: {
     /** 利用者セット (任意のグループ) の一覧
@@ -2749,8 +2976,8 @@ export interface CposApi_session {
     get(args?: { facilityId?: string }): Promise<unknown>;
   };
   auth: {
-    /** 認証: 自分の取得 (me)
-     * GET /api/auth/me / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) not authenticated / 模擬サーバ: あり */
+    /** 認証: 自分の取得 (me)。事業所スコープ (facilityScope) と閲覧の範囲 (facilityScope.readScope) を含む
+     * GET /api/auth/me / 認証 session / 応答の形あり / 実測 401 (2026-09-27) not authenticated / 模擬サーバ: あり */
     getMe(args?: { facilityId?: string }): Promise<unknown>;
   };
   authUsers: {
@@ -2810,13 +3037,13 @@ export interface CposApi_session {
     /** バックアップ: run-taskの登録・実行 (_internal/run-task)
      * POST /api/backup/_internal/run-task / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postInternalRunTask(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
-    /** バックアップ: 1 件取得 (executions/:id)
+    /** バックアップ: 実行 1 件 (項目ごとの結果 sections を含む)
      * GET /api/backup/executions/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     getExecutionsById(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** バックアップ: downloadの取得 (executions/:id/download)
      * GET /api/backup/executions/{id}/download / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     getExecutionsByIdDownload(args: { id: string; facilityId?: string }): Promise<unknown>;
-    /** バックアップ: プレビューの取得 (executions/:id/preview)
+    /** バックアップ: 概要 (ファイルの中身の件数と、項目ごとの結果)
      * GET /api/backup/executions/{id}/preview / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     getExecutionsByIdPreview(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** バックアップ: 復元 (executions/:id/restore)
@@ -2840,7 +3067,7 @@ export interface CposApi_session {
     /** バックアップ: 削除 (strategies/:id)
      * DELETE /api/backup/strategies/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     deleteStrategiesById(args: { id: string; facilityId?: string }): Promise<unknown>;
-    /** バックアップ: executionsの取得 (strategies/:id/executions)
+    /** バックアップ: 戦略の実行履歴 (新しい順)
      * GET /api/backup/strategies/{id}/executions / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     getStrategiesByIdExecutions(args: { id: string; facilityId?: string }): Promise<unknown>;
     /** バックアップ: 実行 (strategies/:id/run)
@@ -3172,6 +3399,22 @@ export interface CposApi_session {
      * GET /api/care-reminders/today / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getToday(args?: { facilityId?: string }): Promise<unknown>;
   };
+  careSchedules: {
+    /** 取消の有効日を持たない取消済みの予定に、補完するなら書く日を報告する (書き込まない)
+     * GET /api/care-schedules/v1/history-backfill/dry-run / 認証 session / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getV1HistoryBackfillDryRun(args: { facilityId: string; from?: string; to?: string; tz?: string; limit?: number }): Promise<unknown>;
+  };
+  careServiceActuals: {
+    /** 固定基準の候補を採用する (管理者・管理職の職員セッション専用。expectedState: candidate)
+     * POST /api/care-service-actuals/v1/monthly-baselines/{id}/adopt / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV1MonthlyBaselinesByIdAdopt(args: { id: string; body: unknown; facilityId?: string }): Promise<unknown>;
+    /** 固定基準の候補をまとめて採用する (1 事業所、200 件まで。件ごとの結果)
+     * POST /api/care-service-actuals/v1/monthly-baselines/adopt-batch / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV1MonthlyBaselinesAdoptBatch(args: { body: unknown; facilityId?: string }): Promise<unknown>;
+    /** 固定基準の候補を作る (1 人 × 月。現在の予定の例外なし展開を発生枠・コード・単位ごと凍結。冪等)
+     * POST /api/care-service-actuals/v1/monthly-baselines/candidates / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV1MonthlyBaselinesCandidates(args: { body: unknown; facilityId?: string }): Promise<unknown>;
+  };
   connectors: {
     /** Google connector (Docs/Drive/Sheets) 有効化状態の自己診断
      * GET /api/connectors/google/status / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
@@ -3353,6 +3596,47 @@ export interface CposApi_session {
     /** 出席を更新 (時刻・欠席理由)
      * PATCH /api/facilities/{facilityId}/attendance/{id} / 認証 session / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     patchByFacilityIdAttendanceById(args: { facilityId: string; id: string; body?: unknown }): Promise<unknown>;
+    /** 本体とサテライトをまとめて請求する最初の月を設定する (管理者のみ)
+     * PUT /api/facilities/{id}/billing-office-grouping / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    putByIdBillingOfficeGrouping(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** サテライトの設定の点検 (本体と違う事業所番号などを一覧にする。管理者のみ)
+     * GET /api/facilities/satellite-link-report / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getSatelliteLinkReport(args?: { facilityId?: string }): Promise<unknown>;
+  };
+  facilityChanges: {
+    /** 事業所の変更の一覧 (新しい順)
+     * GET /api/facility-changes/v1 / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getV1(args?: { facilityId?: string }): Promise<unknown>;
+    /** 事業所の変更 1 件
+     * GET /api/facility-changes/v1/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getV1ById(args: { id: string; facilityId?: string }): Promise<unknown>;
+    /** 事業所の変更: 実行する (今すぐ / 日時を指定)
+     * POST /api/facility-changes/v1/{id}/apply / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV1ByIdApply(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 事業所の変更: 取り消す
+     * POST /api/facility-changes/v1/{id}/cancel / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV1ByIdCancel(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 事業所の変更: もう一度確かめる (あとの確認を今すぐ)
+     * POST /api/facility-changes/v1/{id}/late-sweep / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV1ByIdLateSweep(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 事業所の変更: 一時停止
+     * POST /api/facility-changes/v1/{id}/pause / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV1ByIdPause(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 事業所の変更: 選び直して下見をやり直す
+     * POST /api/facility-changes/v1/{id}/preview / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV1ByIdPreview(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 事業所の変更: 再開
+     * POST /api/facility-changes/v1/{id}/resume / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV1ByIdResume(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 事業所の変更: 元に戻す
+     * POST /api/facility-changes/v1/{id}/undo / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV1ByIdUndo(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** サテライトを本体にまとめる: 変更を作って下見を始める
+     * POST /api/facility-changes/v1/absorb / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV1Absorb(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 事業所の変更: この機能が使えるか
+     * GET /api/facility-changes/v1/feature / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getV1Feature(args?: { facilityId?: string }): Promise<unknown>;
   };
   features: {
     /** 機能フラグの一覧
@@ -3836,6 +4120,9 @@ export interface CposApi_session {
     /** 運用診断: 実行 (diagnostics/run)
      * POST /api/operations/diagnostics/run / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postDiagnosticsRun(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 運用診断: サーバのメモリにしか無かったファイルの参照 (memory://) の件数 (admin 限定・読み取りだけ)
+     * GET /api/operations/memory-file-refs / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getMemoryFileRefs(args?: { facilityId?: string }): Promise<unknown>;
   };
   personalAccessTokens: {
     /** Personal Access Token: 一覧
@@ -4082,6 +4369,46 @@ export interface CposApi_session {
      * POST /api/records-pipeline/process / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postProcess(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
   };
+  restore: {
+    /** 過去の状態から戻す: この機能が使えるか
+     * GET /api/restore/v1/feature / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getV1Feature(args?: { facilityId?: string }): Promise<unknown>;
+    /** 過去の状態から戻す: 消えた写真・添付
+     * GET /api/restore/v1/files / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getV1Files(args?: { facilityId?: string }): Promise<unknown>;
+    /** 過去の状態から戻す: 写真・添付を 1 件戻す
+     * POST /api/restore/v1/files/restore / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV1FilesRestore(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 過去の状態から戻す: 戻した履歴
+     * GET /api/restore/v1/history / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getV1History(args?: { facilityId?: string }): Promise<unknown>;
+    /** 過去の状態から戻す: 元に戻す
+     * POST /api/restore/v1/history/{id}/undo / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV1HistoryByIdUndo(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 過去の状態から戻す: 消えた・変わったものの一覧
+     * GET /api/restore/v1/items / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getV1Items(args?: { facilityId?: string }): Promise<unknown>;
+    /** 過去の状態から戻す: 比べる
+     * GET /api/restore/v1/items/{kind}/{docId} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getV1ItemsByKindByDocId(args: { kind: string; docId: string; facilityId?: string }): Promise<unknown>;
+    /** 過去の状態から戻す: 戻す
+     * POST /api/restore/v1/items/{kind}/{docId}/restore / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV1ItemsByKindByDocIdRestore(args: { kind: string; docId: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+  };
+  robotics: {
+    /** 人事相談の引き継ぎの一覧 (super_admin のみ)
+     * GET /api/robotics/hr-handoffs / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getHrHandoffs(args?: { status?: string; facilityId?: string; limit?: number }): Promise<unknown>;
+    /** 人事相談の引き継ぎを 1 件 (super_admin のみ)
+     * GET /api/robotics/hr-handoffs/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getHrHandoffsById(args: { id: string; facilityId?: string }): Promise<unknown>;
+    /** 人事相談の引き継ぎを受け付ける (super_admin のみ)
+     * POST /api/robotics/hr-handoffs/{id}/acknowledge / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postHrHandoffsByIdAcknowledge(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 人事相談の引き継ぎを完了にする (super_admin のみ)
+     * POST /api/robotics/hr-handoffs/{id}/close / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postHrHandoffsByIdClose(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+  };
   scheduler: {
     /** スケジュールタスク: reportsの取得 (reports)
      * GET /api/scheduler/reports / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -4254,12 +4581,24 @@ export interface CposApi_session {
     /** システム設定: 更新 (corporation)
      * PUT /api/system-settings/corporation / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     putCorporation(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 組織の事業所アクセス設定 (crossFacilityRead: 同じ組織の他の事業所の利用者・記録の閲覧。未設定は true)
+     * GET /api/system-settings/facility-access / 認証 session / 応答の形あり / 模擬サーバ: 無し (501) */
+    getFacilityAccess(args?: { facilityId?: string }): Promise<unknown>;
+    /** 組織の crossFacilityRead を切り替える (admin。false で所属事業所だけの閲覧に戻す、null で既定の true に戻す)
+     * PUT /api/system-settings/facility-access / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    putFacilityAccess(args: { body: unknown; facilityId?: string }): Promise<unknown>;
     /** システム設定: filingの取得 (filing)
      * GET /api/system-settings/filing / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getFiling(args?: { facilityId?: string }): Promise<unknown>;
     /** システム設定: 更新 (filing)
      * PUT /api/system-settings/filing / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     putFiling(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 第一トラックの機能フラグ (事業所ごとの許可一覧・環境変数の値・どちらが効いているか)
+     * GET /api/system-settings/first-track-flags / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getFirstTrackFlags(args?: { facilityId?: string }): Promise<unknown>;
+    /** 第一トラックの機能フラグを 1 つ更新 (admin。facilityIds の配列で置き換え、null で保存値を消して環境変数に戻す)
+     * PUT /api/system-settings/first-track-flags / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    putFirstTrackFlags(args: { body: unknown; facilityId?: string }): Promise<unknown>;
     /** システム設定: google-workspaceの取得 (google-workspace)
      * GET /api/system-settings/google-workspace / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 401 (2026-09-27) 認証が必要です / 模擬サーバ: 無し (501) */
     getGoogleWorkspace(args?: { facilityId?: string }): Promise<unknown>;

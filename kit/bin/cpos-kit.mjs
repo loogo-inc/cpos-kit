@@ -572,7 +572,7 @@ function guide(appId, name, { afterCreate = false } = {}) {
   L.push('');
   L.push('【3】使う API が決まったら manifest に書く  ★忘れると本物で 403 になる');
   L.push('    npx github:loogo-inc/cpos-kit scopes --used        ソースが使うメソッドから必要なスコープを出し、manifest に足りないものを示す');
-  L.push('    npx github:loogo-inc/cpos-kit scopes 送迎          語からスコープと API を引く (全 160 スコープの一覧は引数なし)');
+  L.push('    npx github:loogo-inc/cpos-kit scopes 送迎          語からスコープと API を引く (スコープの全一覧は引数なし)');
   L.push('    resources には保存する入れ物の名前 (英小文字・数字・ハイフンのみ)');
   L.push('    npx github:loogo-inc/cpos-kit validate             形を確かめる');
   L.push('    → KIT 模擬サーバは manifest のスコープで検査する。宣言漏れはここで 403 になる');

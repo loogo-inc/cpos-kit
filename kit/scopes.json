@@ -1,9 +1,9 @@
 {
  "generatedFrom": {
   "version": "0.1.0",
-  "revision": "main@216c45cc",
-  "fetchedAt": "2026-09-28",
-  "operations": 1418
+  "revision": "main@52c8f6c9",
+  "fetchedAt": "2026-10-08",
+  "operations": 1525
  },
  "note": "CPOS が知る全スコープ (OpenAPI の oauth2 scopes) と、それを要求する operation の数。{appId} を含むものは雛形 (appId を入れて使う)。生成物。手で編集しない",
  "scopes": [
@@ -430,7 +430,7 @@
    "template": false,
    "known": true,
    "adminOnly": false,
-   "operations": 12,
+   "operations": 17,
    "ns": [
     "app"
    ],
@@ -445,7 +445,7 @@
    "template": false,
    "known": true,
    "adminOnly": false,
-   "operations": 11,
+   "operations": 20,
    "ns": [
     "app"
    ],
@@ -672,14 +672,14 @@
    "template": false,
    "known": true,
    "adminOnly": false,
-   "operations": 6,
+   "operations": 9,
    "ns": [
     "app"
    ],
    "examples": [
     "GET /api/care-service-actuals/v1",
     "GET /api/care-service-actuals/v1/{id}",
-    "GET /api/care-service-actuals/v1/metrics"
+    "GET /api/care-service-actuals/v1/changed-persons"
    ]
   },
   {
@@ -1412,14 +1412,14 @@
    "template": false,
    "known": true,
    "adminOnly": false,
-   "operations": 4,
+   "operations": 5,
    "ns": [
     "app"
    ],
    "examples": [
+    "GET /api/assignment-end-dates/v1/preview",
     "POST /api/master-users/{insuredNumber}/geocode",
-    "POST /api/platform/geo/geocode-missing",
-    "GET /api/user-id-maintenance/v1/unlinked-app-data"
+    "POST /api/platform/geo/geocode-missing"
    ]
   },
   {
@@ -1671,6 +1671,177 @@
     "POST /api/reported-placements",
     "DELETE /api/reported-placements/{id}",
     "POST /api/reported-placements/{id}/end"
+   ]
+  },
+  {
+   "name": "robot-consents:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 2,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/robotics/consents",
+    "GET /api/robotics/consents/{id}"
+   ]
+  },
+  {
+   "name": "robot-consents:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 2,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/robotics/consents",
+    "POST /api/robotics/consents/{id}/withdraw"
+   ]
+  },
+  {
+   "name": "robot-reports:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 2,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/robotics/incident-drafts",
+    "GET /api/robotics/incident-drafts/{id}"
+   ]
+  },
+  {
+   "name": "robot-reports:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 2,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/robotics/incident-drafts/{id}/convert",
+    "POST /api/robotics/incident-drafts/{id}/dismiss"
+   ]
+  },
+  {
+   "name": "robot-sessions:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 2,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/robotics/sessions",
+    "GET /api/robotics/sessions/{id}"
+   ]
+  },
+  {
+   "name": "robot-sessions:review",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 1,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/robotics/sessions/{id}/review"
+   ]
+  },
+  {
+   "name": "robot-tasks:approve",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 2,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/robotics/tasks/{id}/approve",
+    "POST /api/robotics/tasks/{id}/reject"
+   ]
+  },
+  {
+   "name": "robot-tasks:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 2,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/robotics/tasks",
+    "GET /api/robotics/tasks/{id}"
+   ]
+  },
+  {
+   "name": "robot-tasks:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 5,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/robotics/tasks",
+    "PATCH /api/robotics/tasks/{id}",
+    "POST /api/robotics/tasks/{id}/cancel"
+   ]
+  },
+  {
+   "name": "robots:act",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 23,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/robotics/consents/check",
+    "POST /api/robotics/consents/withdraw-request",
+    "GET /api/robotics/context"
+   ]
+  },
+  {
+   "name": "robots:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 4,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "GET /api/robotics/catalog",
+    "GET /api/robotics/events",
+    "GET /api/robotics/robots"
+   ]
+  },
+  {
+   "name": "robots:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 4,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/robotics/robots",
+    "PATCH /api/robotics/robots/{id}",
+    "DELETE /api/robotics/robots/{id}"
    ]
   },
   {

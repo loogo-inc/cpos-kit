@@ -5,6 +5,42 @@ v1 の間は API の削除をしない (deprecated の印だけ)。
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-10-08
+
+### Added
+- CPOS の API の追加に追随 (10 operation): 削除したデータの復元 (`cpos.session.restore.*`: 項目・ファイル・履歴の一覧、復元、履歴の取り消し)、記録の写真・ファイルの参照一覧 (`cpos.session.operations.getMemoryFileRefs`)、バックアップの定期実行の起動 (`cpos.app.triggers.postTasksBackupDue`)。
+- CPOS の API の追加に追随 (2 operation): 組織の他事業所の閲覧設定 (`cpos.session.systemSettings.getFacilityAccess` / `putFacilityAccess`、管理者向け)。`GET /api/auth/me` の `facilityScope` に `readScope` (`organization` / `membership`) が載る。
+- CPOS の API の追加に追随 (8 operation): 月の固定基準 (`cpos.app.careServiceActuals.getV1MonthlyBaselines`、採用・候補作成は `cpos.session.careServiceActuals.*`。API トークンで呼べるのは一覧の取得だけ)、予定の履歴の試算 (`cpos.session.careSchedules.getV1HistoryBackfillDryRun`)、事業所のフラグ設定 (`cpos.session.systemSettings.getFirstTrackFlags` / `putFirstTrackFlags`)。ケアプラン相談・予定・月次比較の既存 operation は引数が増えた (`careDocuments` の `evidence`、予定の `planBasis` など)。
+- CPOS の API の追加に追随 (69 operation): ケアプランの版 (`cpos.app.careDocuments.*CarePlanVersions*`・`getV1Inbox`・やり取りの記録) と、ロボット連携 (`cpos.app.robotics.*` / `cpos.session.robotics.*`)、介護サービス実績の月次比較・変更のあった利用者 (`cpos.app.careServiceActuals.getV1MonthlyComparison` / `getV1ChangedPersons`)。
+- CPOS の API の追加に追随 (16 operation): 事業所の吸収 (`cpos.session.facilityChanges.*`、管理者のセッション専用)、事業所の請求事務所まとめ・サテライトの連携報告 (`cpos.session.facilities.*`)、割当の終了日の下見 (`cpos.app.assignmentEndDates.getV1Preview`、管理者専用)。`cpos.app.platform.getMasterUsers` に `assignedDuring` (YYYY-MM)、事業所の一覧に `includeClosed` が付いた。
+
+### Changed
+- 非管理者のログイン (Cookie) セッションは、組織の設定が ON (未設定は ON) なら同じ組織の他事業所の利用者・記録を読めるようになった (AppData の GET・利用者・支援経過の GET)。書き込み、API トークン、機密・本人限定の行は従来どおり所属事業所だけ。所属外で読めるのは利用者に紐づく行 (`masterUserId` か番号を持つもの) だけ。
+- 記録アプリの未分類一覧に期間 (`from` / `to`) の絞り込みが付いた。
+- AppData の一覧をページ分け (`paginated=true` / `cursor=`) で読むと、ページをまたいで同じ行が繰り返され別の行が落ちる不具合が CPOS 側で直った。1 ページを超える一覧は更新日の新しい順 (同時刻は id 順) で漏れなく返る。ページ分けなしの一覧は変わらない。
+- 予定の日次の読み取り (`careSchedules` の today / occurrences / reconciliation の説明) と実績の日次の盤の説明が更新された。CPOS の能力 `careSchedules.scheduleHistoryDailyScreens` が `platform.capabilities()` に出る。
+- `guide`: スコープ数の固定表記をやめた。
+- 閉鎖済み・閉鎖中・切替日前の事業所は、事業所の一覧 (`facilities` / `platform.getFacilities`) に既定では出なくなった (`includeClosed=true` で取れる)。各事業所に `effectiveBusinessNumber` / `billingFacilityId` / `successorFacilityId` などが付く。
+
+### 既存アプリで手が要る
+- 記録の添付: 作成 (`POST /api/records/:recordId/attachments`) の保存場所が検査されるようになった。`gcs` はその記録の事業所の写真置き場の `objectPath` だけ、`drive` は Drive のファイル ID が必須で、外れると 400。中身の配信 (`/api/record-app/attachments/:attachmentId/content`) も事業所の写真置き場にある行だけを返し、それ以外は 404。任意の保存場所を添付に書いていたアプリは直す。
+- 業務ドキュメントの原本・生成物は、本番で Drive に保存できないとき 503 (`file-not-stored`) になった (以前はメモリに黙って置いていた)。再試行するか Drive の設定を確かめる。
+- 他事業所の閲覧: app-kit の `canSeeFacility` は所属事業所だけで判定するため、本部から他事業所の利用者を開く画面は kit 上では拒否のまま (読めない側に倒れる)。模擬サーバも組織横断の閲覧を再現しない。他事業所の行を読みたいアプリは `masterUserId` を付けて保存する。
+- 測定値の読み取りで本人が引けないとき、200 で事業所全体を返さず 503 (`person-lookup-unavailable`、`Retry-After: 2`) になった。再試行する。
+- 事業所のフラグ `scheduleHistory` が ON の事業所では、予定の today / occurrences / reconciliation と実績の日次の盤が、取消・終了した予定のその日に有効だった部分も返す。「取消済みは一覧に出ない」前提の表示・集計は直す。月の固定基準の候補も月途中の取消前の枠を含む。OFF の事業所は変わらない。
+- ケアプランの保存 (`care-plans` の保存・一括保存) で body の `status` を送っていると 400 (`status-not-writable`) になる。`status` を送らない。
+- 一括保存で他組織の id を渡したときの 404 の形が `{ error: '見つかりません', reasonCode: 'not-found' }` に変わった。`error` の文字列で判定している場合は `reasonCode` で見る。
+- ロボット連携: `robots:act` を持つ App Token は `/api/robotics` 専用 (他は 403)。kit の警告・模擬サーバはまだ対応していない。
+- 予定の更新 (PUT) は body の `expectedUpdatedAt` を予定に保存しなくなった。別の事業所への PUT は移す先の権限も確認され、他の事業所・組織の予定 id での作成は 409 (`schedule-id-conflict`) になる。事業所を限ったトークンで事業所をまたいで書いていると失敗する。
+- 予定の取消 (cancel) の `effectiveFrom` は、事業所のフラグ `scheduleHistory` が ON のときだけ効き、受け付けるのは明日まで (それより先は 400)。
+- ケアプラン相談の読み取り (`getV1ById`) は、`evidence=1` を付けないと根拠の現在性 (`evidenceStatus` / `evidenceCheck`) が返らない。根拠を見るアプリは付ける。
+- AppData: id を指定した POST で他組織に同じ id があると 409 (`id_conflict`)。組織ごとに固定 id で作るのをやめ、採番に任せる。
+- AppData: PAT で作ったレコードの `createdBy` が、トークン id ではなく本人の userId になる (以前のレコードは混在)。
+- AppData: PUT の 409 の `current` は読み取り権限が無いと null。状態遷移・添付の追加削除も競合時は 409 (`stale_record`) になるので再取得してやり直す。PUT には任意の `expectedUpdatedAt` が付けられる (client はまだ対応していない)。
+- AppData: 本人限定 (`ownerOnly`) のレコードは、共有に戻す (400)・事業所を変える (400)・なりすまし中に書く (403 `impersonation_owner_only`) ができない。共有を本人限定にできるのは作成者だけ (403)。読めない機密・他人の本人限定は、状態遷移・集計・添付でも見えない (404・件数から除外)。模擬サーバはこれらをまだ再現しない。
+- 閉鎖済みの事業所への書き込みは 409 (`facility-closed`、まとめた先は `successorFacilityId`)、閉鎖作業中は 503 (`facility-maintenance`、`Retry-After`)、切替日前のサテライトは 409 (`facility-not-open-yet`) になる。`CposError` の body で見分け、503 だけ再試行する。模擬サーバはまだ再現しない。
+- manifest の `resources[].facilityScope` は、CPOS が登録時に検査し、知らないキー・範囲外の値があると取込が止まる。書いているアプリは CPOS の許可キー (`kind` / `singletonBy` / `onCollision` / `sumPaths` / `onAbsorb` など) だけにする。`cpos-kit validate` はまだこの検査をしない。
+
 ## [0.4.1] - 2026-09-29
 
 ### Fixed

@@ -1,9 +1,9 @@
 {
  "generatedFrom": {
   "version": "0.1.0",
-  "revision": "main@216c45cc",
-  "fetchedAt": "2026-09-28",
-  "operations": 1418
+  "revision": "main@52c8f6c9",
+  "fetchedAt": "2026-10-08",
+  "operations": 1525
  },
  "note": "client が実行時に読む operation の表。kit の保守者が生成器 (gen-api) で spec/cpos-openapi.json から作る。手で編集しない",
  "operations": [
@@ -2094,7 +2094,7 @@
      "in": "query",
      "required": false,
      "type": "string",
-     "description": "件数を数えるときの事業所スコープ。X-Cpos-Facility-Id でも可"
+     "description": "件数を数えるときの事業所スコープ。X-Cpos-Facility-Id でも可。session の所属 / トークンの許可事業所の外は 403 / 404"
     },
     {
      "name": "withCounts",
@@ -3682,6 +3682,37 @@
    "sig": "66003127b4d3"
   },
   {
+   "id": "get_api_assignment_end_dates_v1_preview",
+   "ns": "app",
+   "group": "assignmentEndDates",
+   "name": "getV1Preview",
+   "method": "GET",
+   "path": "/api/assignment-end-dates/v1/preview",
+   "summary": "終了日の無い利用終了の登録と、付ける予定の終了日 (最後に変更された日) の一覧 (書き込みなし)",
+   "tags": [
+    "利用者 ID の整備"
+   ],
+   "auth": "both",
+   "scope": "master-users:write",
+   "params": [
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "事業所で絞る (省略時は組織のすべての事業所)"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "ae48ef8f9885"
+  },
+  {
    "id": "get_api_audit_logs",
    "ns": "session",
    "group": "auditLogs",
@@ -4462,7 +4493,7 @@
    "name": "getMe",
    "method": "GET",
    "path": "/api/auth/me",
-   "summary": "認証: 自分の取得 (me)",
+   "summary": "認証: 自分の取得 (me)。事業所スコープ (facilityScope) と閲覧の範囲 (facilityScope.readScope) を含む",
    "tags": [
     "認証"
    ],
@@ -4472,7 +4503,7 @@
    "hasBody": false,
    "bodyRequired": false,
    "facilityRequired": false,
-   "hasResponseSchema": false,
+   "hasResponseSchema": true,
    "fake": true,
    "fakeBody": false,
    "mcp": null,
@@ -4587,7 +4618,7 @@
    "name": "getExecutionsById",
    "method": "GET",
    "path": "/api/backup/executions/{id}",
-   "summary": "バックアップ: 1 件取得 (executions/:id)",
+   "summary": "バックアップ: 実行 1 件 (項目ごとの結果 sections を含む)",
    "tags": [
     "バックアップ"
    ],
@@ -4647,7 +4678,7 @@
    "name": "getExecutionsByIdPreview",
    "method": "GET",
    "path": "/api/backup/executions/{id}/preview",
-   "summary": "バックアップ: プレビューの取得 (executions/:id/preview)",
+   "summary": "バックアップ: 概要 (ファイルの中身の件数と、項目ごとの結果)",
    "tags": [
     "バックアップ"
    ],
@@ -4866,7 +4897,7 @@
    "name": "getStrategiesByIdExecutions",
    "method": "GET",
    "path": "/api/backup/strategies/{id}/executions",
-   "summary": "バックアップ: executionsの取得 (strategies/:id/executions)",
+   "summary": "バックアップ: 戦略の実行履歴 (新しい順)",
    "tags": [
     "バックアップ"
    ],
@@ -7767,6 +7798,13 @@
      "required": false,
      "type": "string",
      "description": "sections を指定すると表示用の節を返す"
+    },
+    {
+     "name": "evidence",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "`1` のときだけ、相談・情報提供の根拠の現在性 (`evidenceStatus`・`evidenceCheck`) を計算して足す (発信事業所のフラグ `evidenceStatus` が有効なときだけ。OFF なら無視し従来どおりの応答)。ほかの値・省略は根拠を読まない。ほかの種類の文書では無視する。`view=sections` の `document` にも同じく効く"
     }
    ],
    "hasBody": false,
@@ -7794,7 +7832,7 @@
      "updatedAt"
     ]
    },
-   "sig": "89254c243b3d"
+   "sig": "0989c6ddb45d"
   },
   {
    "id": "put_api_care_documents_v1_id",
@@ -7818,13 +7856,13 @@
     }
    ],
    "hasBody": true,
-   "bodyRequired": false,
+   "bodyRequired": true,
    "facilityRequired": false,
    "hasResponseSchema": false,
    "fake": false,
    "fakeBody": false,
    "mcp": null,
-   "sig": "4bf242698a20"
+   "sig": "1ca829e1a186"
   },
   {
    "id": "delete_api_care_documents_v1_id",
@@ -7947,6 +7985,36 @@
    "sig": "14f4064020e3"
   },
   {
+   "id": "post_api_care_documents_v1_id_care_plan_link",
+   "ns": "app",
+   "group": "careDocuments",
+   "name": "postV1ByIdCarePlanLink",
+   "method": "POST",
+   "path": "/api/care-documents/v1/{id}/care-plan-link",
+   "summary": "計画をケアプランの版に結び付ける(照合)",
+   "tags": [
+    "業務ドキュメント"
+   ],
+   "auth": "both",
+   "scope": "care-documents:write",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "ea5a4cd82f88"
+  },
+  {
    "id": "post_api_care_documents_v1_id_convert",
    "ns": "app",
    "group": "careDocuments",
@@ -7975,6 +8043,66 @@
    "fakeBody": false,
    "mcp": null,
    "sig": "439a31d9456a"
+  },
+  {
+   "id": "post_api_care_documents_v1_id_correspondence",
+   "ns": "app",
+   "group": "careDocuments",
+   "name": "postV1ByIdCorrespondence",
+   "method": "POST",
+   "path": "/api/care-documents/v1/{id}/correspondence",
+   "summary": "送付・回答の記録",
+   "tags": [
+    "業務ドキュメント"
+   ],
+   "auth": "both",
+   "scope": "care-documents:write",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "22add89a585b"
+  },
+  {
+   "id": "post_api_care_documents_v1_id_correspondence_preview_addressee",
+   "ns": "app",
+   "group": "careDocuments",
+   "name": "postV1ByIdCorrespondencePreviewAddressee",
+   "method": "POST",
+   "path": "/api/care-documents/v1/{id}/correspondence/preview-addressee",
+   "summary": "CPOS 上の宛先事業所の確認",
+   "tags": [
+    "業務ドキュメント"
+   ],
+   "auth": "both",
+   "scope": "care-documents:write",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "b3f2f4357047"
   },
   {
    "id": "post_api_care_documents_v1_id_duplicate_draft",
@@ -8189,13 +8317,13 @@
     }
    ],
    "hasBody": true,
-   "bodyRequired": false,
+   "bodyRequired": true,
    "facilityRequired": false,
    "hasResponseSchema": false,
    "fake": false,
    "fakeBody": false,
    "mcp": null,
-   "sig": "b065f726d314"
+   "sig": "3595c20efa3d"
   },
   {
    "id": "post_api_care_documents_v1_id_parse_attached_file",
@@ -8378,6 +8506,264 @@
    "sig": "1934f1131e46"
   },
   {
+   "id": "get_api_care_documents_v1_care_plan_versions",
+   "ns": "app",
+   "group": "careDocuments",
+   "name": "getV1CarePlanVersions",
+   "method": "GET",
+   "path": "/api/care-documents/v1/care-plan-versions",
+   "summary": "利用者のケアプランの版と現在有効な版",
+   "tags": [
+    "業務ドキュメント"
+   ],
+   "auth": "both",
+   "scope": "care-documents:read",
+   "params": [],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "24b128329be0"
+  },
+  {
+   "id": "post_api_care_documents_v1_care_plan_versions",
+   "ns": "app",
+   "group": "careDocuments",
+   "name": "postV1CarePlanVersions",
+   "method": "POST",
+   "path": "/api/care-documents/v1/care-plan-versions",
+   "summary": "ケアプランを構造化データで登録する",
+   "tags": [
+    "業務ドキュメント"
+   ],
+   "auth": "both",
+   "scope": "care-documents:write",
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "c845b567cb2f"
+  },
+  {
+   "id": "get_api_care_documents_v1_care_plan_versions_documentId",
+   "ns": "app",
+   "group": "careDocuments",
+   "name": "getV1CarePlanVersionsByDocumentId",
+   "method": "GET",
+   "path": "/api/care-documents/v1/care-plan-versions/{documentId}",
+   "summary": "ケアプランの 1 版を正規化して読む",
+   "tags": [
+    "業務ドキュメント"
+   ],
+   "auth": "both",
+   "scope": "care-documents:read",
+   "params": [
+    {
+     "name": "documentId",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "0d4bc97d82d7"
+  },
+  {
+   "id": "post_api_care_documents_v1_care_plan_versions_documentId_confirm_received",
+   "ns": "app",
+   "group": "careDocuments",
+   "name": "postV1CarePlanVersionsByDocumentIdConfirmReceived",
+   "method": "POST",
+   "path": "/api/care-documents/v1/care-plan-versions/{documentId}/confirm-received",
+   "summary": "受領したケアプランを確定する",
+   "tags": [
+    "業務ドキュメント"
+   ],
+   "auth": "both",
+   "scope": "care-documents:write",
+   "params": [
+    {
+     "name": "documentId",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "abd292cc5148"
+  },
+  {
+   "id": "get_api_care_documents_v1_care_plan_versions_documentId_diff",
+   "ns": "app",
+   "group": "careDocuments",
+   "name": "getV1CarePlanVersionsByDocumentIdDiff",
+   "method": "GET",
+   "path": "/api/care-documents/v1/care-plan-versions/{documentId}/diff",
+   "summary": "ケアプランの 2 版の差分",
+   "tags": [
+    "業務ドキュメント"
+   ],
+   "auth": "both",
+   "scope": "care-documents:read",
+   "params": [
+    {
+     "name": "documentId",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "7a9d1674bf44"
+  },
+  {
+   "id": "post_api_care_documents_v1_care_plan_versions_documentId_share",
+   "ns": "app",
+   "group": "careDocuments",
+   "name": "postV1CarePlanVersionsByDocumentIdShare",
+   "method": "POST",
+   "path": "/api/care-documents/v1/care-plan-versions/{documentId}/share",
+   "summary": "ケアプランを事業所に共有する(原案の提供)",
+   "tags": [
+    "業務ドキュメント"
+   ],
+   "auth": "both",
+   "scope": "care-documents:write",
+   "params": [
+    {
+     "name": "documentId",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "524835950d84"
+  },
+  {
+   "id": "post_api_care_documents_v1_care_plan_versions_extract_file",
+   "ns": "app",
+   "group": "careDocuments",
+   "name": "postV1CarePlanVersionsExtractFile",
+   "method": "POST",
+   "path": "/api/care-documents/v1/care-plan-versions/extract-file",
+   "summary": "PDF・画像からケアプランを読み取って下書きを作る",
+   "tags": [
+    "業務ドキュメント"
+   ],
+   "auth": "both",
+   "scope": "care-documents:write",
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "00fac7fe4e10"
+  },
+  {
+   "id": "post_api_care_documents_v1_care_plan_versions_import_csv_apply",
+   "ns": "app",
+   "group": "careDocuments",
+   "name": "postV1CarePlanVersionsImportCsvApply",
+   "method": "POST",
+   "path": "/api/care-documents/v1/care-plan-versions/import-csv/apply",
+   "summary": "連携CSVを1人分取り込む",
+   "tags": [
+    "業務ドキュメント"
+   ],
+   "auth": "both",
+   "scope": "care-documents:write",
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "f12df21970ec"
+  },
+  {
+   "id": "post_api_care_documents_v1_care_plan_versions_import_csv_preview",
+   "ns": "app",
+   "group": "careDocuments",
+   "name": "postV1CarePlanVersionsImportCsvPreview",
+   "method": "POST",
+   "path": "/api/care-documents/v1/care-plan-versions/import-csv/preview",
+   "summary": "連携CSVを1人分下見する",
+   "tags": [
+    "業務ドキュメント"
+   ],
+   "auth": "both",
+   "scope": "care-documents:write",
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "0ce1f97fde2c"
+  },
+  {
+   "id": "post_api_care_documents_v1_care_plan_versions_lookup",
+   "ns": "app",
+   "group": "careDocuments",
+   "name": "postV1CarePlanVersionsLookup",
+   "method": "POST",
+   "path": "/api/care-documents/v1/care-plan-versions/lookup",
+   "summary": "被保険者番号でケアプランの版を引く",
+   "tags": [
+    "業務ドキュメント"
+   ],
+   "auth": "both",
+   "scope": "care-documents:read",
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "9683640d0643"
+  },
+  {
    "id": "post_api_care_documents_v1_draft_from_context",
    "ns": "app",
    "group": "careDocuments",
@@ -8392,13 +8778,13 @@
    "scope": "care-documents:ai",
    "params": [],
    "hasBody": true,
-   "bodyRequired": false,
+   "bodyRequired": true,
    "facilityRequired": false,
    "hasResponseSchema": false,
    "fake": false,
    "fakeBody": false,
    "mcp": null,
-   "sig": "8544c3b195b2"
+   "sig": "614910f822be"
   },
   {
    "id": "post_api_care_documents_v1_from_source_hub",
@@ -8468,6 +8854,29 @@
    "fakeBody": false,
    "mcp": null,
    "sig": "200e54d971c4"
+  },
+  {
+   "id": "get_api_care_documents_v1_inbox",
+   "ns": "app",
+   "group": "careDocuments",
+   "name": "getV1Inbox",
+   "method": "GET",
+   "path": "/api/care-documents/v1/inbox",
+   "summary": "事業所あての相談の受信一覧",
+   "tags": [
+    "業務ドキュメント"
+   ],
+   "auth": "both",
+   "scope": "care-documents:read",
+   "params": [],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "7bcb17aa2937"
   },
   {
    "id": "get_api_care_documents_v1_legal_profiles",
@@ -12024,13 +12433,13 @@
    "scope": "care-schedules:write",
    "params": [],
    "hasBody": true,
-   "bodyRequired": false,
+   "bodyRequired": true,
    "facilityRequired": false,
    "hasResponseSchema": false,
    "fake": false,
    "fakeBody": false,
    "mcp": null,
-   "sig": "979b7a1dc87d"
+   "sig": "6f6b02baacac"
   },
   {
    "id": "get_api_care_schedules_id",
@@ -12089,13 +12498,13 @@
     }
    ],
    "hasBody": true,
-   "bodyRequired": false,
+   "bodyRequired": true,
    "facilityRequired": false,
    "hasResponseSchema": false,
    "fake": false,
    "fakeBody": false,
    "mcp": null,
-   "sig": "b8a488517a7d"
+   "sig": "9fd0e4ad427c"
   },
   {
    "id": "delete_api_care_schedules_id",
@@ -12149,13 +12558,13 @@
     }
    ],
    "hasBody": true,
-   "bodyRequired": false,
+   "bodyRequired": true,
    "facilityRequired": false,
    "hasResponseSchema": false,
    "fake": false,
    "fakeBody": false,
    "mcp": null,
-   "sig": "3efd5fcae857"
+   "sig": "9f6d1e9290ae"
   },
   {
    "id": "post_api_care_schedules_id_create_actual",
@@ -12457,6 +12866,65 @@
     ]
    },
    "sig": "d62ba18e8562"
+  },
+  {
+   "id": "get_api_care_schedules_v1_history_backfill_dry_run",
+   "ns": "session",
+   "group": "careSchedules",
+   "name": "getV1HistoryBackfillDryRun",
+   "method": "GET",
+   "path": "/api/care-schedules/v1/history-backfill/dry-run",
+   "summary": "取消の有効日を持たない取消済みの予定に、補完するなら書く日を報告する (書き込まない)",
+   "tags": [
+    "ケアスケジュール"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "事業所 ID"
+    },
+    {
+     "name": "from",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "この日以降に有効期間がかかる予定だけ (YYYY-MM-DD。省略は制限なし)"
+    },
+    {
+     "name": "to",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "この日以前に有効期間が始まる予定だけ (YYYY-MM-DD。省略は制限なし)"
+    },
+    {
+     "name": "tz",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "日付にする時区 (IANA。既定 Asia/Tokyo)"
+    },
+    {
+     "name": "limit",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": "items の最大件数 (1〜5000、既定 1000。counts は全件)"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": true,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "1a6bdb77d7bf"
   },
   {
    "id": "get_api_care_service_actuals_v1",
@@ -12779,6 +13247,65 @@
    "sig": "5957cef31d6f"
   },
   {
+   "id": "get_api_care_service_actuals_v1_changed_persons",
+   "ns": "app",
+   "group": "careServiceActuals",
+   "name": "getV1ChangedPersons",
+   "method": "GET",
+   "path": "/api/care-service-actuals/v1/changed-persons",
+   "summary": "since 以降に実績・予定・例外が更新された利用者 (件数と最終更新時刻のみ。日次タスクの差分検出用)",
+   "tags": [
+    "サービス実績"
+   ],
+   "auth": "both",
+   "scope": "care-service-actuals:read",
+   "params": [
+    {
+     "name": "since",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "ISO 8601 (包含)。オフセット付き・ミリ秒無しでも UTC に正規化して比べる"
+    },
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "事業所 ID (事業所限定のトークンは必須。v2 は事業所の指定が必要)"
+    },
+    {
+     "name": "serviceDomain",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "実績・予定・例外・固定基準を域で絞る (記録・文書・相談は事業所だけで絞る)"
+    },
+    {
+     "name": "limit",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": "1 ページの人数。既定 500、最大 2000"
+    },
+    {
+     "name": "cursor",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "v2 (事業所のフラグ changedPersonsV2 が有効なときだけ): 前のページの nextCursor。同じ since・facilityId・serviceDomain で渡す。違えば・壊れていれば 400 invalid-cursor、フラグが無効な事業所では 400 changed-persons-v2-disabled"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "e9adf2073e8d"
+  },
+  {
    "id": "post_api_care_service_actuals_v1_from_app_data",
    "ns": "app",
    "group": "careServiceActuals",
@@ -12883,6 +13410,141 @@
    "sig": "5393c8ab62be"
   },
   {
+   "id": "get_api_care_service_actuals_v1_monthly_baselines",
+   "ns": "app",
+   "group": "careServiceActuals",
+   "name": "getV1MonthlyBaselines",
+   "method": "GET",
+   "path": "/api/care-service-actuals/v1/monthly-baselines",
+   "summary": "月の固定基準の一覧 (事業所 × 月。候補・採用・置き換え済みの全版。凍結した発生枠と単位を含む。氏名は返さない)",
+   "tags": [
+    "サービス実績"
+   ],
+   "auth": "both",
+   "scope": "care-service-actuals:read",
+   "params": [
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "事業所 ID"
+    },
+    {
+     "name": "serviceMonth",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "YYYY-MM"
+    },
+    {
+     "name": "serviceDomain",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "業務領域で絞る (visit-nursing / home-visit-care など)"
+    },
+    {
+     "name": "insuredNumber",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "1 人に絞る"
+    },
+    {
+     "name": "state",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "状態で絞る"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": true,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "c4bc81084690"
+  },
+  {
+   "id": "post_api_care_service_actuals_v1_monthly_baselines_id_adopt",
+   "ns": "session",
+   "group": "careServiceActuals",
+   "name": "postV1MonthlyBaselinesByIdAdopt",
+   "method": "POST",
+   "path": "/api/care-service-actuals/v1/monthly-baselines/{id}/adopt",
+   "summary": "固定基準の候補を採用する (管理者・管理職の職員セッション専用。expectedState: candidate)",
+   "tags": [
+    "サービス実績"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "a9cf593d8f02"
+  },
+  {
+   "id": "post_api_care_service_actuals_v1_monthly_baselines_adopt_batch",
+   "ns": "session",
+   "group": "careServiceActuals",
+   "name": "postV1MonthlyBaselinesAdoptBatch",
+   "method": "POST",
+   "path": "/api/care-service-actuals/v1/monthly-baselines/adopt-batch",
+   "summary": "固定基準の候補をまとめて採用する (1 事業所、200 件まで。件ごとの結果)",
+   "tags": [
+    "サービス実績"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "5a9c347c0666"
+  },
+  {
+   "id": "post_api_care_service_actuals_v1_monthly_baselines_candidates",
+   "ns": "session",
+   "group": "careServiceActuals",
+   "name": "postV1MonthlyBaselinesCandidates",
+   "method": "POST",
+   "path": "/api/care-service-actuals/v1/monthly-baselines/candidates",
+   "summary": "固定基準の候補を作る (1 人 × 月。現在の予定の例外なし展開を発生枠・コード・単位ごと凍結。冪等)",
+   "tags": [
+    "サービス実績"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "d1b21ce61a85"
+  },
+  {
    "id": "get_api_care_service_actuals_v1_monthly_close",
    "ns": "app",
    "group": "careServiceActuals",
@@ -12909,6 +13571,93 @@
     "note": "パラメータが要る: serviceMonth (YYYY-MM) が必要です"
    },
    "sig": "5fc807fe7e7e"
+  },
+  {
+   "id": "get_api_care_service_actuals_v1_monthly_comparison",
+   "ns": "app",
+   "group": "careServiceActuals",
+   "name": "getV1MonthlyComparison",
+   "method": "GET",
+   "path": "/api/care-service-actuals/v1/monthly-comparison",
+   "summary": "一人一か月の月次比較 (利用者 × 保険区分 × 基準日。当初・改訂後予定、確定実績、未確認、中止、臨時、未来を別々に数える。金額・氏名は返さない)",
+   "tags": [
+    "サービス実績"
+   ],
+   "auth": "both",
+   "scope": "care-service-actuals:read",
+   "params": [
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "事業所 ID (事業所限定のトークンは必須。v2 は事業所の指定が必要)"
+    },
+    {
+     "name": "serviceMonth",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "YYYY-MM"
+    },
+    {
+     "name": "serviceDomain",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "既定 home-visit-care"
+    },
+    {
+     "name": "asOf",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "YYYY-MM-DD (既定は事業所の今日)。v2 では時差付きの日時も可 (日次の盤の「今」を min(asOf, 実時刻) に固定する)"
+    },
+    {
+     "name": "tz",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "IANA の時区。既定 Asia/Tokyo"
+    },
+    {
+     "name": "insuredNumber",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "1 人に絞る"
+    },
+    {
+     "name": "includeDays",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": "日ごとの行を付ける"
+    },
+    {
+     "name": "contract",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "v2 の項目を求める (事業所のフラグが有効なときだけ効く)"
+    },
+    {
+     "name": "baselineId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "固定基準を指定する (v2。事業所のフラグ monthBaseline も有効なときだけ。別の法人・事業所・領域・月・本人のものや存在しない id は 400。省略時は行ごとに最新の採用済み基準、なければ現在の予定からの再構成)"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "89538c6481d5"
   },
   {
    "id": "get_api_care_service_actuals_v1_operations_board",
@@ -15362,7 +16111,22 @@
    ],
    "auth": "both",
    "scope": "facilities:read",
-   "params": [],
+   "params": [
+    {
+     "name": "activeOnly",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": "有効な事業所だけ"
+    },
+    {
+     "name": "includeClosed",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": "閉じた事業所・閉じる作業中の事業所も返す"
+    }
+   ],
    "hasBody": false,
    "bodyRequired": false,
    "facilityRequired": false,
@@ -15395,7 +16159,7 @@
      "users"
     ]
    },
-   "sig": "849307c0bde6"
+   "sig": "2b9d0056ea69"
   },
   {
    "id": "post_api_facilities",
@@ -17920,6 +18684,36 @@
    "sig": "68e5666ad9ab"
   },
   {
+   "id": "put_api_facilities_id_billing_office_grouping",
+   "ns": "session",
+   "group": "facilities",
+   "name": "putByIdBillingOfficeGrouping",
+   "method": "PUT",
+   "path": "/api/facilities/{id}/billing-office-grouping",
+   "summary": "本体とサテライトをまとめて請求する最初の月を設定する (管理者のみ)",
+   "tags": [
+    "事業所"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "eb2843c57807"
+  },
+  {
    "id": "get_api_facilities_id_billing_settings",
    "ns": "app",
    "group": "facilities",
@@ -18323,6 +19117,361 @@
    "fakeBody": false,
    "mcp": null,
    "sig": "6bf964c644e1"
+  },
+  {
+   "id": "get_api_facilities_satellite_link_report",
+   "ns": "session",
+   "group": "facilities",
+   "name": "getSatelliteLinkReport",
+   "method": "GET",
+   "path": "/api/facilities/satellite-link-report",
+   "summary": "サテライトの設定の点検 (本体と違う事業所番号などを一覧にする。管理者のみ)",
+   "tags": [
+    "事業所"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "e06a7d903fe6"
+  },
+  {
+   "id": "post_api_facility_changes_internal_run",
+   "ns": "app",
+   "group": "facilityChanges",
+   "name": "postInternalRun",
+   "method": "POST",
+   "path": "/api/facility-changes/_internal/run",
+   "summary": "事業所の変更: Cloud Tasks の作業口。実行を 45 秒まで進め、残りがあれば次のタスクを積む",
+   "tags": [
+    "事業所の変更"
+   ],
+   "auth": "none",
+   "scope": null,
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "4313fc626093"
+  },
+  {
+   "id": "get_api_facility_changes_v1",
+   "ns": "session",
+   "group": "facilityChanges",
+   "name": "getV1",
+   "method": "GET",
+   "path": "/api/facility-changes/v1",
+   "summary": "事業所の変更の一覧 (新しい順)",
+   "tags": [
+    "事業所の変更"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "0994b8f8f711"
+  },
+  {
+   "id": "get_api_facility_changes_v1_id",
+   "ns": "session",
+   "group": "facilityChanges",
+   "name": "getV1ById",
+   "method": "GET",
+   "path": "/api/facility-changes/v1/{id}",
+   "summary": "事業所の変更 1 件",
+   "tags": [
+    "事業所の変更"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "4d91712ad656"
+  },
+  {
+   "id": "post_api_facility_changes_v1_id_apply",
+   "ns": "session",
+   "group": "facilityChanges",
+   "name": "postV1ByIdApply",
+   "method": "POST",
+   "path": "/api/facility-changes/v1/{id}/apply",
+   "summary": "事業所の変更: 実行する (今すぐ / 日時を指定)",
+   "tags": [
+    "事業所の変更"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "d34d26923d32"
+  },
+  {
+   "id": "post_api_facility_changes_v1_id_cancel",
+   "ns": "session",
+   "group": "facilityChanges",
+   "name": "postV1ByIdCancel",
+   "method": "POST",
+   "path": "/api/facility-changes/v1/{id}/cancel",
+   "summary": "事業所の変更: 取り消す",
+   "tags": [
+    "事業所の変更"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "969fe79222e8"
+  },
+  {
+   "id": "post_api_facility_changes_v1_id_late_sweep",
+   "ns": "session",
+   "group": "facilityChanges",
+   "name": "postV1ByIdLateSweep",
+   "method": "POST",
+   "path": "/api/facility-changes/v1/{id}/late-sweep",
+   "summary": "事業所の変更: もう一度確かめる (あとの確認を今すぐ)",
+   "tags": [
+    "事業所の変更"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "cee690e20ff2"
+  },
+  {
+   "id": "post_api_facility_changes_v1_id_pause",
+   "ns": "session",
+   "group": "facilityChanges",
+   "name": "postV1ByIdPause",
+   "method": "POST",
+   "path": "/api/facility-changes/v1/{id}/pause",
+   "summary": "事業所の変更: 一時停止",
+   "tags": [
+    "事業所の変更"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "3dd372aa2690"
+  },
+  {
+   "id": "post_api_facility_changes_v1_id_preview",
+   "ns": "session",
+   "group": "facilityChanges",
+   "name": "postV1ByIdPreview",
+   "method": "POST",
+   "path": "/api/facility-changes/v1/{id}/preview",
+   "summary": "事業所の変更: 選び直して下見をやり直す",
+   "tags": [
+    "事業所の変更"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "24705c6543bb"
+  },
+  {
+   "id": "post_api_facility_changes_v1_id_resume",
+   "ns": "session",
+   "group": "facilityChanges",
+   "name": "postV1ByIdResume",
+   "method": "POST",
+   "path": "/api/facility-changes/v1/{id}/resume",
+   "summary": "事業所の変更: 再開",
+   "tags": [
+    "事業所の変更"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "c4a11e4f29e9"
+  },
+  {
+   "id": "post_api_facility_changes_v1_id_undo",
+   "ns": "session",
+   "group": "facilityChanges",
+   "name": "postV1ByIdUndo",
+   "method": "POST",
+   "path": "/api/facility-changes/v1/{id}/undo",
+   "summary": "事業所の変更: 元に戻す",
+   "tags": [
+    "事業所の変更"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "24d47574f0d3"
+  },
+  {
+   "id": "post_api_facility_changes_v1_absorb",
+   "ns": "session",
+   "group": "facilityChanges",
+   "name": "postV1Absorb",
+   "method": "POST",
+   "path": "/api/facility-changes/v1/absorb",
+   "summary": "サテライトを本体にまとめる: 変更を作って下見を始める",
+   "tags": [
+    "事業所の変更"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "02eaece3390c"
+  },
+  {
+   "id": "get_api_facility_changes_v1_feature",
+   "ns": "session",
+   "group": "facilityChanges",
+   "name": "getV1Feature",
+   "method": "GET",
+   "path": "/api/facility-changes/v1/feature",
+   "summary": "事業所の変更: この機能が使えるか",
+   "tags": [
+    "事業所の変更"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "1489617c8424"
   },
   {
    "id": "get_api_facility_financials_labor_cost_ratio",
@@ -24591,6 +25740,29 @@
    "sig": "4e8141cd296a"
   },
   {
+   "id": "get_api_operations_memory_file_refs",
+   "ns": "session",
+   "group": "operations",
+   "name": "getMemoryFileRefs",
+   "method": "GET",
+   "path": "/api/operations/memory-file-refs",
+   "summary": "運用診断: サーバのメモリにしか無かったファイルの参照 (memory://) の件数 (admin 限定・読み取りだけ)",
+   "tags": [
+    "運用診断"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "f6e9dec52f34"
+  },
+  {
    "id": "post_api_pdf_render",
    "ns": "app",
    "group": "pdf",
@@ -25498,7 +26670,15 @@
    ],
    "auth": "both",
    "scope": "facilities:read",
-   "params": [],
+   "params": [
+    {
+     "name": "includeClosed",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": "閉じた事業所・閉じる作業中の事業所も返す (管理者のセッションと API トークンだけ)"
+    }
+   ],
    "hasBody": false,
    "bodyRequired": false,
    "facilityRequired": false,
@@ -25530,7 +26710,7 @@
      "users"
     ]
    },
-   "sig": "8a757f9645f1"
+   "sig": "355bbd901a91"
   },
   {
    "id": "get_api_platform_facilities_facilityId_users",
@@ -26277,6 +27457,13 @@
      "description": "利用中だけ"
     },
     {
+     "name": "assignedDuring",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "YYYY-MM。その月に所属期間が重なる利用者だけ (月の途中で終わった・始まった人を含む。activeOnly=true とは併用不可)"
+    },
+    {
      "name": "includeFacilities",
      "in": "query",
      "required": false,
@@ -26352,7 +27539,7 @@
      "updatedAt"
     ]
    },
-   "sig": "b2d208cebc96"
+   "sig": "d98efbbbfe68"
   },
   {
    "id": "get_api_platform_master_users_insuredNumber",
@@ -29145,7 +30332,7 @@
      "in": "query",
      "required": false,
      "type": "boolean",
-     "description": "true でこの事業所の未分類 (利用者を特定できずに保存された記録) だけを期間を問わず返す (過去記録の「未分類」タブ)。他の絞り込みは使わない。取消済みは出さない"
+     "description": "true でこの事業所の未分類 (利用者を特定できずに保存された記録) だけを期間を問わず返す (過去記録の「未分類」タブ)。他の絞り込みは使わない。取消済みは出さない。上限を超えたかを truncated で返す。 from と to (YYYY-MM-DD) を両方付けると recordDate がその範囲の未分類だけを読み windowed: true を返す (truncated も範囲の中で数える。片方だけ・逆順は 400。索引が無い環境では期間なしで読み windowed を返さない)"
     }
    ],
    "hasBody": false,
@@ -31201,6 +32388,2177 @@
     ]
    },
    "sig": "e29c6418f023"
+  },
+  {
+   "id": "get_api_restore_v1_feature",
+   "ns": "session",
+   "group": "restore",
+   "name": "getV1Feature",
+   "method": "GET",
+   "path": "/api/restore/v1/feature",
+   "summary": "過去の状態から戻す: この機能が使えるか",
+   "tags": [
+    "過去の状態から戻す"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "3894ffa8294c"
+  },
+  {
+   "id": "get_api_restore_v1_files",
+   "ns": "session",
+   "group": "restore",
+   "name": "getV1Files",
+   "method": "GET",
+   "path": "/api/restore/v1/files",
+   "summary": "過去の状態から戻す: 消えた写真・添付",
+   "tags": [
+    "過去の状態から戻す"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "59625dc267ab"
+  },
+  {
+   "id": "post_api_restore_v1_files_restore",
+   "ns": "session",
+   "group": "restore",
+   "name": "postV1FilesRestore",
+   "method": "POST",
+   "path": "/api/restore/v1/files/restore",
+   "summary": "過去の状態から戻す: 写真・添付を 1 件戻す",
+   "tags": [
+    "過去の状態から戻す"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "a9a68d58323c"
+  },
+  {
+   "id": "get_api_restore_v1_history",
+   "ns": "session",
+   "group": "restore",
+   "name": "getV1History",
+   "method": "GET",
+   "path": "/api/restore/v1/history",
+   "summary": "過去の状態から戻す: 戻した履歴",
+   "tags": [
+    "過去の状態から戻す"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "2a4ad97caf26"
+  },
+  {
+   "id": "post_api_restore_v1_history_id_undo",
+   "ns": "session",
+   "group": "restore",
+   "name": "postV1HistoryByIdUndo",
+   "method": "POST",
+   "path": "/api/restore/v1/history/{id}/undo",
+   "summary": "過去の状態から戻す: 元に戻す",
+   "tags": [
+    "過去の状態から戻す"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "9e5fad8243e0"
+  },
+  {
+   "id": "get_api_restore_v1_items",
+   "ns": "session",
+   "group": "restore",
+   "name": "getV1Items",
+   "method": "GET",
+   "path": "/api/restore/v1/items",
+   "summary": "過去の状態から戻す: 消えた・変わったものの一覧",
+   "tags": [
+    "過去の状態から戻す"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "f1ec1cb1a3ec"
+  },
+  {
+   "id": "get_api_restore_v1_items_kind_docId",
+   "ns": "session",
+   "group": "restore",
+   "name": "getV1ItemsByKindByDocId",
+   "method": "GET",
+   "path": "/api/restore/v1/items/{kind}/{docId}",
+   "summary": "過去の状態から戻す: 比べる",
+   "tags": [
+    "過去の状態から戻す"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [
+    {
+     "name": "kind",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "docId",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "836b1294dae7"
+  },
+  {
+   "id": "post_api_restore_v1_items_kind_docId_restore",
+   "ns": "session",
+   "group": "restore",
+   "name": "postV1ItemsByKindByDocIdRestore",
+   "method": "POST",
+   "path": "/api/restore/v1/items/{kind}/{docId}/restore",
+   "summary": "過去の状態から戻す: 戻す",
+   "tags": [
+    "過去の状態から戻す"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [
+    {
+     "name": "kind",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "docId",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "a2925a401041"
+  },
+  {
+   "id": "get_api_robotics_catalog",
+   "ns": "app",
+   "group": "robotics",
+   "name": "getCatalog",
+   "method": "GET",
+   "path": "/api/robotics/catalog",
+   "summary": "ロボット連携の契約 (能力・同意目的・作業種別・状態遷移・原則) の自己記述",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robots:read",
+   "params": [],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": "robotics_catalog",
+   "sig": "4bfd626d52fd"
+  },
+  {
+   "id": "get_api_robotics_consents",
+   "ns": "app",
+   "group": "robotics",
+   "name": "getConsents",
+   "method": "GET",
+   "path": "/api/robotics/consents",
+   "summary": "ロボット利用の同意の一覧",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robot-consents:read",
+   "params": [
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "事業所 ID (X-Cpos-Facility-Id ヘッダでも可)。admin 以外のセッションは必須"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "利用者の不変 ID (mu_*)。insuredNumber とどちらか"
+    },
+    {
+     "name": "insuredNumber",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "被保険者番号 (現行・過去番号可)。masterUserId とどちらか"
+    },
+    {
+     "name": "purpose",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "同意目的で絞る"
+    },
+    {
+     "name": "status",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "状態で絞る"
+    },
+    {
+     "name": "limit",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": "最大件数 (既定 200、上限 1000)"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "67d1b0d09269"
+  },
+  {
+   "id": "post_api_robotics_consents",
+   "ns": "app",
+   "group": "robotics",
+   "name": "postConsents",
+   "method": "POST",
+   "path": "/api/robotics/consents",
+   "summary": "ロボット利用の同意を記録 (職員の対話操作のみ)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robot-consents:write",
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "b28733a491bf"
+  },
+  {
+   "id": "get_api_robotics_consents_id",
+   "ns": "app",
+   "group": "robotics",
+   "name": "getConsentsById",
+   "method": "GET",
+   "path": "/api/robotics/consents/{id}",
+   "summary": "同意を 1 件",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robot-consents:read",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "同意 ID (rcs_*)"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "3e78119d4d18"
+  },
+  {
+   "id": "post_api_robotics_consents_id_withdraw",
+   "ns": "app",
+   "group": "robotics",
+   "name": "postConsentsByIdWithdraw",
+   "method": "POST",
+   "path": "/api/robotics/consents/{id}/withdraw",
+   "summary": "同意を撤回 (職員)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robot-consents:write",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "同意 ID (rcs_*)"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "79cfaf7fe1e6"
+  },
+  {
+   "id": "get_api_robotics_consents_check",
+   "ns": "app",
+   "group": "robotics",
+   "name": "getConsentsCheck",
+   "method": "GET",
+   "path": "/api/robotics/consents/check",
+   "summary": "利用者の同意を確認 (ロボット用。氏名は返さない)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robots:act",
+   "params": [
+    {
+     "name": "robotId",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "ロボット ID (rbt_*)。本文の robotId でも可"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "利用者の不変 ID (mu_*)。insuredNumber とどちらか"
+    },
+    {
+     "name": "insuredNumber",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "被保険者番号 (現行・過去番号可)。masterUserId とどちらか"
+    },
+    {
+     "name": "purposes",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "確認する同意目的 (カンマ区切り): physical_assist_bathing / physical_assist_transfer / conversation / audio_recording / camera_recording / face_recognition / vitals_measurement / watch_monitoring / data_secondary_use"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "d2598ca8955e"
+  },
+  {
+   "id": "post_api_robotics_consents_withdraw_request",
+   "ns": "app",
+   "group": "robotics",
+   "name": "postConsentsWithdrawRequest",
+   "method": "POST",
+   "path": "/api/robotics/consents/withdraw-request",
+   "summary": "ロボットが受けた同意の撤回申し出を記録 (職員へアラート)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robots:act",
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "e6e22a6d4670"
+  },
+  {
+   "id": "get_api_robotics_context",
+   "ns": "app",
+   "group": "robotics",
+   "name": "getContext",
+   "method": "GET",
+   "path": "/api/robotics/context",
+   "summary": "作業目的に必要な最小限の利用者情報 (同意がある場合のみ。保存禁止)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robots:act",
+   "params": [
+    {
+     "name": "robotId",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "ロボット ID (rbt_*)。本文の robotId でも可"
+    },
+    {
+     "name": "purpose",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "作業目的 (ロボットの能力)"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "利用者の不変 ID (mu_*)。insuredNumber とどちらか"
+    },
+    {
+     "name": "insuredNumber",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "被保険者番号 (現行・過去番号可)。masterUserId とどちらか"
+    },
+    {
+     "name": "date",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "予定を見る日 (YYYY-MM-DD、今日の前後 7 日以内。既定は今日)"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "355bf0b3c7f0"
+  },
+  {
+   "id": "get_api_robotics_events",
+   "ns": "app",
+   "group": "robotics",
+   "name": "getEvents",
+   "method": "GET",
+   "path": "/api/robotics/events",
+   "summary": "ロボットの稼働ログの一覧 (新しい順)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robots:read",
+   "params": [
+    {
+     "name": "robotId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "ロボット ID で絞る (admin 以外は robotId か facilityId が必要)"
+    },
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "事業所 ID (X-Cpos-Facility-Id ヘッダでも可)。admin 以外のセッションは必須"
+    },
+    {
+     "name": "type",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "種類で絞る"
+    },
+    {
+     "name": "from",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "開始日 (YYYY-MM-DD、日本時間)"
+    },
+    {
+     "name": "to",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "終了日 (YYYY-MM-DD、日本時間、その日を含む)"
+    },
+    {
+     "name": "limit",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": "最大件数 (既定 200、上限 1000)"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": "robot_events_list",
+   "sig": "678d0dda752d"
+  },
+  {
+   "id": "post_api_robotics_events",
+   "ns": "app",
+   "group": "robotics",
+   "name": "postEvents",
+   "method": "POST",
+   "path": "/api/robotics/events",
+   "summary": "ロボットの稼働ログをまとめて送る (ロボット用。安全停止は職員へアラート)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robots:act",
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "0e1687df441c"
+  },
+  {
+   "id": "get_api_robotics_hr_handoffs",
+   "ns": "session",
+   "group": "robotics",
+   "name": "getHrHandoffs",
+   "method": "GET",
+   "path": "/api/robotics/hr-handoffs",
+   "summary": "人事相談の引き継ぎの一覧 (super_admin のみ)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [
+    {
+     "name": "status",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "状態で絞る"
+    },
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "事業所 ID で絞る"
+    },
+    {
+     "name": "limit",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": "最大件数 (既定 200、上限 1000)"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "7cb9f1d1379f"
+  },
+  {
+   "id": "post_api_robotics_hr_handoffs",
+   "ns": "app",
+   "group": "robotics",
+   "name": "postHrHandoffs",
+   "method": "POST",
+   "path": "/api/robotics/hr-handoffs",
+   "summary": "人事相談の引き継ぎを送る (ロボット用。区分と緊急度のみで相談内容は受け取らない)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robots:act",
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "f95624f8b349"
+  },
+  {
+   "id": "get_api_robotics_hr_handoffs_id",
+   "ns": "session",
+   "group": "robotics",
+   "name": "getHrHandoffsById",
+   "method": "GET",
+   "path": "/api/robotics/hr-handoffs/{id}",
+   "summary": "人事相談の引き継ぎを 1 件 (super_admin のみ)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "引き継ぎ ID (rhh_*)"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "a9b491aca903"
+  },
+  {
+   "id": "post_api_robotics_hr_handoffs_id_acknowledge",
+   "ns": "session",
+   "group": "robotics",
+   "name": "postHrHandoffsByIdAcknowledge",
+   "method": "POST",
+   "path": "/api/robotics/hr-handoffs/{id}/acknowledge",
+   "summary": "人事相談の引き継ぎを受け付ける (super_admin のみ)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "引き継ぎ ID (rhh_*)"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "7345bf76de36"
+  },
+  {
+   "id": "post_api_robotics_hr_handoffs_id_close",
+   "ns": "session",
+   "group": "robotics",
+   "name": "postHrHandoffsByIdClose",
+   "method": "POST",
+   "path": "/api/robotics/hr-handoffs/{id}/close",
+   "summary": "人事相談の引き継ぎを完了にする (super_admin のみ)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "引き継ぎ ID (rhh_*)"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "b94585c8c3b7"
+  },
+  {
+   "id": "get_api_robotics_incident_drafts",
+   "ns": "app",
+   "group": "robotics",
+   "name": "getIncidentDrafts",
+   "method": "GET",
+   "path": "/api/robotics/incident-drafts",
+   "summary": "ロボットからの事故報告の下書きの一覧",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robot-reports:read",
+   "params": [
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "事業所 ID (X-Cpos-Facility-Id ヘッダでも可)。admin 以外のセッションは必須"
+    },
+    {
+     "name": "status",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "状態で絞る"
+    },
+    {
+     "name": "robotId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "ロボット ID で絞る"
+    },
+    {
+     "name": "from",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "開始日 (YYYY-MM-DD、日本時間)"
+    },
+    {
+     "name": "to",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "終了日 (YYYY-MM-DD、日本時間、その日を含む)"
+    },
+    {
+     "name": "limit",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": "最大件数 (既定 200、上限 1000)"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": "robot_incident_drafts_list",
+   "sig": "8cbb6da05f3d"
+  },
+  {
+   "id": "post_api_robotics_incident_drafts",
+   "ns": "app",
+   "group": "robotics",
+   "name": "postIncidentDrafts",
+   "method": "POST",
+   "path": "/api/robotics/incident-drafts",
+   "summary": "事故・ヒヤリハットを報告 (ロボット用。下書きとして保存し職員へアラート)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robots:act",
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "975bfc2812de"
+  },
+  {
+   "id": "get_api_robotics_incident_drafts_id",
+   "ns": "app",
+   "group": "robotics",
+   "name": "getIncidentDraftsById",
+   "method": "GET",
+   "path": "/api/robotics/incident-drafts/{id}",
+   "summary": "事故報告の下書きを 1 件",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robot-reports:read",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "下書き ID (rid_*)"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "86e877d59e6a"
+  },
+  {
+   "id": "post_api_robotics_incident_drafts_id_convert",
+   "ns": "app",
+   "group": "robotics",
+   "name": "postIncidentDraftsByIdConvert",
+   "method": "POST",
+   "path": "/api/robotics/incident-drafts/{id}/convert",
+   "summary": "下書きから事故報告 (正本) を作る (職員の対話操作のみ)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robot-reports:write",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "下書き ID (rid_*)"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "fdc1ac1fc313"
+  },
+  {
+   "id": "post_api_robotics_incident_drafts_id_dismiss",
+   "ns": "app",
+   "group": "robotics",
+   "name": "postIncidentDraftsByIdDismiss",
+   "method": "POST",
+   "path": "/api/robotics/incident-drafts/{id}/dismiss",
+   "summary": "事故報告の下書きを却下 (職員の対話操作のみ)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robot-reports:write",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "下書き ID (rid_*)"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "52d34b55e7c1"
+  },
+  {
+   "id": "get_api_robotics_knowledge_articles_id",
+   "ns": "app",
+   "group": "robotics",
+   "name": "getKnowledgeArticlesById",
+   "method": "GET",
+   "path": "/api/robotics/knowledge/articles/{id}",
+   "summary": "公開済みナレッジ記事を 1 件 (ロボット用)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robots:act",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "記事 ID"
+    },
+    {
+     "name": "robotId",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "ロボット ID (rbt_*)。本文の robotId でも可"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "9d258a25750c"
+  },
+  {
+   "id": "get_api_robotics_knowledge_search",
+   "ns": "app",
+   "group": "robotics",
+   "name": "getKnowledgeSearch",
+   "method": "GET",
+   "path": "/api/robotics/knowledge/search",
+   "summary": "公開済みナレッジ記事の検索 (ロボット用。職員支援の能力が必要)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robots:act",
+   "params": [
+    {
+     "name": "robotId",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "ロボット ID (rbt_*)。本文の robotId でも可"
+    },
+    {
+     "name": "q",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "検索語"
+    },
+    {
+     "name": "category",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "分類で絞る"
+    },
+    {
+     "name": "tags",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "タグ (カンマ区切り)"
+    },
+    {
+     "name": "limit",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": "最大件数 (既定 20、上限 50)"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "619ea729b79e"
+  },
+  {
+   "id": "get_api_robotics_me",
+   "ns": "app",
+   "group": "robotics",
+   "name": "getMe",
+   "method": "GET",
+   "path": "/api/robotics/me",
+   "summary": "このロボット用トークンに紐づくロボットの一覧",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robots:act",
+   "params": [],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "762eb4052cf5"
+  },
+  {
+   "id": "get_api_robotics_robots",
+   "ns": "app",
+   "group": "robotics",
+   "name": "getRobots",
+   "method": "GET",
+   "path": "/api/robotics/robots",
+   "summary": "ロボットの一覧 (最新の死活情報つき)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robots:read",
+   "params": [
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "事業所 ID (X-Cpos-Facility-Id ヘッダでも可)。admin 以外のセッションは必須"
+    },
+    {
+     "name": "status",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "状態で絞る"
+    },
+    {
+     "name": "capability",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "能力で絞る"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": "robots_list",
+   "sig": "62140fe6d596"
+  },
+  {
+   "id": "post_api_robotics_robots",
+   "ns": "app",
+   "group": "robotics",
+   "name": "postRobots",
+   "method": "POST",
+   "path": "/api/robotics/robots",
+   "summary": "ロボットを登録 (トークンからの登録は停止状態で作られ、有効化は人が行う)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robots:write",
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "80c8532c8b1b"
+  },
+  {
+   "id": "get_api_robotics_robots_id",
+   "ns": "app",
+   "group": "robotics",
+   "name": "getRobotsById",
+   "method": "GET",
+   "path": "/api/robotics/robots/{id}",
+   "summary": "ロボットを 1 件",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robots:read",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "ロボット ID (rbt_*)"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "08a555a541ad"
+  },
+  {
+   "id": "patch_api_robotics_robots_id",
+   "ns": "app",
+   "group": "robotics",
+   "name": "patchRobotsById",
+   "method": "PATCH",
+   "path": "/api/robotics/robots/{id}",
+   "summary": "ロボットの登録内容を更新 (能力・紐づけの変更は人のみ)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robots:write",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "ロボット ID (rbt_*)"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "3a291941c7f5"
+  },
+  {
+   "id": "delete_api_robotics_robots_id",
+   "ns": "app",
+   "group": "robotics",
+   "name": "deleteRobotsById",
+   "method": "DELETE",
+   "path": "/api/robotics/robots/{id}",
+   "summary": "ロボットを削除 (論理削除。人のみ)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robots:write",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "ロボット ID (rbt_*)"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "a2086fb99a1c"
+  },
+  {
+   "id": "post_api_robotics_robots_id_heartbeat",
+   "ns": "app",
+   "group": "robotics",
+   "name": "postRobotsByIdHeartbeat",
+   "method": "POST",
+   "path": "/api/robotics/robots/{id}/heartbeat",
+   "summary": "ロボットの死活通知 (停止中なら停止指示を返す)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robots:act",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "ロボット ID (rbt_*)"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "0d1da17635a8"
+  },
+  {
+   "id": "get_api_robotics_robots_id_policy",
+   "ns": "app",
+   "group": "robotics",
+   "name": "getRobotsByIdPolicy",
+   "method": "GET",
+   "path": "/api/robotics/robots/{id}/policy",
+   "summary": "ロボットに適用される方針 (必要な同意・承認が要る作業・承認の有効期間)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robots:act",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "ロボット ID (rbt_*)"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "6e0ad145fd89"
+  },
+  {
+   "id": "post_api_robotics_robots_id_status",
+   "ns": "app",
+   "group": "robotics",
+   "name": "postRobotsByIdStatus",
+   "method": "POST",
+   "path": "/api/robotics/robots/{id}/status",
+   "summary": "ロボットの状態を変更 (有効化と廃止は人のみ。停止・保守はトークンでも可)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robots:write",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "ロボット ID (rbt_*)"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "f6b7a4483d90"
+  },
+  {
+   "id": "get_api_robotics_sessions",
+   "ns": "app",
+   "group": "robotics",
+   "name": "getSessions",
+   "method": "GET",
+   "path": "/api/robotics/sessions",
+   "summary": "ロボット相談の一覧",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robot-sessions:read",
+   "params": [
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "事業所 ID (X-Cpos-Facility-Id ヘッダでも可)。admin 以外のセッションは必須"
+    },
+    {
+     "name": "status",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "状態で絞る"
+    },
+    {
+     "name": "sessionType",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "相談の種類で絞る"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "利用者の不変 ID (mu_*) で絞る"
+    },
+    {
+     "name": "robotId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "ロボット ID で絞る"
+    },
+    {
+     "name": "from",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "開始日 (YYYY-MM-DD、日本時間)"
+    },
+    {
+     "name": "to",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "終了日 (YYYY-MM-DD、日本時間、その日を含む)"
+    },
+    {
+     "name": "limit",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": "最大件数 (既定 100、上限 500)"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": "robot_sessions_list",
+   "sig": "56eabce33a0f"
+  },
+  {
+   "id": "post_api_robotics_sessions",
+   "ns": "app",
+   "group": "robotics",
+   "name": "postSessions",
+   "method": "POST",
+   "path": "/api/robotics/sessions",
+   "summary": "ロボット相談の記録を送る (ロボット用。要約は下書き、兆候は職員へアラート)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robots:act",
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "9a82d92b93b2"
+  },
+  {
+   "id": "get_api_robotics_sessions_id",
+   "ns": "app",
+   "group": "robotics",
+   "name": "getSessionsById",
+   "method": "GET",
+   "path": "/api/robotics/sessions/{id}",
+   "summary": "ロボット相談を 1 件",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robot-sessions:read",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "相談 ID (rss_*)"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "6e59225355ac"
+  },
+  {
+   "id": "post_api_robotics_sessions_id_review",
+   "ns": "app",
+   "group": "robotics",
+   "name": "postSessionsByIdReview",
+   "method": "POST",
+   "path": "/api/robotics/sessions/{id}/review",
+   "summary": "ロボット相談を確認 (採用で支援経過を作成、または却下。職員の対話操作のみ)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robot-sessions:review",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "相談 ID (rss_*)"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "b08ee193538d"
+  },
+  {
+   "id": "get_api_robotics_tasks",
+   "ns": "app",
+   "group": "robotics",
+   "name": "getTasks",
+   "method": "GET",
+   "path": "/api/robotics/tasks",
+   "summary": "ロボット作業の一覧",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robot-tasks:read",
+   "params": [
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "事業所 ID (X-Cpos-Facility-Id ヘッダでも可)。admin 以外のセッションは必須"
+    },
+    {
+     "name": "date",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "予定日 (YYYY-MM-DD)"
+    },
+    {
+     "name": "from",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "開始日 (YYYY-MM-DD、日本時間)"
+    },
+    {
+     "name": "to",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "終了日 (YYYY-MM-DD、日本時間、その日を含む)"
+    },
+    {
+     "name": "status",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "状態で絞る"
+    },
+    {
+     "name": "taskType",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "作業種別で絞る"
+    },
+    {
+     "name": "robotId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "ロボット ID で絞る"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "利用者の不変 ID (mu_*) で絞る"
+    },
+    {
+     "name": "limit",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": "最大件数 (既定 200、上限 1000)"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": "robot_tasks_list",
+   "sig": "e396a211fe3b"
+  },
+  {
+   "id": "post_api_robotics_tasks",
+   "ns": "app",
+   "group": "robotics",
+   "name": "postTasks",
+   "method": "POST",
+   "path": "/api/robotics/tasks",
+   "summary": "ロボット作業を作成 (下書き)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robot-tasks:write",
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "bf234a9aba51"
+  },
+  {
+   "id": "get_api_robotics_tasks_id",
+   "ns": "app",
+   "group": "robotics",
+   "name": "getTasksById",
+   "method": "GET",
+   "path": "/api/robotics/tasks/{id}",
+   "summary": "ロボット作業を 1 件",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robot-tasks:read",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "作業 ID (rtk_*)"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "a2db30d662aa"
+  },
+  {
+   "id": "patch_api_robotics_tasks_id",
+   "ns": "app",
+   "group": "robotics",
+   "name": "patchTasksById",
+   "method": "PATCH",
+   "path": "/api/robotics/tasks/{id}",
+   "summary": "ロボット作業を編集 (下書き・差し戻しのみ)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robot-tasks:write",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "作業 ID (rtk_*)"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "f9000f962b50"
+  },
+  {
+   "id": "post_api_robotics_tasks_id_abort",
+   "ns": "app",
+   "group": "robotics",
+   "name": "postTasksByIdAbort",
+   "method": "POST",
+   "path": "/api/robotics/tasks/{id}/abort",
+   "summary": "作業の中止を報告 (ロボット用。職員へアラート)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robots:act",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "作業 ID (rtk_*)"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "36334287fa53"
+  },
+  {
+   "id": "post_api_robotics_tasks_id_approve",
+   "ns": "app",
+   "group": "robotics",
+   "name": "postTasksByIdApprove",
+   "method": "POST",
+   "path": "/api/robotics/tasks/{id}/approve",
+   "summary": "ロボット作業を承認 (確認項目すべて済み・同意あり。職員の対話操作のみ)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robot-tasks:approve",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "作業 ID (rtk_*)"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "8d002d3e380c"
+  },
+  {
+   "id": "post_api_robotics_tasks_id_cancel",
+   "ns": "app",
+   "group": "robotics",
+   "name": "postTasksByIdCancel",
+   "method": "POST",
+   "path": "/api/robotics/tasks/{id}/cancel",
+   "summary": "ロボット作業を取り消す",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robot-tasks:write",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "作業 ID (rtk_*)"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "d32b850d9fec"
+  },
+  {
+   "id": "post_api_robotics_tasks_id_claim",
+   "ns": "app",
+   "group": "robotics",
+   "name": "postTasksByIdClaim",
+   "method": "POST",
+   "path": "/api/robotics/tasks/{id}/claim",
+   "summary": "作業を引き受ける (ロボット用。承認の期限内のみ)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robots:act",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "作業 ID (rtk_*)"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "a9905c728521"
+  },
+  {
+   "id": "post_api_robotics_tasks_id_complete",
+   "ns": "app",
+   "group": "robotics",
+   "name": "postTasksByIdComplete",
+   "method": "POST",
+   "path": "/api/robotics/tasks/{id}/complete",
+   "summary": "作業の完了を報告 (ロボット用。結果は下書き扱い)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robots:act",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "作業 ID (rtk_*)"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "5daaaa655414"
+  },
+  {
+   "id": "post_api_robotics_tasks_id_emergency",
+   "ns": "app",
+   "group": "robotics",
+   "name": "postTasksByIdEmergency",
+   "method": "POST",
+   "path": "/api/robotics/tasks/{id}/emergency",
+   "summary": "作業の緊急停止を報告 (ロボット用。重大アラート)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robots:act",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "作業 ID (rtk_*)"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "fb51118ce917"
+  },
+  {
+   "id": "post_api_robotics_tasks_id_fail",
+   "ns": "app",
+   "group": "robotics",
+   "name": "postTasksByIdFail",
+   "method": "POST",
+   "path": "/api/robotics/tasks/{id}/fail",
+   "summary": "作業の失敗を報告 (ロボット用。職員へアラート)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robots:act",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "作業 ID (rtk_*)"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "ad722c638c1f"
+  },
+  {
+   "id": "post_api_robotics_tasks_id_pause",
+   "ns": "app",
+   "group": "robotics",
+   "name": "postTasksByIdPause",
+   "method": "POST",
+   "path": "/api/robotics/tasks/{id}/pause",
+   "summary": "作業を一時停止 (ロボット用)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robots:act",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "作業 ID (rtk_*)"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "faedd4da96bb"
+  },
+  {
+   "id": "post_api_robotics_tasks_id_progress",
+   "ns": "app",
+   "group": "robotics",
+   "name": "postTasksByIdProgress",
+   "method": "POST",
+   "path": "/api/robotics/tasks/{id}/progress",
+   "summary": "作業の進み具合を報告 (ロボット用。状態は変えない)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robots:act",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "作業 ID (rtk_*)"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "de3c0465fec0"
+  },
+  {
+   "id": "post_api_robotics_tasks_id_record_draft",
+   "ns": "app",
+   "group": "robotics",
+   "name": "postTasksByIdRecordDraft",
+   "method": "POST",
+   "path": "/api/robotics/tasks/{id}/record-draft",
+   "summary": "終了した作業から支援経過の下書きを作る (職員の対話操作のみ)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robot-tasks:write",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "作業 ID (rtk_*)"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "d7ee1b82bc1d"
+  },
+  {
+   "id": "post_api_robotics_tasks_id_reject",
+   "ns": "app",
+   "group": "robotics",
+   "name": "postTasksByIdReject",
+   "method": "POST",
+   "path": "/api/robotics/tasks/{id}/reject",
+   "summary": "ロボット作業を差し戻す (職員の対話操作のみ)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robot-tasks:approve",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "作業 ID (rtk_*)"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "f303db3c6ab9"
+  },
+  {
+   "id": "post_api_robotics_tasks_id_release",
+   "ns": "app",
+   "group": "robotics",
+   "name": "postTasksByIdRelease",
+   "method": "POST",
+   "path": "/api/robotics/tasks/{id}/release",
+   "summary": "引き受けた作業を手放す (ロボット用)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robots:act",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "作業 ID (rtk_*)"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "b7a8a7c7d7cb"
+  },
+  {
+   "id": "post_api_robotics_tasks_id_resume",
+   "ns": "app",
+   "group": "robotics",
+   "name": "postTasksByIdResume",
+   "method": "POST",
+   "path": "/api/robotics/tasks/{id}/resume",
+   "summary": "作業を再開 (ロボット用)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robots:act",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "作業 ID (rtk_*)"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "e1d9c1b1a3ea"
+  },
+  {
+   "id": "post_api_robotics_tasks_id_start",
+   "ns": "app",
+   "group": "robotics",
+   "name": "postTasksByIdStart",
+   "method": "POST",
+   "path": "/api/robotics/tasks/{id}/start",
+   "summary": "作業を開始 (ロボット用。同意と承認をその場で再確認)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robots:act",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "作業 ID (rtk_*)"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "0f3b2f2d2e90"
+  },
+  {
+   "id": "post_api_robotics_tasks_id_submit",
+   "ns": "app",
+   "group": "robotics",
+   "name": "postTasksByIdSubmit",
+   "method": "POST",
+   "path": "/api/robotics/tasks/{id}/submit",
+   "summary": "ロボット作業を提出 (承認待ち、または承認不要なら実施可)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robot-tasks:write",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "作業 ID (rtk_*)"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "f526350ababc"
+  },
+  {
+   "id": "get_api_robotics_tasks_queue",
+   "ns": "app",
+   "group": "robotics",
+   "name": "getTasksQueue",
+   "method": "GET",
+   "path": "/api/robotics/tasks/queue",
+   "summary": "ロボットが今日引き受けられる作業と実行中の作業 (ロボット用)",
+   "tags": [
+    "robotics"
+   ],
+   "auth": "both",
+   "scope": "robots:act",
+   "params": [
+    {
+     "name": "robotId",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "ロボット ID (rbt_*)。本文の robotId でも可"
+    },
+    {
+     "name": "date",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "予定日 (YYYY-MM-DD、既定は今日)"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "169a6ef97461"
   },
   {
    "id": "get_api_scheduler_reports",
@@ -34132,6 +37490,52 @@
    "sig": "98ec15378829"
   },
   {
+   "id": "get_api_system_settings_facility_access",
+   "ns": "session",
+   "group": "systemSettings",
+   "name": "getFacilityAccess",
+   "method": "GET",
+   "path": "/api/system-settings/facility-access",
+   "summary": "組織の事業所アクセス設定 (crossFacilityRead: 同じ組織の他の事業所の利用者・記録の閲覧。未設定は true)",
+   "tags": [
+    "システム設定"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": true,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "1cd614b58127"
+  },
+  {
+   "id": "put_api_system_settings_facility_access",
+   "ns": "session",
+   "group": "systemSettings",
+   "name": "putFacilityAccess",
+   "method": "PUT",
+   "path": "/api/system-settings/facility-access",
+   "summary": "組織の crossFacilityRead を切り替える (admin。false で所属事業所だけの閲覧に戻す、null で既定の true に戻す)",
+   "tags": [
+    "システム設定"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "3d6597ceaac7"
+  },
+  {
    "id": "get_api_system_settings_filing",
    "ns": "session",
    "group": "systemSettings",
@@ -34181,6 +37585,52 @@
    "fakeBody": false,
    "mcp": null,
    "sig": "7a7be992cefc"
+  },
+  {
+   "id": "get_api_system_settings_first_track_flags",
+   "ns": "session",
+   "group": "systemSettings",
+   "name": "getFirstTrackFlags",
+   "method": "GET",
+   "path": "/api/system-settings/first-track-flags",
+   "summary": "第一トラックの機能フラグ (事業所ごとの許可一覧・環境変数の値・どちらが効いているか)",
+   "tags": [
+    "システム設定"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "2be734f63456"
+  },
+  {
+   "id": "put_api_system_settings_first_track_flags",
+   "ns": "session",
+   "group": "systemSettings",
+   "name": "putFirstTrackFlags",
+   "method": "PUT",
+   "path": "/api/system-settings/first-track-flags",
+   "summary": "第一トラックの機能フラグを 1 つ更新 (admin。facilityIds の配列で置き換え、null で保存値を消して環境変数に戻す)",
+   "tags": [
+    "システム設定"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "647cce1ffa63"
   },
   {
    "id": "get_api_system_settings_google_workspace",
@@ -36607,6 +40057,75 @@
    "fakeBody": false,
    "mcp": null,
    "sig": "299fde37237d"
+  },
+  {
+   "id": "post_api_triggers_tasks_backup_due",
+   "ns": "app",
+   "group": "triggers",
+   "name": "postTasksBackupDue",
+   "method": "POST",
+   "path": "/api/triggers/tasks/backup-due",
+   "summary": "定時タスク: アプリ内のバックアップの、時刻を過ぎた戦略を実行して終わるまで待つ (件数だけ返す)",
+   "tags": [
+    "トリガー"
+   ],
+   "auth": "none",
+   "scope": null,
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "e961e06203b6"
+  },
+  {
+   "id": "post_api_triggers_tasks_facility_changes_due",
+   "ns": "app",
+   "group": "triggers",
+   "name": "postTasksFacilityChangesDue",
+   "method": "POST",
+   "path": "/api/triggers/tasks/facility-changes-due",
+   "summary": "定時タスク: 事業所の変更 (サテライトの統合・作成) の時刻が来た実行を始め、動いている実行を進める (件数だけ返す)",
+   "tags": [
+    "トリガー"
+   ],
+   "auth": "none",
+   "scope": null,
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "fb75890b9947"
+  },
+  {
+   "id": "post_api_triggers_tasks_month_baseline_candidates",
+   "ns": "app",
+   "group": "triggers",
+   "name": "postTasksMonthBaselineCandidates",
+   "method": "POST",
+   "path": "/api/triggers/tasks/month-baseline-candidates",
+   "summary": "定時タスク: 月の固定基準の候補を事業所ごとに作る (月初の一括。件数だけ返す。採用はしない)",
+   "tags": [
+    "トリガー"
+   ],
+   "auth": "none",
+   "scope": null,
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "398df2b94ddc"
   },
   {
    "id": "get_api_user_detail",
