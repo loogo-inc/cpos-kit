@@ -5,6 +5,11 @@ v1 の間は API の削除をしない (deprecated の印だけ)。
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-10-09
+
+### Added
+- CPOS の API の追加に追随 (18 operation): 継続アセスメント・ケアマネジメント (`cpos.app.careManagement.*`)。契約版と操作能力の確認 (`getV1Capabilities`)、受領資料の一覧・登録・確認・撤回、更新候補の取得、手動の準備要求 (`postV1Recompute`)、判断・途中保存・正式承認 (`postV1ReviewDecisions`)、準備処理の状態と再試行 (`getV1RunsById` / `postV1RunsByIdRetry`)。受領・判断・承認・再試行には認証済みの職員が必要で、App Token だけで人の承認は代用できない。機能フラグは既定 OFF。定時実行の起動口 `cpos.app.triggers.postTasksCareReviewDetect` / `Due` / `Reconcile` も増えた。
+
 ## [0.5.0] - 2026-10-08
 
 ### Added

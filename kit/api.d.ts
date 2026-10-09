@@ -1,5 +1,5 @@
 // 生成物。kit の保守者が生成器 (gen-api) で spec/cpos-openapi.json から作る。手で編集しない。
-// 生成元: CPOS OpenAPI 0.1.0 / revision main@52c8f6c9 / 2026-10-08 / 1525 operations
+// 生成元: CPOS OpenAPI 0.1.0 / revision main@dedace78 / 2026-10-09 / 1543 operations
 
 export interface CposApi_app {
   alerts: {
@@ -499,6 +499,53 @@ export interface CposApi_app {
     /** 文書テンプレートを 1 件取得
      * GET /api/care-documents/v1/templates/{templateId} / scope care-documents:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: createdAt, documentType, facilityId, fieldMappings, fields, id, isActive, layout, name, organizationId, serviceDomain, templateKey … / 模擬サーバ: 無し (501) */
     getV1TemplatesByTemplateId(args: { templateId: string; facilityId?: string }): Promise<unknown>;
+  };
+  careManagement: {
+    /** 継続アセスメントの契約版・対象・操作能力を確認
+     * GET /api/care-management/v1/capabilities / scope care-documents:read / 認証 both / 応答の形あり / 模擬サーバ: 無し (501) */
+    getV1Capabilities(args?: { facilityId?: string }): Promise<unknown>;
+    /** 同じ処理経路へ手動の候補準備を要求
+     * POST /api/care-management/v1/recompute / scope care-documents:ai / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV1Recompute(args: { body: unknown; facilityId?: string }): Promise<unknown>;
+    /** 対象本人の判断と適用結果を取得
+     * GET /api/care-management/v1/review-decisions / scope care-documents:read / 認証 both / 応答の形あり / 模擬サーバ: 無し (501) */
+    getV1ReviewDecisions(args: { facilityId?: string; masterUserId: string; serviceDomain?: string; cursor?: string; limit?: number }): Promise<unknown>;
+    /** 単一対象の項目判断・途中保存・正式承認
+     * POST /api/care-management/v1/review-decisions / scope care-documents:write / 認証 both / 応答の形あり / 模擬サーバ: 無し (501) */
+    postV1ReviewDecisions(args: { facilityId?: string; body: unknown }): Promise<unknown>;
+    /** 利用者の更新候補と実行状態を一覧
+     * GET /api/care-management/v1/review-drafts / scope care-documents:read / 認証 both / 応答の形あり / 模擬サーバ: 無し (501) */
+    getV1ReviewDrafts(args: { facilityId?: string; masterUserId: string; serviceDomain?: string; cursor?: string; limit?: number }): Promise<unknown>;
+    /** 候補・固定した根拠・現在の作業本文を取得
+     * GET /api/care-management/v1/review-drafts/{id} / scope care-documents:read / 認証 both / 応答の形あり / 模擬サーバ: 無し (501) */
+    getV1ReviewDraftsById(args: { id: string; facilityId?: string }): Promise<unknown>;
+    /** 準備処理の状態・不足・失敗を確認
+     * GET /api/care-management/v1/runs/{id} / scope care-documents:read / 認証 both / 応答の形あり / 模擬サーバ: 無し (501) */
+    getV1RunsById(args: { id: string; facilityId?: string }): Promise<unknown>;
+    /** 再試行可能な準備処理を同じ処理経路へ再登録
+     * POST /api/care-management/v1/runs/{id}/retry / scope care-documents:ai / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV1RunsByIdRetry(args: { id: string; facilityId?: string; body: unknown }): Promise<unknown>;
+    /** 権限のある受領資料を一覧
+     * GET /api/care-management/v1/sources / scope care-documents:read / 認証 both / 応答の形あり / 模擬サーバ: 無し (501) */
+    getV1Sources(args?: { facilityId?: string; masterUserId?: string; serviceDomain?: string; cursor?: string; limit?: number }): Promise<unknown>;
+    /** 保管済み原本または情報源の受領を登録
+     * POST /api/care-management/v1/sources/receipts / scope care-documents:write / 認証 both / 応答の形あり / 模擬サーバ: 無し (501) */
+    postV1SourcesReceipts(args: { body: unknown; facilityId?: string }): Promise<unknown>;
+    /** 確認済み受領資料から自組織の評価の下書きを作成
+     * POST /api/care-management/v1/sources/receipts/{id}/local-draft / scope care-documents:write / 認証 both / 応答の形あり / 模擬サーバ: 無し (501) */
+    postV1SourcesReceiptsByIdLocalDraft(args: { id: string; facilityId?: string; body: unknown }): Promise<unknown>;
+    /** 権限を再確認して受領原本の参照を取得
+     * GET /api/care-management/v1/sources/receipts/{id}/original / scope care-documents:read / 認証 both / 応答の形あり / 模擬サーバ: 無し (501) */
+    getV1SourcesReceiptsByIdOriginal(args: { id: string; facilityId?: string }): Promise<unknown>;
+    /** 受領物の本人・抽出内容・原本照合を確認
+     * POST /api/care-management/v1/sources/receipts/{id}/verify / scope care-documents:write / 認証 both / 応答の形あり / 模擬サーバ: 無し (501) */
+    postV1SourcesReceiptsByIdVerify(args: { id: string; facilityId?: string; body: unknown }): Promise<unknown>;
+    /** 受領物を理由付きで撤回
+     * POST /api/care-management/v1/sources/receipts/{id}/withdraw / scope care-documents:delete / 認証 both / 応答の形あり / 模擬サーバ: 無し (501) */
+    postV1SourcesReceiptsByIdWithdraw(args: { id: string; facilityId?: string; body: unknown }): Promise<unknown>;
+    /** 外部資料の原本を保管し受領物を登録
+     * POST /api/care-management/v1/sources/receipts/upload / scope care-documents:write / 認証 both / 応答の形あり / 模擬サーバ: 無し (501) */
+    postV1SourcesReceiptsUpload(args: { body: unknown; facilityId?: string }): Promise<unknown>;
   };
   careRecords: {
     /** 記録に関する質問を AI に投げる (記録本文を材料にする)
@@ -2238,6 +2285,15 @@ export interface CposApi_app {
     /** 定時タスク: アプリ内のバックアップの、時刻を過ぎた戦略を実行して終わるまで待つ (件数だけ返す)
      * POST /api/triggers/tasks/backup-due / 認証 none / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postTasksBackupDue(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 継続アセスメント: 未処理の変更を対象ごとにまとめる
+     * POST /api/triggers/tasks/care-review-detect / 認証 none / 応答の形あり / 模擬サーバ: 無し (501) */
+    postTasksCareReviewDetect(args: { body: unknown; facilityId?: string }): Promise<unknown>;
+    /** 継続アセスメント: 時刻の来た準備処理を進め完了まで待つ
+     * POST /api/triggers/tasks/care-review-due / 認証 none / 応答の形あり / 模擬サーバ: 無し (501) */
+    postTasksCareReviewDue(args: { body: unknown; facilityId?: string }): Promise<unknown>;
+    /** 継続アセスメント: 情報源の取りこぼしを照合する
+     * POST /api/triggers/tasks/care-review-reconcile / 認証 none / 応答の形あり / 模擬サーバ: 無し (501) */
+    postTasksCareReviewReconcile(args: { body: unknown; facilityId?: string }): Promise<unknown>;
     /** 定時タスク: 事業所の変更 (サテライトの統合・作成) の時刻が来た実行を始め、動いている実行を進める (件数だけ返す)
      * POST /api/triggers/tasks/facility-changes-due / 認証 none / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postTasksFacilityChangesDue(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;

@@ -1,9 +1,9 @@
 {
  "generatedFrom": {
   "version": "0.1.0",
-  "revision": "main@52c8f6c9",
-  "fetchedAt": "2026-10-08",
-  "operations": 1525
+  "revision": "main@dedace78",
+  "fetchedAt": "2026-10-09",
+  "operations": 1543
  },
  "note": "client が実行時に読む operation の表。kit の保守者が生成器 (gen-api) で spec/cpos-openapi.json から作る。手で編集しない",
  "operations": [
@@ -9097,6 +9097,570 @@
     }
    },
    "sig": "87969fceb8b5"
+  },
+  {
+   "id": "get_api_care_management_v1_capabilities",
+   "ns": "app",
+   "group": "careManagement",
+   "name": "getV1Capabilities",
+   "method": "GET",
+   "path": "/api/care-management/v1/capabilities",
+   "summary": "継続アセスメントの契約版・対象・操作能力を確認",
+   "tags": [
+    "継続アセスメント・ケアマネジメント"
+   ],
+   "auth": "both",
+   "scope": "care-documents:read",
+   "params": [
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "対象事業所。これまたは X-Cpos-Facility-Id が必須で、認証で許可された事業所と一致すること。"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": true,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "d35c03feb583"
+  },
+  {
+   "id": "post_api_care_management_v1_recompute",
+   "ns": "app",
+   "group": "careManagement",
+   "name": "postV1Recompute",
+   "method": "POST",
+   "path": "/api/care-management/v1/recompute",
+   "summary": "同じ処理経路へ手動の候補準備を要求",
+   "tags": [
+    "継続アセスメント・ケアマネジメント"
+   ],
+   "auth": "both",
+   "scope": "care-documents:ai",
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "a1e1c17589f3"
+  },
+  {
+   "id": "get_api_care_management_v1_review_decisions",
+   "ns": "app",
+   "group": "careManagement",
+   "name": "getV1ReviewDecisions",
+   "method": "GET",
+   "path": "/api/care-management/v1/review-decisions",
+   "summary": "対象本人の判断と適用結果を取得",
+   "tags": [
+    "継続アセスメント・ケアマネジメント"
+   ],
+   "auth": "both",
+   "scope": "care-documents:read",
+   "params": [
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "対象事業所。これまたは X-Cpos-Facility-Id が必須で、認証で許可された事業所と一致すること。"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "本人の不変 ID。番号だけで別人へ候補を移さない。"
+    },
+    {
+     "name": "serviceDomain",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    },
+    {
+     "name": "cursor",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "前の応答の nextCursor"
+    },
+    {
+     "name": "limit",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": "1〜20 件。既定 10 件。"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": true,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "0ca8fdef7ecf"
+  },
+  {
+   "id": "post_api_care_management_v1_review_decisions",
+   "ns": "app",
+   "group": "careManagement",
+   "name": "postV1ReviewDecisions",
+   "method": "POST",
+   "path": "/api/care-management/v1/review-decisions",
+   "summary": "単一対象の項目判断・途中保存・正式承認",
+   "tags": [
+    "継続アセスメント・ケアマネジメント"
+   ],
+   "auth": "both",
+   "scope": "care-documents:write",
+   "params": [
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "対象事業所。これまたは X-Cpos-Facility-Id が必須で、認証で許可された事業所と一致すること。"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": false,
+   "hasResponseSchema": true,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "56690f6ebf45"
+  },
+  {
+   "id": "get_api_care_management_v1_review_drafts",
+   "ns": "app",
+   "group": "careManagement",
+   "name": "getV1ReviewDrafts",
+   "method": "GET",
+   "path": "/api/care-management/v1/review-drafts",
+   "summary": "利用者の更新候補と実行状態を一覧",
+   "tags": [
+    "継続アセスメント・ケアマネジメント"
+   ],
+   "auth": "both",
+   "scope": "care-documents:read",
+   "params": [
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "対象事業所。これまたは X-Cpos-Facility-Id が必須で、認証で許可された事業所と一致すること。"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "本人の不変 ID。番号だけで別人へ候補を移さない。"
+    },
+    {
+     "name": "serviceDomain",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    },
+    {
+     "name": "cursor",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "前の応答の nextCursor"
+    },
+    {
+     "name": "limit",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": "1〜20 件。既定 10 件。"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": true,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "ff5dab6c6251"
+  },
+  {
+   "id": "get_api_care_management_v1_review_drafts_id",
+   "ns": "app",
+   "group": "careManagement",
+   "name": "getV1ReviewDraftsById",
+   "method": "GET",
+   "path": "/api/care-management/v1/review-drafts/{id}",
+   "summary": "候補・固定した根拠・現在の作業本文を取得",
+   "tags": [
+    "継続アセスメント・ケアマネジメント"
+   ],
+   "auth": "both",
+   "scope": "care-documents:read",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "対象事業所。これまたは X-Cpos-Facility-Id が必須で、認証で許可された事業所と一致すること。"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": true,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "7a5e3c09a4d8"
+  },
+  {
+   "id": "get_api_care_management_v1_runs_id",
+   "ns": "app",
+   "group": "careManagement",
+   "name": "getV1RunsById",
+   "method": "GET",
+   "path": "/api/care-management/v1/runs/{id}",
+   "summary": "準備処理の状態・不足・失敗を確認",
+   "tags": [
+    "継続アセスメント・ケアマネジメント"
+   ],
+   "auth": "both",
+   "scope": "care-documents:read",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "対象事業所。これまたは X-Cpos-Facility-Id が必須で、認証で許可された事業所と一致すること。"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": true,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "36dd5f31dd28"
+  },
+  {
+   "id": "post_api_care_management_v1_runs_id_retry",
+   "ns": "app",
+   "group": "careManagement",
+   "name": "postV1RunsByIdRetry",
+   "method": "POST",
+   "path": "/api/care-management/v1/runs/{id}/retry",
+   "summary": "再試行可能な準備処理を同じ処理経路へ再登録",
+   "tags": [
+    "継続アセスメント・ケアマネジメント"
+   ],
+   "auth": "both",
+   "scope": "care-documents:ai",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "対象事業所。これまたは X-Cpos-Facility-Id が必須で、認証で許可された事業所と一致すること。"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "9951e11c9678"
+  },
+  {
+   "id": "get_api_care_management_v1_sources",
+   "ns": "app",
+   "group": "careManagement",
+   "name": "getV1Sources",
+   "method": "GET",
+   "path": "/api/care-management/v1/sources",
+   "summary": "権限のある受領資料を一覧",
+   "tags": [
+    "継続アセスメント・ケアマネジメント"
+   ],
+   "auth": "both",
+   "scope": "care-documents:read",
+   "params": [
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "対象事業所。これまたは X-Cpos-Facility-Id が必須で、認証で許可された事業所と一致すること。"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "本人の不変 ID。番号だけで別人へ候補を移さない。"
+    },
+    {
+     "name": "serviceDomain",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    },
+    {
+     "name": "cursor",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "前の応答の nextCursor"
+    },
+    {
+     "name": "limit",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": "1〜20 件。既定 10 件。"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": true,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "1fa21b0037db"
+  },
+  {
+   "id": "post_api_care_management_v1_sources_receipts",
+   "ns": "app",
+   "group": "careManagement",
+   "name": "postV1SourcesReceipts",
+   "method": "POST",
+   "path": "/api/care-management/v1/sources/receipts",
+   "summary": "保管済み原本または情報源の受領を登録",
+   "tags": [
+    "継続アセスメント・ケアマネジメント"
+   ],
+   "auth": "both",
+   "scope": "care-documents:write",
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": false,
+   "hasResponseSchema": true,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "13f7be3a77b2"
+  },
+  {
+   "id": "post_api_care_management_v1_sources_receipts_id_local_draft",
+   "ns": "app",
+   "group": "careManagement",
+   "name": "postV1SourcesReceiptsByIdLocalDraft",
+   "method": "POST",
+   "path": "/api/care-management/v1/sources/receipts/{id}/local-draft",
+   "summary": "確認済み受領資料から自組織の評価の下書きを作成",
+   "tags": [
+    "継続アセスメント・ケアマネジメント"
+   ],
+   "auth": "both",
+   "scope": "care-documents:write",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "対象事業所。これまたは X-Cpos-Facility-Id が必須で、認証で許可された事業所と一致すること。"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": false,
+   "hasResponseSchema": true,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "185c2c7e2e21"
+  },
+  {
+   "id": "get_api_care_management_v1_sources_receipts_id_original",
+   "ns": "app",
+   "group": "careManagement",
+   "name": "getV1SourcesReceiptsByIdOriginal",
+   "method": "GET",
+   "path": "/api/care-management/v1/sources/receipts/{id}/original",
+   "summary": "権限を再確認して受領原本の参照を取得",
+   "tags": [
+    "継続アセスメント・ケアマネジメント"
+   ],
+   "auth": "both",
+   "scope": "care-documents:read",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "対象事業所。これまたは X-Cpos-Facility-Id が必須で、認証で許可された事業所と一致すること。"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": true,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "05113ec1f565"
+  },
+  {
+   "id": "post_api_care_management_v1_sources_receipts_id_verify",
+   "ns": "app",
+   "group": "careManagement",
+   "name": "postV1SourcesReceiptsByIdVerify",
+   "method": "POST",
+   "path": "/api/care-management/v1/sources/receipts/{id}/verify",
+   "summary": "受領物の本人・抽出内容・原本照合を確認",
+   "tags": [
+    "継続アセスメント・ケアマネジメント"
+   ],
+   "auth": "both",
+   "scope": "care-documents:write",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "対象事業所。これまたは X-Cpos-Facility-Id が必須で、認証で許可された事業所と一致すること。"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": false,
+   "hasResponseSchema": true,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "5a26dce8cd82"
+  },
+  {
+   "id": "post_api_care_management_v1_sources_receipts_id_withdraw",
+   "ns": "app",
+   "group": "careManagement",
+   "name": "postV1SourcesReceiptsByIdWithdraw",
+   "method": "POST",
+   "path": "/api/care-management/v1/sources/receipts/{id}/withdraw",
+   "summary": "受領物を理由付きで撤回",
+   "tags": [
+    "継続アセスメント・ケアマネジメント"
+   ],
+   "auth": "both",
+   "scope": "care-documents:delete",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "対象事業所。これまたは X-Cpos-Facility-Id が必須で、認証で許可された事業所と一致すること。"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": false,
+   "hasResponseSchema": true,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "50cacae378d0"
+  },
+  {
+   "id": "post_api_care_management_v1_sources_receipts_upload",
+   "ns": "app",
+   "group": "careManagement",
+   "name": "postV1SourcesReceiptsUpload",
+   "method": "POST",
+   "path": "/api/care-management/v1/sources/receipts/upload",
+   "summary": "外部資料の原本を保管し受領物を登録",
+   "tags": [
+    "継続アセスメント・ケアマネジメント"
+   ],
+   "auth": "both",
+   "scope": "care-documents:write",
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": false,
+   "hasResponseSchema": true,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "cec9cb090891"
   },
   {
    "id": "post_api_care_plan_csv_bulk_import_apply",
@@ -40080,6 +40644,78 @@
    "fakeBody": false,
    "mcp": null,
    "sig": "e961e06203b6"
+  },
+  {
+   "id": "post_api_triggers_tasks_care_review_detect",
+   "ns": "app",
+   "group": "triggers",
+   "name": "postTasksCareReviewDetect",
+   "method": "POST",
+   "path": "/api/triggers/tasks/care-review-detect",
+   "summary": "継続アセスメント: 未処理の変更を対象ごとにまとめる",
+   "tags": [
+    "トリガー",
+    "継続アセスメント・ケアマネジメント"
+   ],
+   "auth": "none",
+   "scope": null,
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": false,
+   "hasResponseSchema": true,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "71a478f75650"
+  },
+  {
+   "id": "post_api_triggers_tasks_care_review_due",
+   "ns": "app",
+   "group": "triggers",
+   "name": "postTasksCareReviewDue",
+   "method": "POST",
+   "path": "/api/triggers/tasks/care-review-due",
+   "summary": "継続アセスメント: 時刻の来た準備処理を進め完了まで待つ",
+   "tags": [
+    "トリガー",
+    "継続アセスメント・ケアマネジメント"
+   ],
+   "auth": "none",
+   "scope": null,
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": false,
+   "hasResponseSchema": true,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "3a483df1f8b1"
+  },
+  {
+   "id": "post_api_triggers_tasks_care_review_reconcile",
+   "ns": "app",
+   "group": "triggers",
+   "name": "postTasksCareReviewReconcile",
+   "method": "POST",
+   "path": "/api/triggers/tasks/care-review-reconcile",
+   "summary": "継続アセスメント: 情報源の取りこぼしを照合する",
+   "tags": [
+    "トリガー",
+    "継続アセスメント・ケアマネジメント"
+   ],
+   "auth": "none",
+   "scope": null,
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": false,
+   "hasResponseSchema": true,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "636e49d1637c"
   },
   {
    "id": "post_api_triggers_tasks_facility_changes_due",

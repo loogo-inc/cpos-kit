@@ -1,9 +1,9 @@
 {
  "generatedFrom": {
   "version": "0.1.0",
-  "revision": "main@52c8f6c9",
-  "fetchedAt": "2026-10-08",
-  "operations": 1525
+  "revision": "main@dedace78",
+  "fetchedAt": "2026-10-09",
+  "operations": 1543
  },
  "note": "CPOS が知る全スコープ (OpenAPI の oauth2 scopes) と、それを要求する operation の数。{appId} を含むものは雛形 (appId を入れて使う)。生成物。手で編集しない",
  "scopes": [
@@ -388,13 +388,14 @@
    "template": false,
    "known": true,
    "adminOnly": false,
-   "operations": 2,
+   "operations": 4,
    "ns": [
     "app"
    ],
    "examples": [
     "POST /api/care-documents/v1/{id}/ai-fill",
-    "POST /api/care-documents/v1/draft-from-context"
+    "POST /api/care-documents/v1/draft-from-context",
+    "POST /api/care-management/v1/recompute"
    ]
   },
   {
@@ -417,12 +418,13 @@
    "template": false,
    "known": true,
    "adminOnly": false,
-   "operations": 1,
+   "operations": 2,
    "ns": [
     "app"
    ],
    "examples": [
-    "DELETE /api/care-documents/v1/{id}"
+    "DELETE /api/care-documents/v1/{id}",
+    "POST /api/care-management/v1/sources/receipts/{id}/withdraw"
    ]
   },
   {
@@ -430,7 +432,7 @@
    "template": false,
    "known": true,
    "adminOnly": false,
-   "operations": 17,
+   "operations": 24,
    "ns": [
     "app"
    ],
@@ -445,7 +447,7 @@
    "template": false,
    "known": true,
    "adminOnly": false,
-   "operations": 20,
+   "operations": 25,
    "ns": [
     "app"
    ],
