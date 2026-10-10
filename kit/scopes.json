@@ -1,9 +1,9 @@
 {
  "generatedFrom": {
   "version": "0.1.0",
-  "revision": "main@dedace78",
-  "fetchedAt": "2026-10-09",
-  "operations": 1543
+  "revision": "main@68cfcee5",
+  "fetchedAt": "2026-10-10",
+  "operations": 1571
  },
  "note": "CPOS が知る全スコープ (OpenAPI の oauth2 scopes) と、それを要求する operation の数。{appId} を含むものは雛形 (appId を入れて使う)。生成物。手で編集しない",
  "scopes": [
@@ -388,7 +388,7 @@
    "template": false,
    "known": true,
    "adminOnly": false,
-   "operations": 4,
+   "operations": 6,
    "ns": [
     "app"
    ],
@@ -418,13 +418,14 @@
    "template": false,
    "known": true,
    "adminOnly": false,
-   "operations": 2,
+   "operations": 3,
    "ns": [
     "app"
    ],
    "examples": [
     "DELETE /api/care-documents/v1/{id}",
-    "POST /api/care-management/v1/sources/receipts/{id}/withdraw"
+    "POST /api/care-management/v1/sources/receipts/{id}/withdraw",
+    "POST /api/care-management/v2/sources/receipts/{id}/withdraw"
    ]
   },
   {
@@ -432,7 +433,7 @@
    "template": false,
    "known": true,
    "adminOnly": false,
-   "operations": 24,
+   "operations": 37,
    "ns": [
     "app"
    ],
@@ -447,7 +448,7 @@
    "template": false,
    "known": true,
    "adminOnly": false,
-   "operations": 25,
+   "operations": 31,
    "ns": [
     "app"
    ],
@@ -557,6 +558,38 @@
     "POST /api/care-records/v1/day-service/arrival-vitals",
     "POST /api/care-records/v1/day-service/batch-fluid"
    ]
+  },
+  {
+   "name": "care-review-approvals:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 2,
+   "ns": [
+    "app"
+   ],
+   "examples": [
+    "POST /api/care-management/v2/review-decisions",
+    "POST /api/care-management/v2/targets/{id}/approvals"
+   ]
+  },
+  {
+   "name": "care-review-sharing:read",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 0,
+   "ns": [],
+   "examples": []
+  },
+  {
+   "name": "care-review-sharing:write",
+   "template": false,
+   "known": true,
+   "adminOnly": false,
+   "operations": 0,
+   "ns": [],
+   "examples": []
   },
   {
    "name": "care-schedule-exceptions:delete",

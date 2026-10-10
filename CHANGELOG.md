@@ -5,6 +5,12 @@ v1 の間は API の削除をしない (deprecated の印だけ)。
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-10-10
+
+### Added
+- CPOS の API の追加に追随 (28 operation): 継続アセスメントの v2 (`cpos.app.careManagement.*` の `getV2*` / `postV2*` / `putV2*`)。アセスメントの取得と変更履歴、対象者ごとの対象と作業中の内容、レビューの下書き・判断、受領資料の登録・アップロード・確認・撤回・元ファイルの取得、共有元の参照、再計算と再試行。共有の作成・一覧・取り消しは職員のログイン (`cpos.session.careManagement.getV2Shares` / `postV2Shares` / `postV2SharesByIdRevoke`) が必要。
+- 新しい scope: `care-review-approvals:write` / `care-review-sharing:read` / `care-review-sharing:write` (`scopes` コマンドに反映)。
+
 ## [0.6.0] - 2026-10-09
 
 ### Added
