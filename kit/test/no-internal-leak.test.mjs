@@ -35,7 +35,7 @@ const FORBIDDEN_PUBLIC = [
 const FORBIDDEN_DATA = [
   [/\b(?!index\b)[\w-]+\.tsx?\b/, 'CPOS のファイル名 (.ts / .tsx)'],
   [/\b(docs\/)?[A-Z][A-Z0-9_]+\.md\b/, 'CPOS の docs のファイル名'],
-  [/\b[A-Z][a-zA-Z]+(?<!List)Page\b/, '管理画面の部品名 (ListPage = 一覧の 1 ページは除く)'],
+  [/\b[A-Z][a-zA-Z]+(?<!List)(?<!Receipt)Page\b/, '管理画面の部品名 (ListPage・ReceiptPage = 一覧の 1 ページは除く)'],
 ];
 if (process.env.CPOS_KIT_EXTRA_FORBIDDEN) FORBIDDEN.push([new RegExp(process.env.CPOS_KIT_EXTRA_FORBIDDEN, 'i'), '公開したくない語 (CPOS_KIT_EXTRA_FORBIDDEN)']);
 const SKIP_DIRS = new Set(['.git', 'node_modules']);

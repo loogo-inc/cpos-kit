@@ -1,9 +1,9 @@
 {
  "generatedFrom": {
   "version": "0.1.0",
-  "revision": "main@68cfcee5",
-  "fetchedAt": "2026-10-10",
-  "operations": 1571
+  "revision": "main@cf73b8fd",
+  "fetchedAt": "2026-10-12",
+  "operations": 1594
  },
  "note": "client が実行時に読む operation の表。kit の保守者が生成器 (gen-api) で spec/cpos-openapi.json から作る。手で編集しない",
  "operations": [
@@ -7800,6 +7800,13 @@
      "description": "sections を指定すると表示用の節を返す"
     },
     {
+     "name": "validatePlanBasis",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "1 の場合、保存済みの計画根拠と現在の評価・本人・事業所の一致を読み取りだけで検査します。正式履歴の原本版は保持します。"
+    },
+    {
      "name": "evidence",
      "in": "query",
      "required": false,
@@ -7832,7 +7839,7 @@
      "updatedAt"
     ]
    },
-   "sig": "0989c6ddb45d"
+   "sig": "74c5153e2fb5"
   },
   {
    "id": "put_api_care_documents_v1_id",
@@ -9724,6 +9731,51 @@
    "sig": "212571e464b4"
   },
   {
+   "id": "post_api_care_management_v2_intake_contexts",
+   "ns": "session",
+   "group": "careManagement",
+   "name": "postV2IntakeContexts",
+   "method": "POST",
+   "path": "/api/care-management/v2/intake-contexts",
+   "summary": "人のログインと現在の本人・事業所で共通取り込みを開く",
+   "tags": [
+    "共通資料取り込み・計画準備"
+   ],
+   "auth": "session",
+   "scope": "care-documents:write",
+   "params": [
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "現在の作業事業所"
+    },
+    {
+     "name": "serviceDomain",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "受領側のサービス"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "未同定の受領では省略できます。架空IDを要求しません。"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": true,
+   "hasResponseSchema": true,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "58d41fadb8f3"
+  },
+  {
    "id": "get_api_care_management_v2_persons_id_assessment",
    "ns": "app",
    "group": "careManagement",
@@ -10230,6 +10282,300 @@
    "sig": "21b37483f004"
   },
   {
+   "id": "get_api_care_management_v2_service_plan_preparations",
+   "ns": "app",
+   "group": "careManagement",
+   "name": "getV2ServicePlanPreparations",
+   "method": "GET",
+   "path": "/api/care-management/v2/service-plan-preparations",
+   "summary": "現在の本人・事業所の計画準備を読み取りだけで再開",
+   "tags": [
+    "共通資料取り込み・計画準備"
+   ],
+   "auth": "both",
+   "scope": "care-documents:read",
+   "params": [
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "現在の作業事業所"
+    },
+    {
+     "name": "serviceDomain",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "受領側のサービス"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "未同定の受領では省略できます。架空IDを要求しません。"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": true,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "5a1e98778c74"
+  },
+  {
+   "id": "post_api_care_management_v2_service_plan_preparations",
+   "ns": "session",
+   "group": "careManagement",
+   "name": "postV2ServicePlanPreparations",
+   "method": "POST",
+   "path": "/api/care-management/v2/service-plan-preparations",
+   "summary": "正式承認済みの評価版を引き継いで計画準備を起票",
+   "tags": [
+    "共通資料取り込み・計画準備"
+   ],
+   "auth": "session",
+   "scope": "care-documents:write",
+   "params": [
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "現在の作業事業所"
+    },
+    {
+     "name": "serviceDomain",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "受領側のサービス"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "未同定の受領では省略できます。架空IDを要求しません。"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": true,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "5b97884b8abe"
+  },
+  {
+   "id": "get_api_care_management_v2_service_plan_preparations_id",
+   "ns": "app",
+   "group": "careManagement",
+   "name": "getV2ServicePlanPreparationsById",
+   "method": "GET",
+   "path": "/api/care-management/v2/service-plan-preparations/{id}",
+   "summary": "根拠・必要入力・実際に保存された計画案を確認",
+   "tags": [
+    "共通資料取り込み・計画準備"
+   ],
+   "auth": "both",
+   "scope": "care-documents:read",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "現在の作業事業所"
+    },
+    {
+     "name": "serviceDomain",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "受領側のサービス"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "未同定の受領では省略できます。架空IDを要求しません。"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": true,
+   "hasResponseSchema": true,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "9012c249d520"
+  },
+  {
+   "id": "get_api_care_management_v2_service_plan_preparations_id_consultation_seed",
+   "ns": "app",
+   "group": "careManagement",
+   "name": "getV2ServicePlanPreparationsByIdConsultationSeed",
+   "method": "GET",
+   "path": "/api/care-management/v2/service-plan-preparations/{id}/consultation-seed",
+   "summary": "承認済み評価と計画根拠から相談案を取得",
+   "tags": [
+    "共通資料取り込み・計画準備"
+   ],
+   "auth": "both",
+   "scope": "care-documents:read",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "現在の作業事業所"
+    },
+    {
+     "name": "serviceDomain",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "受領側のサービス"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "未同定の受領では省略できます。架空IDを要求しません。"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": true,
+   "hasResponseSchema": true,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "2949655b521a"
+  },
+  {
+   "id": "post_api_care_management_v2_service_plan_preparations_id_no_change",
+   "ns": "session",
+   "group": "careManagement",
+   "name": "postV2ServicePlanPreparationsByIdNoChange",
+   "method": "POST",
+   "path": "/api/care-management/v2/service-plan-preparations/{id}/no-change",
+   "summary": "評価版と現計画版に対する計画変更不要の判断を保存",
+   "tags": [
+    "共通資料取り込み・計画準備"
+   ],
+   "auth": "session",
+   "scope": "care-documents:write",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "現在の作業事業所"
+    },
+    {
+     "name": "serviceDomain",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "受領側のサービス"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "未同定の受領では省略できます。架空IDを要求しません。"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": true,
+   "hasResponseSchema": true,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "d619e6f004e1"
+  },
+  {
+   "id": "post_api_care_management_v2_service_plan_preparations_id_refresh",
+   "ns": "session",
+   "group": "careManagement",
+   "name": "postV2ServicePlanPreparationsByIdRefresh",
+   "method": "POST",
+   "path": "/api/care-management/v2/service-plan-preparations/{id}/refresh",
+   "summary": "旧根拠を保持し次の計画準備世代を作る",
+   "tags": [
+    "共通資料取り込み・計画準備"
+   ],
+   "auth": "session",
+   "scope": "care-documents:write",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "現在の作業事業所"
+    },
+    {
+     "name": "serviceDomain",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "受領側のサービス"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "未同定の受領では省略できます。架空IDを要求しません。"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": true,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "731196d2e975"
+  },
+  {
    "id": "get_api_care_management_v2_shared_sources_kind_id",
    "ns": "app",
    "group": "careManagement",
@@ -10510,22 +10856,23 @@
     {
      "name": "facilityId",
      "in": "query",
-     "required": false,
+     "required": true,
      "type": "string",
-     "description": "対象事業所。これまたは X-Cpos-Facility-Id が必須で、認証で許可された事業所と一致すること。"
+     "description": "現在の作業事業所"
     },
     {
      "name": "masterUserId",
      "in": "query",
      "required": false,
      "type": "string",
-     "description": "本人の不変 ID。番号だけで別人へ候補を移さない。"
+     "description": "本人未確定の場合は省略できます。"
     },
     {
      "name": "serviceDomain",
      "in": "query",
-     "required": false,
-     "type": "string"
+     "required": true,
+     "type": "string",
+     "description": "受領側のサービス"
     },
     {
      "name": "cursor",
@@ -10540,16 +10887,125 @@
      "required": false,
      "type": "integer",
      "description": "1〜20 件。既定 10 件。"
+    },
+    {
+     "name": "contextId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "操作を開始した人・権限・期限に束縛する共通context"
     }
    ],
    "hasBody": false,
    "bodyRequired": false,
-   "facilityRequired": false,
+   "facilityRequired": true,
    "hasResponseSchema": true,
    "fake": false,
    "fakeBody": false,
    "mcp": null,
-   "sig": "aa61cde129ac"
+   "sig": "0f3c1bc3b4ab"
+  },
+  {
+   "id": "get_api_care_management_v2_sources_extraction_jobs_id",
+   "ns": "app",
+   "group": "careManagement",
+   "name": "getV2SourcesExtractionJobsById",
+   "method": "GET",
+   "path": "/api/care-management/v2/sources/extraction-jobs/{id}",
+   "summary": "永続読み取り処理の状態・未処理範囲を確認",
+   "tags": [
+    "共通資料取り込み・計画準備"
+   ],
+   "auth": "both",
+   "scope": "care-documents:read",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "現在の作業事業所"
+    },
+    {
+     "name": "serviceDomain",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "受領側のサービス"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "未同定の受領では省略できます。架空IDを要求しません。"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": true,
+   "hasResponseSchema": true,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "83532407e0d6"
+  },
+  {
+   "id": "post_api_care_management_v2_sources_extraction_jobs_id_retry",
+   "ns": "session",
+   "group": "careManagement",
+   "name": "postV2SourcesExtractionJobsByIdRetry",
+   "method": "POST",
+   "path": "/api/care-management/v2/sources/extraction-jobs/{id}/retry",
+   "summary": "現在の処理版を確認して同じ資料を再試行",
+   "tags": [
+    "共通資料取り込み・計画準備"
+   ],
+   "auth": "session",
+   "scope": "care-documents:write",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "現在の作業事業所"
+    },
+    {
+     "name": "serviceDomain",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "受領側のサービス"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "未同定の受領では省略できます。架空IDを要求しません。"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": true,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "761117c7e398"
   },
   {
    "id": "post_api_care_management_v2_sources_receipts",
@@ -10564,15 +11020,425 @@
    ],
    "auth": "both",
    "scope": "care-documents:write",
-   "params": [],
+   "params": [
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "現在の作業事業所"
+    },
+    {
+     "name": "serviceDomain",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "受領側のサービス"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "本人未確定の場合は省略できます。"
+    },
+    {
+     "name": "contextId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "操作を開始した人・権限・期限に束縛する共通context"
+    }
+   ],
    "hasBody": true,
    "bodyRequired": true,
-   "facilityRequired": false,
+   "facilityRequired": true,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "9a02de06536f"
+  },
+  {
+   "id": "get_api_care_management_v2_sources_receipts_id",
+   "ns": "app",
+   "group": "careManagement",
+   "name": "getV2SourcesReceiptsById",
+   "method": "GET",
+   "path": "/api/care-management/v2/sources/receipts/{id}",
+   "summary": "現在の閲覧範囲にある受領資料と版を取得",
+   "tags": [
+    "共通資料取り込み・計画準備"
+   ],
+   "auth": "both",
+   "scope": "care-documents:read",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "現在の作業事業所"
+    },
+    {
+     "name": "serviceDomain",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "受領側のサービス"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "未同定の受領では省略できます。架空IDを要求しません。"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": true,
    "hasResponseSchema": true,
    "fake": false,
    "fakeBody": false,
    "mcp": null,
-   "sig": "4923dcdb6121"
+   "sig": "2029490a16e2"
+  },
+  {
+   "id": "post_api_care_management_v2_sources_receipts_id_comparisons",
+   "ns": "session",
+   "group": "careManagement",
+   "name": "postV2SourcesReceiptsByIdComparisons",
+   "method": "POST",
+   "path": "/api/care-management/v2/sources/receipts/{id}/comparisons",
+   "summary": "外部原本・現在評価・作業評価・観察を固定根拠で比較",
+   "tags": [
+    "共通資料取り込み・計画準備"
+   ],
+   "auth": "session",
+   "scope": "care-documents:write",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "現在の作業事業所"
+    },
+    {
+     "name": "serviceDomain",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "受領側のサービス"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "未同定の受領では省略できます。架空IDを要求しません。"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": true,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "8d224eadc454"
+  },
+  {
+   "id": "get_api_care_management_v2_sources_receipts_id_comparisons_comparisonId",
+   "ns": "app",
+   "group": "careManagement",
+   "name": "getV2SourcesReceiptsByIdComparisonsByComparisonId",
+   "method": "GET",
+   "path": "/api/care-management/v2/sources/receipts/{id}/comparisons/{comparisonId}",
+   "summary": "版付き比較と消えない判断履歴を取得",
+   "tags": [
+    "共通資料取り込み・計画準備"
+   ],
+   "auth": "both",
+   "scope": "care-documents:read",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "comparisonId",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "現在の作業事業所"
+    },
+    {
+     "name": "serviceDomain",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "受領側のサービス"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "未同定の受領では省略できます。架空IDを要求しません。"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": true,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "70eade1f602b"
+  },
+  {
+   "id": "get_api_care_management_v2_sources_receipts_id_comparisons_comparisonId_consultation_seed",
+   "ns": "app",
+   "group": "careManagement",
+   "name": "getV2SourcesReceiptsByIdComparisonsByComparisonIdConsultationSeed",
+   "method": "GET",
+   "path": "/api/care-management/v2/sources/receipts/{id}/comparisons/{comparisonId}/consultation-seed",
+   "summary": "比較の固定根拠からケアマネへの相談案を取得",
+   "tags": [
+    "共通資料取り込み・計画準備"
+   ],
+   "auth": "both",
+   "scope": "care-documents:read",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "comparisonId",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "現在の作業事業所"
+    },
+    {
+     "name": "serviceDomain",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "受領側のサービス"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "未同定の受領では省略できます。架空IDを要求しません。"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": true,
+   "hasResponseSchema": true,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "a6ca7401888b"
+  },
+  {
+   "id": "post_api_care_management_v2_sources_receipts_id_comparisons_comparisonId_decisions",
+   "ns": "session",
+   "group": "careManagement",
+   "name": "postV2SourcesReceiptsByIdComparisonsByComparisonIdDecisions",
+   "method": "POST",
+   "path": "/api/care-management/v2/sources/receipts/{id}/comparisons/{comparisonId}/decisions",
+   "summary": "比較に対する人の判断を履歴として保存",
+   "tags": [
+    "共通資料取り込み・計画準備"
+   ],
+   "auth": "session",
+   "scope": "care-documents:write",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "comparisonId",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "現在の作業事業所"
+    },
+    {
+     "name": "serviceDomain",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "受領側のサービス"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "未同定の受領では省略できます。架空IDを要求しません。"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": true,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "5f3a3aacb549"
+  },
+  {
+   "id": "post_api_care_management_v2_sources_receipts_id_extractions",
+   "ns": "session",
+   "group": "careManagement",
+   "name": "postV2SourcesReceiptsByIdExtractions",
+   "method": "POST",
+   "path": "/api/care-management/v2/sources/receipts/{id}/extractions",
+   "summary": "確認済み結果を保持したまま再読み取りを起票",
+   "tags": [
+    "共通資料取り込み・計画準備"
+   ],
+   "auth": "session",
+   "scope": "care-documents:write",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "現在の作業事業所"
+    },
+    {
+     "name": "serviceDomain",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "受領側のサービス"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "未同定の受領では省略できます。架空IDを要求しません。"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": true,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "022f13d7ea31"
+  },
+  {
+   "id": "get_api_care_management_v2_sources_receipts_id_extractions_extractionId",
+   "ns": "app",
+   "group": "careManagement",
+   "name": "getV2SourcesReceiptsByIdExtractionsByExtractionId",
+   "method": "GET",
+   "path": "/api/care-management/v2/sources/receipts/{id}/extractions/{extractionId}",
+   "summary": "その原本範囲で閲覧できる不変の読み取り結果を取得",
+   "tags": [
+    "共通資料取り込み・計画準備"
+   ],
+   "auth": "both",
+   "scope": "care-documents:read",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "extractionId",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "現在の作業事業所"
+    },
+    {
+     "name": "serviceDomain",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "受領側のサービス"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "未同定の受領では省略できます。架空IDを要求しません。"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": true,
+   "hasResponseSchema": true,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "a81eeae86810"
   },
   {
    "id": "post_api_care_management_v2_sources_receipts_id_local_draft",
@@ -10597,19 +11463,91 @@
     {
      "name": "facilityId",
      "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "現在の作業事業所"
+    },
+    {
+     "name": "serviceDomain",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "受領側のサービス"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
      "required": false,
      "type": "string",
-     "description": "対象事業所。これまたは X-Cpos-Facility-Id が必須で、認証で許可された事業所と一致すること。"
+     "description": "本人未確定の場合は省略できます。"
+    },
+    {
+     "name": "contextId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "操作を開始した人・権限・期限に束縛する共通context"
     }
    ],
    "hasBody": true,
    "bodyRequired": true,
-   "facilityRequired": false,
+   "facilityRequired": true,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "2d132aa40b88"
+  },
+  {
+   "id": "post_api_care_management_v2_sources_receipts_id_manual_extractions",
+   "ns": "session",
+   "group": "careManagement",
+   "name": "postV2SourcesReceiptsByIdManualExtractions",
+   "method": "POST",
+   "path": "/api/care-management/v2/sources/receipts/{id}/manual-extractions",
+   "summary": "原本からの手入力を不変の読み取り結果として保存",
+   "tags": [
+    "共通資料取り込み・計画準備"
+   ],
+   "auth": "session",
+   "scope": "care-documents:write",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "現在の作業事業所"
+    },
+    {
+     "name": "serviceDomain",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "受領側のサービス"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "未同定の受領では省略できます。架空IDを要求しません。"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": true,
    "hasResponseSchema": true,
    "fake": false,
    "fakeBody": false,
    "mcp": null,
-   "sig": "b5882a63c879"
+   "sig": "88530978039d"
   },
   {
    "id": "get_api_care_management_v2_sources_receipts_id_original",
@@ -10634,19 +11572,244 @@
     {
      "name": "facilityId",
      "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "現在の作業事業所"
+    },
+    {
+     "name": "serviceDomain",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "受領側のサービス"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
      "required": false,
      "type": "string",
-     "description": "対象事業所。これまたは X-Cpos-Facility-Id が必須で、認証で許可された事業所と一致すること。"
+     "description": "本人未確定の場合は省略できます。"
+    },
+    {
+     "name": "contextId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "操作を開始した人・権限・期限に束縛する共通context"
     }
    ],
    "hasBody": false,
    "bodyRequired": false,
-   "facilityRequired": false,
+   "facilityRequired": true,
    "hasResponseSchema": true,
    "fake": false,
    "fakeBody": false,
    "mcp": null,
-   "sig": "fcf189bbe31c"
+   "sig": "57a100d16a59"
+  },
+  {
+   "id": "post_api_care_management_v2_sources_receipts_id_profile_proposals",
+   "ns": "session",
+   "group": "careManagement",
+   "name": "postV2SourcesReceiptsByIdProfileProposals",
+   "method": "POST",
+   "path": "/api/care-management/v2/sources/receipts/{id}/profile-proposals",
+   "summary": "確認済み項目から許可された基本情報の変更候補を作る",
+   "tags": [
+    "共通資料取り込み・計画準備"
+   ],
+   "auth": "session",
+   "scope": "care-documents:write",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "現在の作業事業所"
+    },
+    {
+     "name": "serviceDomain",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "受領側のサービス"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "未同定の受領では省略できます。架空IDを要求しません。"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": true,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "31e2b2dcda1a"
+  },
+  {
+   "id": "post_api_care_management_v2_sources_receipts_id_received_care_plan",
+   "ns": "session",
+   "group": "careManagement",
+   "name": "postV2SourcesReceiptsByIdReceivedCarePlan",
+   "method": "POST",
+   "path": "/api/care-management/v2/sources/receipts/{id}/received-care-plan",
+   "summary": "職員が確認した受領ケアプランを原本の版付きで登録",
+   "tags": [
+    "共通資料取り込み・計画準備"
+   ],
+   "auth": "session",
+   "scope": "care-documents:write",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "現在の作業事業所"
+    },
+    {
+     "name": "serviceDomain",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "受領側のサービス"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "未同定の受領では省略できます。架空IDを要求しません。"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": true,
+   "hasResponseSchema": true,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "f1daf7316432"
+  },
+  {
+   "id": "post_api_care_management_v2_sources_receipts_id_split",
+   "ns": "session",
+   "group": "careManagement",
+   "name": "postV2SourcesReceiptsByIdSplit",
+   "method": "POST",
+   "path": "/api/care-management/v2/sources/receipts/{id}/split",
+   "summary": "複数本人の資料を原本範囲別の子受領へ分ける",
+   "tags": [
+    "共通資料取り込み・計画準備"
+   ],
+   "auth": "session",
+   "scope": "care-documents:write",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "現在の作業事業所"
+    },
+    {
+     "name": "serviceDomain",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "受領側のサービス"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "未同定の受領では省略できます。架空IDを要求しません。"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": true,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "be17db0c5f6f"
+  },
+  {
+   "id": "post_api_care_management_v2_sources_receipts_id_subject",
+   "ns": "session",
+   "group": "careManagement",
+   "name": "postV2SourcesReceiptsByIdSubject",
+   "method": "POST",
+   "path": "/api/care-management/v2/sources/receipts/{id}/subject",
+   "summary": "職員が原本の範囲と対象本人を確認",
+   "tags": [
+    "共通資料取り込み・計画準備"
+   ],
+   "auth": "session",
+   "scope": "care-documents:write",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "現在の作業事業所"
+    },
+    {
+     "name": "serviceDomain",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "受領側のサービス"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "未同定の受領では省略できます。架空IDを要求しません。"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": true,
+   "hasResponseSchema": true,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "0004d765d67b"
   },
   {
    "id": "post_api_care_management_v2_sources_receipts_id_verify",
@@ -10671,19 +11834,40 @@
     {
      "name": "facilityId",
      "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "現在の作業事業所"
+    },
+    {
+     "name": "serviceDomain",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "受領側のサービス"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
      "required": false,
      "type": "string",
-     "description": "対象事業所。これまたは X-Cpos-Facility-Id が必須で、認証で許可された事業所と一致すること。"
+     "description": "本人未確定の場合は省略できます。"
+    },
+    {
+     "name": "contextId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "操作を開始した人・権限・期限に束縛する共通context"
     }
    ],
    "hasBody": true,
    "bodyRequired": true,
-   "facilityRequired": false,
+   "facilityRequired": true,
    "hasResponseSchema": true,
    "fake": false,
    "fakeBody": false,
    "mcp": null,
-   "sig": "6f1e1762c577"
+   "sig": "e3cd884b3706"
   },
   {
    "id": "post_api_care_management_v2_sources_receipts_id_withdraw",
@@ -10708,19 +11892,40 @@
     {
      "name": "facilityId",
      "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "現在の作業事業所"
+    },
+    {
+     "name": "serviceDomain",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "受領側のサービス"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
      "required": false,
      "type": "string",
-     "description": "対象事業所。これまたは X-Cpos-Facility-Id が必須で、認証で許可された事業所と一致すること。"
+     "description": "本人未確定の場合は省略できます。"
+    },
+    {
+     "name": "contextId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "操作を開始した人・権限・期限に束縛する共通context"
     }
    ],
    "hasBody": true,
    "bodyRequired": true,
-   "facilityRequired": false,
+   "facilityRequired": true,
    "hasResponseSchema": true,
    "fake": false,
    "fakeBody": false,
    "mcp": null,
-   "sig": "6744fa312813"
+   "sig": "b6c408bf6c0a"
   },
   {
    "id": "post_api_care_management_v2_sources_receipts_upload",
@@ -10735,15 +11940,44 @@
    ],
    "auth": "both",
    "scope": "care-documents:write",
-   "params": [],
+   "params": [
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "現在の作業事業所"
+    },
+    {
+     "name": "serviceDomain",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "受領側のサービス"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "本人未確定の場合は省略できます。"
+    },
+    {
+     "name": "contextId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "操作を開始した人・権限・期限に束縛する共通context"
+    }
+   ],
    "hasBody": true,
    "bodyRequired": true,
-   "facilityRequired": false,
-   "hasResponseSchema": true,
+   "facilityRequired": true,
+   "hasResponseSchema": false,
    "fake": false,
    "fakeBody": false,
    "mcp": null,
-   "sig": "17345c669697"
+   "sig": "d11d08a3005c"
   },
   {
    "id": "post_api_care_management_v2_targets_id_approvals",
@@ -21587,13 +22821,13 @@
     }
    ],
    "hasBody": true,
-   "bodyRequired": false,
+   "bodyRequired": true,
    "facilityRequired": false,
    "hasResponseSchema": false,
    "fake": false,
    "fakeBody": false,
    "mcp": null,
-   "sig": "013c3dce1de5"
+   "sig": "9119af63b1ac"
   },
   {
    "id": "post_api_field_proposals_id_edit_and_approve",
@@ -21617,13 +22851,13 @@
     }
    ],
    "hasBody": true,
-   "bodyRequired": false,
+   "bodyRequired": true,
    "facilityRequired": false,
    "hasResponseSchema": false,
    "fake": false,
    "fakeBody": false,
    "mcp": null,
-   "sig": "8a450a749525"
+   "sig": "32934312d191"
   },
   {
    "id": "post_api_field_proposals_id_reject",
@@ -41977,6 +43211,54 @@
    "fakeBody": false,
    "mcp": null,
    "sig": "398df2b94ddc"
+  },
+  {
+   "id": "post_api_triggers_tasks_service_plan_preparation_due",
+   "ns": "app",
+   "group": "triggers",
+   "name": "postTasksServicePlanPreparationDue",
+   "method": "POST",
+   "path": "/api/triggers/tasks/service-plan-preparation-due",
+   "summary": "承認した評価からサービス計画の下書きを準備する",
+   "tags": [
+    "トリガー",
+    "共通資料取り込み・計画準備"
+   ],
+   "auth": "none",
+   "scope": null,
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "995e2799051a"
+  },
+  {
+   "id": "post_api_triggers_tasks_source_extraction_due",
+   "ns": "app",
+   "group": "triggers",
+   "name": "postTasksSourceExtractionDue",
+   "method": "POST",
+   "path": "/api/triggers/tasks/source-extraction-due",
+   "summary": "共通取り込みの永続読み取りジョブを進める",
+   "tags": [
+    "トリガー",
+    "共通資料取り込み・計画準備"
+   ],
+   "auth": "none",
+   "scope": null,
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": true,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "367afd42ec90"
   },
   {
    "id": "get_api_user_detail",

@@ -5,6 +5,15 @@ v1 の間は API の削除をしない (deprecated の印だけ)。
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-10-12
+
+### Added
+- CPOS の API の追加に追随 (23 operation): 共有の受付とサービス計画の準備 (`cpos.app.careManagement.*` / `cpos.session.careManagement.*` の `getV2ServicePlanPreparations*` / `postV2ServicePlanPreparations*` / `postV2IntakeContexts`)。受領資料の抽出・照合・判断・分割・対象者の確定・相談の種 (`postV2SourcesReceiptsById*`、`getV2SourcesExtractionJobsById`)。定時実行の起動口 `cpos.app.triggers.postTasksServicePlanPreparationDue` / `postTasksSourceExtractionDue`。人の判断を伴う操作は職員のログイン (`cpos.session.*`) が必要。
+- 受領資料まわりの既存 operation (`getV2Sources`、`postV2SourcesReceipts` と upload・verify・withdraw・local-draft・original、`careDocuments.getV1ById`、`fieldProposals` の承認 2 件) は引数が増えた。
+
+### 既存アプリで手が要る
+- 書類取り込み (`care-plan-import` の preview / commit)・提案の承認 (`field-proposals` の approve / edit-and-approve)・アプリ間起動 (`app-invocations`) の契約が変わった。取り込みはサービス種別の指定が必須で、原本の保管だけを行い、上限も下がった。確認済み資料付きの提案の承認は `clientOpId` と `expectedTargetRevision` が必須。起動の `targetAppId` は実登録 ID を使う。これらを呼んでいるアプリは見直すこと。
+
 ## [0.7.0] - 2026-10-10
 
 ### Added

@@ -1,9 +1,9 @@
 {
  "generatedFrom": {
   "version": "0.1.0",
-  "revision": "main@68cfcee5",
-  "fetchedAt": "2026-10-10",
-  "operations": 1571
+  "revision": "main@cf73b8fd",
+  "fetchedAt": "2026-10-12",
+  "operations": 1594
  },
  "note": "CPOS が知る全スコープ (OpenAPI の oauth2 scopes) と、それを要求する operation の数。{appId} を含むものは雛形 (appId を入れて使う)。生成物。手で編集しない",
  "scopes": [
@@ -433,7 +433,7 @@
    "template": false,
    "known": true,
    "adminOnly": false,
-   "operations": 37,
+   "operations": 45,
    "ns": [
     "app"
    ],
@@ -448,9 +448,10 @@
    "template": false,
    "known": true,
    "adminOnly": false,
-   "operations": 31,
+   "operations": 44,
    "ns": [
-    "app"
+    "app",
+    "session"
    ],
    "examples": [
     "POST /api/care-documents/v1",
