@@ -1,9 +1,9 @@
 {
  "generatedFrom": {
   "version": "0.1.0",
-  "revision": "main@cf73b8fd",
+  "revision": "main@cebce115",
   "fetchedAt": "2026-10-12",
-  "operations": 1594
+  "operations": 1596
  },
  "note": "client が実行時に読む operation の表。kit の保守者が生成器 (gen-api) で spec/cpos-openapi.json から作る。手で編集しない",
  "operations": [
@@ -11331,6 +11331,63 @@
    "fakeBody": false,
    "mcp": null,
    "sig": "5f3a3aacb549"
+  },
+  {
+   "id": "post_api_care_management_v2_sources_receipts_id_comparisons_comparisonId_explanations",
+   "ns": "session",
+   "group": "careManagement",
+   "name": "postV2SourcesReceiptsByIdComparisonsByComparisonIdExplanations",
+   "method": "POST",
+   "path": "/api/care-management/v2/sources/receipts/{id}/comparisons/{comparisonId}/explanations",
+   "summary": "比較の違いについてAIの説明案（下書き）を作る。結果は常に状態として返す",
+   "tags": [
+    "共通資料取り込み・計画準備"
+   ],
+   "auth": "session",
+   "scope": "care-documents:write",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "comparisonId",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "現在の作業事業所"
+    },
+    {
+     "name": "serviceDomain",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "受領側のサービス"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "未同定の受領では省略できます。架空IDを要求しません。"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": true,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "c0c262792a6c"
   },
   {
    "id": "post_api_care_management_v2_sources_receipts_id_extractions",
@@ -28598,6 +28655,29 @@
     ]
    },
    "sig": "5794cb72cc17"
+  },
+  {
+   "id": "get_api_operations_ai_status",
+   "ns": "session",
+   "group": "operations",
+   "name": "getAiStatus",
+   "method": "GET",
+   "path": "/api/operations/ai-status",
+   "summary": "運用診断: AI の稼働状況 (admin 限定・読み取りだけ)",
+   "tags": [
+    "運用診断"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "5cd6a4eb1490"
   },
   {
    "id": "get_api_operations_backup_status",

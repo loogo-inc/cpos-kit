@@ -4,13 +4,13 @@
   "title": "CPOS (Care Planning OS) API",
   "version": "0.1.0",
   "description": "CPOS の HTTP API (公式 OpenAPI の写し)。kit の client はこれから生成する。",
-  "x-cpos-revision": "main@cf73b8fd"
+  "x-cpos-revision": "main@cebce115"
  },
  "x-cpos-kit": {
   "version": "0.1.0",
-  "revision": "main@cf73b8fd",
+  "revision": "main@cebce115",
   "fetchedAt": "2026-10-12",
-  "operations": 1594,
+  "operations": 1596,
   "note": "公式 OpenAPI の写し。内部情報 (x-cpos-source 等) を落としてある。kit の保守者が生成器 (gen-api) で作る。手で編集しない"
  },
  "paths": {
@@ -20285,6 +20285,38 @@
     "x-cpos-scope": null
    }
   },
+  "/api/operations/ai-status": {
+   "get": {
+    "operationId": "get_api_operations_ai_status",
+    "summary": "運用診断: AI の稼働状況 (admin 限定・読み取りだけ)",
+    "tags": [
+     "運用診断"
+    ],
+    "parameters": [],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     }
+    },
+    "security": [
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "session",
+    "x-cpos-scope": null,
+    "description": "資料の読み取り (CPOS が Gemini を呼ぶ) と、日々の記録からの評価の更新候補 (CPOS が AIケアプランを呼ぶ) について、設定の有無、最後の成功・失敗の時刻と符号、定期処理の最終実行を返す。キー・接続先 URL・署名鍵の値、利用者・資料の内容は返さない。"
+   }
+  },
   "/api/mapping-profiles": {
    "get": {
     "operationId": "get_api_mapping_profiles",
@@ -25233,7 +25265,7 @@
     ],
     "responses": {
      "200": {
-      "description": "従来: { proposal, history, foldedExtras }。確認済み資料付き: { proposal, history, operationId, targetRevision, outboxId, foldedExtras }。対象更新・採用状態・根拠付き履歴・後続通知を同一トランザクションで保存します。"
+      "description": "従来: { proposal, history, foldedExtras }。確認済み資料付き: { proposal, history, operationId, targetRevision, outboxId, foldedExtras }。対象更新・採用状態・根拠付き履歴・後続通知を同一トランザクションで保存します。書くのは対象の項目 (期間の履歴は今有効な期間から決まる値も) だけです。"
      },
      "400": {
       "description": "fieldPath が不正 (code=field_path_not_allowed) など"
@@ -25248,7 +25280,7 @@
       "description": "提案が無い・範囲外 / 反映先のレコードが無い・読めない"
      },
      "409": {
-      "description": "処理済みの提案 / 今の値が oldValue と違う (current) / 分離済みアプリ (code=app_isolated)"
+      "description": "処理済みの提案 / 今の値が oldValue と違う (current) / 分離済みアプリ (code=app_isolated)。確認済み資料付きの提案は項目ごとに判定します: 送られた版が提案の版と違う、またはその項目の今の値が提案を作ったときと違うときだけ code=PROFILE_REVISION_CONFLICT と current・currentRevisionRefs.profile を返します。同じ利用者の別の項目が間に変わっても競合にしません。"
      }
     },
     "security": [
@@ -25265,7 +25297,7 @@
       "application/json": {
        "schema": {
         "type": "object",
-        "description": "確認済み資料からサーバが作成した sourceEvidence 付き提案では clientOpId と expectedTargetRevision が必須です。従来の提案には旧契約を維持します。",
+        "description": "確認済み資料からサーバが作成した sourceEvidence 付き提案では clientOpId と expectedTargetRevision (提案の版。提案を作った・比べ直したときの利用者マスタの updatedAt) が必須です。従来の提案には旧契約を維持します。",
         "properties": {
          "clientOpId": {
           "type": "string",
@@ -25353,7 +25385,7 @@
     ],
     "responses": {
      "200": {
-      "description": "従来: { proposal, history, foldedExtras }。確認済み資料付き: { proposal, history, operationId, targetRevision, outboxId, foldedExtras }。409 は current と currentRevisionRefs.profile を返し、入力を保持して比較できます。同一操作ID・同一本文は保存済み結果を返します。"
+      "description": "従来: { proposal, history, foldedExtras }。確認済み資料付き: { proposal, history, operationId, targetRevision, outboxId, foldedExtras }。409 は current と currentRevisionRefs.profile を返し、入力を保持して比較できます。同一操作ID・同一本文は保存済み結果を返します。競合は承認と同じく項目ごとに判定します。"
      },
      "400": {
       "description": "fieldPath が不正 (code=field_path_not_allowed) など"
@@ -37523,7 +37555,7 @@
     ],
     "x-cpos-auth": "bearer-or-session",
     "x-cpos-scope": "care-documents:write",
-    "description": "確定したご相談に `sent` / `response` / `note` / `closed` を 1 件足す (確定前は 409 `not-finalized`)。`sent`・`note`・`closed` は発信事業所だけ、`response` は発信事業所か CPOS 上の宛先事業所。`method: \"cpos\"` の送付は宛先を CPOS 上の事業所に解決できるときだけ (できなければ 409 `addressee-not-on-cpos`)。宛先は書類の事業所番号からは決めない。応答は `{ document, state }`。任意の `clientOpId` (第一トラック PR-D3): 同じ事業所が同じ値・同じ内容で送り直した記録は 1 件で、200 `{ document, state, idempotent: \"hit\" }` (書込み・通知・監査をしない)。同じ値で内容が違えば 409 `idempotency-conflict`。能力 careDocuments.correspondenceClientOpId。",
+    "description": "確定したご相談に `sent` / `response` / `note` / `closed` を 1 件足す (確定前は 409 `not-finalized`)。`sent`・`note`・`closed` は発信事業所だけ、`response` は発信事業所か CPOS 上の宛先事業所。`method: \"cpos\"` の送付は宛先を CPOS 上の事業所に解決できるときだけ (できなければ 409 `addressee-not-on-cpos`)。宛先は書類の事業所番号からは決めない。応答は `{ document, state }`。任意の `clientOpId` (第一トラック PR-D3): 同じ事業所が同じ値・同じ内容で送り直した記録は 1 件で、200 `{ document, state, idempotent: \"hit\" }` (書込み・通知・監査をしない)。同じ値で内容が違えば 409 `idempotency-conflict`。能力 careDocuments.correspondenceClientOpId。任意の `sourceReceiptId` (`response`・`note` だけ。発信事業所だけ): 回答の書類・写真を共通の取り込みで受けた受領を記録に結び付ける。同じ本人・同じ事業所とサービス・本人確認済み・取り下げていない受領で、記録する職員が読めるものだけ (ほかは 404)。記録には `sourceReceiptRef` が残り、発信事業所の読み取りにだけ載る。冪等の比較に含む。能力 careDocuments.correspondenceSourceReceipt。",
     "requestBody": {
      "required": true,
      "content": {
@@ -37552,6 +37584,10 @@
          "clientOpId": {
           "type": "string",
           "description": "任意 (1〜128 文字)。再送の冪等。記録に残る。不正な値は 400 invalid-data (field: clientOpId)"
+         },
+         "sourceReceiptId": {
+          "type": "string",
+          "description": "任意。回答の書類の受領 ID (kind response / note だけ。ほかの種類や不正な値は 400 invalid-data (field: sourceReceiptId))"
          }
         }
        }
@@ -45367,6 +45403,7 @@
     ],
     "x-cpos-auth": "session",
     "x-cpos-scope": "care-documents:write",
+    "description": "基本情報の登録項目 (semanticKey が profile.*) は、記載の対象 (subjectRole) を項目の定義から決めて保存します (担当ケアマネジャー・主治医などは staff、家族・緊急連絡先は family、本人の項目は subject)。送られた subjectRole は使いません。それ以外の項目は送られた subjectRole のまま保存します。同じ clientOpId の再送は送られた内容で照合します。",
     "requestBody": {
      "required": true,
      "content": {
@@ -45697,7 +45734,7 @@
     ],
     "x-cpos-auth": "bearer-or-session",
     "x-cpos-scope": "care-documents:write",
-    "description": "共通受領1.0。原本・抽出版・本人紐付け版・項目確認を区別し、旧一括確認から確認済み項目を推定しません。202は読み取り受付であり、評価や計画の完了ではありません。",
+    "description": "共通受領1.0。原本・抽出版・本人紐付け版・項目確認を区別し、旧一括確認から確認済み項目を推定しません。202は読み取り受付であり、評価や計画の完了ではありません。 受領資料は項目 (登録された定義の semanticKey) ごとに確認済みの内容を 1 つだけ持ちます。confirm・correct はその項目の他の確認 (以前の読み取り・別の ID のものも) を置き換え、置き換えた・除外した確認は receipt.supersededFieldRefs (古い順。新しいものから最大 100 件・約 256 KiB (UTF-8) で、受領資料全体が約 640 KiB に収まる分を残す。各要素は { ref, endedAt, endedBy, endReason: replaced|excluded, replacedBy? }) に残ります。exclude はその候補自身の確認を外し、同じ fieldId で同じ位置・同じ値 (訂正なし) の以前の読み取りの確認も外します (別の値・訂正した確認は残ります)。以前の確認を取り消す・訂正するときは、その確認の extractionRef を expectedExtractionRef にして exclude・correct を送ります。1 回の要求で同じ項目を 2 つ confirm・correct すると 422 FIELD_SLOT_AMBIGUOUS。現在の確認だけで受領資料が約 640 KiB を超える確認・訂正は 413 RECEIPT_TOO_LARGE (何も書かない。exclude・defer のように確認を増やさない操作は通る)。verificationState は受領資料の現在の読み取り (activeExtractionRef) に対して項目ごとに判定します。",
     "requestBody": {
      "required": true,
      "content": {
@@ -46165,6 +46202,7 @@
     ],
     "x-cpos-auth": "session",
     "x-cpos-scope": "care-documents:write",
+    "description": "作るか比べ直すかのどちらかです。候補の ID は受領資料・本人・項目・確認した根拠から決まり clientOpId に依りません。候補が無ければ pending で作り、項目が変わっていない pending は保存したまま、別の操作で項目が変わった pending はその場で今の値と版に合わせ (古い版での反映は 409)、反映済みは approved、却下・置き換え済みは rejected を返します。currentValue は常に今の値です。同じ clientOpId の再送は最初の答えを返します。以前の ID で残った同じ資料・本人・項目の pending 候補は superseded にします。手入力 (producer=manual) の項目は記載の対象を項目から決め、機械の読み取りは記載の対象が項目と合わないと 422 PROFILE_FIELD_NOT_ALLOWED です。同じ項目に確認済みの内容が複数ある選択は 409 FIELD_SLOT_DUPLICATE です。",
     "requestBody": {
      "required": true,
      "content": {
@@ -46631,6 +46669,163 @@
       "application/json": {
        "schema": {
         "$ref": "#/components/schemas/IntakeComparisonDecisionInput"
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/care-management/v2/sources/receipts/{id}/comparisons/{comparisonId}/explanations": {
+   "post": {
+    "operationId": "post_api_care_management_v2_sources_receipts_id_comparisons_comparisonId_explanations",
+    "summary": "比較の違いについてAIの説明案（下書き）を作る。結果は常に状態として返す",
+    "tags": [
+     "共通資料取り込み・計画準備"
+    ],
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "comparisonId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "facilityId",
+      "in": "query",
+      "required": true,
+      "description": "現在の作業事業所",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "serviceDomain",
+      "in": "query",
+      "required": true,
+      "description": "受領側のサービス",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "masterUserId",
+      "in": "query",
+      "required": false,
+      "description": "未同定の受領では省略できます。架空IDを要求しません。",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "比較の違いについてAIの説明案（下書き）を作る。結果は常に状態として返す"
+     },
+     "400": {
+      "description": "入力・権限・版・処理状態を確認してください。入力は保持して再開できます。",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/IntakeError"
+        }
+       }
+      }
+     },
+     "401": {
+      "description": "入力・権限・版・処理状態を確認してください。入力は保持して再開できます。",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/IntakeError"
+        }
+       }
+      }
+     },
+     "403": {
+      "description": "入力・権限・版・処理状態を確認してください。入力は保持して再開できます。",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/IntakeError"
+        }
+       }
+      }
+     },
+     "404": {
+      "description": "入力・権限・版・処理状態を確認してください。入力は保持して再開できます。",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/IntakeError"
+        }
+       }
+      }
+     },
+     "409": {
+      "description": "入力・権限・版・処理状態を確認してください。入力は保持して再開できます。",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/IntakeError"
+        }
+       }
+      }
+     },
+     "413": {
+      "description": "入力・権限・版・処理状態を確認してください。入力は保持して再開できます。",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/IntakeError"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "入力・権限・版・処理状態を確認してください。入力は保持して再開できます。",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/IntakeError"
+        }
+       }
+      }
+     },
+     "503": {
+      "description": "入力・権限・版・処理状態を確認してください。入力は保持して再開できます。",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/IntakeError"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "session",
+    "x-cpos-scope": "care-documents:write",
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": true
        }
       }
      }

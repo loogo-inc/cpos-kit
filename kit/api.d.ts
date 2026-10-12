@@ -1,5 +1,5 @@
 // 生成物。kit の保守者が生成器 (gen-api) で spec/cpos-openapi.json から作る。手で編集しない。
-// 生成元: CPOS OpenAPI 0.1.0 / revision main@cf73b8fd / 2026-10-12 / 1594 operations
+// 生成元: CPOS OpenAPI 0.1.0 / revision main@cebce115 / 2026-10-12 / 1596 operations
 
 export interface CposApi_app {
   alerts: {
@@ -3422,6 +3422,9 @@ export interface CposApi_session {
     /** 比較に対する人の判断を履歴として保存
      * POST /api/care-management/v2/sources/receipts/{id}/comparisons/{comparisonId}/decisions / scope care-documents:write / 認証 session / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV2SourcesReceiptsByIdComparisonsByComparisonIdDecisions(args: { id: string; comparisonId: string; facilityId: string; serviceDomain: string; masterUserId?: string; body: unknown }): Promise<unknown>;
+    /** 比較の違いについてAIの説明案（下書き）を作る。結果は常に状態として返す
+     * POST /api/care-management/v2/sources/receipts/{id}/comparisons/{comparisonId}/explanations / scope care-documents:write / 認証 session / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV2SourcesReceiptsByIdComparisonsByComparisonIdExplanations(args: { id: string; comparisonId: string; facilityId: string; serviceDomain: string; masterUserId?: string; body?: unknown }): Promise<unknown>;
     /** 確認済み結果を保持したまま再読み取りを起票
      * POST /api/care-management/v2/sources/receipts/{id}/extractions / scope care-documents:write / 認証 session / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV2SourcesReceiptsByIdExtractions(args: { id: string; facilityId: string; serviceDomain: string; masterUserId?: string; body: unknown }): Promise<unknown>;
@@ -4313,6 +4316,9 @@ export interface CposApi_session {
     postVisitNursingUser(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
   };
   operations: {
+    /** 運用診断: AI の稼働状況 (admin 限定・読み取りだけ)
+     * GET /api/operations/ai-status / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getAiStatus(args?: { facilityId?: string }): Promise<unknown>;
     /** 運用診断: backup-statusの取得 (backup-status)
      * GET /api/operations/backup-status / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     getBackupStatus(args?: { facilityId?: string }): Promise<unknown>;

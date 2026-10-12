@@ -5,6 +5,14 @@ v1 の間は API の削除をしない (deprecated の印だけ)。
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-10-12
+
+### Added
+- CPOS の API の追加に追随 (2 operation): 受領資料の比較の違いについて AI の説明案 (下書き) を作る `cpos.session.careManagement.postV2SourcesReceiptsByIdComparisonsByComparisonIdExplanations` (職員のログインが必要)、AI の稼働状況を見る `cpos.session.operations.getAiStatus` (管理者向け・読み取りだけ)。
+
+### Changed
+- 受領資料の確認 (verify) は、現在の確認だけで約 640 KiB を超えると `413 RECEIPT_TOO_LARGE` を返すことがある (除外・保留は通る)。同じ再読み取り値の以前の確認は、除外で取り消せるようになった。
+
 ## [0.8.0] - 2026-10-12
 
 ### Added
