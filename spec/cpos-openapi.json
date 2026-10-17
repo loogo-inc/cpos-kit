@@ -4,12 +4,12 @@
   "title": "CPOS (Care Planning OS) API",
   "version": "0.1.0",
   "description": "CPOS の HTTP API (公式 OpenAPI の写し)。kit の client はこれから生成する。",
-  "x-cpos-revision": "main@cebce115"
+  "x-cpos-revision": "main@a4f76346"
  },
  "x-cpos-kit": {
   "version": "0.1.0",
-  "revision": "main@cebce115",
-  "fetchedAt": "2026-10-12",
+  "revision": "main@a4f76346",
+  "fetchedAt": "2026-10-17",
   "operations": 1596,
   "note": "公式 OpenAPI の写し。内部情報 (x-cpos-source 等) を落としてある。kit の保守者が生成器 (gen-api) で作る。手で編集しない"
  },
