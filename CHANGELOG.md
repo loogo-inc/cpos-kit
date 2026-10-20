@@ -5,6 +5,16 @@ v1 の間は API の削除をしない (deprecated の印だけ)。
 
 ## [Unreleased]
 
+## [0.11.0] - 2026-10-20
+
+### Added
+- CPOS の API の追加に追随 (2 operation): サービス計画の項目ごとに原記録の根拠と不足を見る `careDocuments.getV1ByIdEvidenceCoverage`、日々の記録から確認が必要なサービス計画を取る `careDocuments.getV1ReviewQueue` (いずれも読み取りだけ)。
+- 既存の operation の引数が増えた: 記録一覧 `getRecords` (`masterUserId` ほか)、`getV1ReviewDrafts` / `getV2ReviewDrafts` (`targetId`)、`getV2SharedSourcesByKindById` (`nativeDocumentId` ほか)。
+
+### 既存アプリで手が要る
+- 記録一覧 (`getRecords`) を利用者の氏名だけで絞っているアプリは、`400 PERSON_REFERENCE_REQUIRED` になる。`masterUserId` (または保険者番号) で本人を指定すること。
+- `careDocuments.postV1ByIdDuplicateDraft` は `body` が必須になった。
+
 ## [0.10.0] - 2026-10-17
 
 ### 既存アプリで手が要る

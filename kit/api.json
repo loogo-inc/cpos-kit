@@ -1,9 +1,9 @@
 {
  "generatedFrom": {
   "version": "0.1.0",
-  "revision": "main@a4f76346",
-  "fetchedAt": "2026-10-17",
-  "operations": 1596
+  "revision": "main@c0d9b32e",
+  "fetchedAt": "2026-10-20",
+  "operations": 1598
  },
  "note": "client が実行時に読む operation の表。kit の保守者が生成器 (gen-api) で spec/cpos-openapi.json から作る。手で編集しない",
  "operations": [
@@ -8133,13 +8133,83 @@
     }
    ],
    "hasBody": true,
-   "bodyRequired": false,
+   "bodyRequired": true,
    "facilityRequired": false,
    "hasResponseSchema": false,
    "fake": false,
    "fakeBody": false,
    "mcp": null,
-   "sig": "ec023407ae8f"
+   "sig": "c7bd034f8e17"
+  },
+  {
+   "id": "get_api_care_documents_v1_id_evidence_coverage",
+   "ns": "app",
+   "group": "careDocuments",
+   "name": "getV1ByIdEvidenceCoverage",
+   "method": "GET",
+   "path": "/api/care-documents/v1/{id}/evidence-coverage",
+   "summary": "サービス計画の項目別に原記録の根拠と不足を表示",
+   "tags": [
+    "業務ドキュメント"
+   ],
+   "auth": "both",
+   "scope": "care-documents:read",
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "serviceDomain",
+     "in": "query",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "表示中の本人。保存された文書の本人と一致する必要がある"
+    },
+    {
+     "name": "expectedDocumentRevision",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "表示中の文書updatedAt（opaque）。異なる場合は409"
+    },
+    {
+     "name": "definitionKey",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "保存された様式の正確なkey。訪問看護・福祉用具の共通SDKでは必須。domainだけで様式を選ばない"
+    },
+    {
+     "name": "caseId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "福祉用具では必須。保存済み文書summary.weCaseIdの案件と一致すること"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": true,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "d73e801a9804"
   },
   {
    "id": "get_api_care_documents_v1_id_export_csv",
@@ -8987,6 +9057,81 @@
    "sig": "847fb4904d31"
   },
   {
+   "id": "get_api_care_documents_v1_review_queue",
+   "ns": "app",
+   "group": "careDocuments",
+   "name": "getV1ReviewQueue",
+   "method": "GET",
+   "path": "/api/care-documents/v1/review-queue",
+   "summary": "日々の記録から確認が必要なサービス計画を取得",
+   "tags": [
+    "業務ドキュメント"
+   ],
+   "auth": "both",
+   "scope": "care-documents:read",
+   "params": [
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "serviceDomain",
+     "in": "query",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "from",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "更新受領期間の初日 YYYY-MM-DD"
+    },
+    {
+     "name": "to",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "更新受領期間の末日 YYYY-MM-DD"
+    },
+    {
+     "name": "masterUserId",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    },
+    {
+     "name": "caseId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "福祉用具の案件で絞り込む場合の固定case ID。各item.nativeContext.caseIdを保持する"
+    },
+    {
+     "name": "cursor",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    },
+    {
+     "name": "limit",
+     "in": "query",
+     "required": false,
+     "type": "integer"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": true,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "25b052dd77fb"
+  },
+  {
    "id": "get_api_care_documents_v1_templates",
    "ns": "app",
    "group": "careDocuments",
@@ -9295,6 +9440,13 @@
      "required": false,
      "type": "integer",
      "description": "1〜20 件。既定 10 件。"
+    },
+    {
+     "name": "targetId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "指定した本人・事業所・サービスの既存targetに対する現在の候補だけを取得。系列headを直接参照し全件探索しない"
     }
    ],
    "hasBody": false,
@@ -9304,7 +9456,7 @@
    "fake": false,
    "fakeBody": false,
    "mcp": null,
-   "sig": "ff5dab6c6251"
+   "sig": "bd44b6429cbc"
   },
   {
    "id": "get_api_care_management_v1_review_drafts_id",
@@ -10159,6 +10311,13 @@
      "required": false,
      "type": "integer",
      "description": "1〜20 件。既定 10 件。"
+    },
+    {
+     "name": "targetId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "指定した本人・事業所・サービスの既存targetに対する現在の候補だけを取得。系列headを直接参照し全件探索しない"
     }
    ],
    "hasBody": false,
@@ -10168,7 +10327,7 @@
    "fake": false,
    "fakeBody": false,
    "mcp": null,
-   "sig": "3a0fbd89045f"
+   "sig": "88d07c46bccb"
   },
   {
    "id": "get_api_care_management_v2_review_drafts_id",
@@ -10628,6 +10787,34 @@
      "required": false,
      "type": "string",
      "description": "表示したsource revision。変わっている場合は本文を返さず409。"
+    },
+    {
+     "name": "nativeDocumentId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "福祉用具モニタリング原本の表示対象native計画ID。案件混在原本では固定contextが必須。"
+    },
+    {
+     "name": "nativeDocumentRevision",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "表示中のnative計画updatedAt opaque版。"
+    },
+    {
+     "name": "definitionKey",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "we-rental-plan又はwe-purchase-planの正確な保存key。"
+    },
+    {
+     "name": "caseId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "固定native案件ID。同TXで計画・案件・品目・契約行等を再検査し、該当行だけ返す。response.documentContextが一致する必要がある。"
     }
    ],
    "hasBody": false,
@@ -10637,7 +10824,7 @@
    "fake": false,
    "fakeBody": false,
    "mcp": null,
-   "sig": "12bfb99dea84"
+   "sig": "5c70f743f8c8"
   },
   {
    "id": "get_api_care_management_v2_shares",
@@ -33414,6 +33601,55 @@
    "scope": "care-records:read",
    "params": [
     {
+     "name": "masterUserId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "本人の不変 ID (mu_*)。番号のない新規利用者も本人の保存キーだけで読み、明示された別人の mu は返さない。本人不明は404、解決失敗・キー上限超過は503で施設全体の読みに戻らない。isUnclassified=trueとは併用不可"
+    },
+    {
+     "name": "insuredNumber",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "現番号・旧番号・仮番号。masterUserIdも指定した場合は番号で読んだ結果を本人のmuで絞る"
+    },
+    {
+     "name": "userName",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "本人の絞り込みには使わない。非空の氏名だけの照会 (masterUserId・非空insuredNumberなし) は400 PERSON_REFERENCE_REQUIRED。空の任意検索値・通常の施設一覧は従来どおり"
+    },
+    {
+     "name": "filter",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "日付範囲 (明示したfrom/toを優先)"
+    },
+    {
+     "name": "from",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "開始日 (YYYY-MM-DD)"
+    },
+    {
+     "name": "to",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "終了日 (YYYY-MM-DD)"
+    },
+    {
+     "name": "limit",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": "返却件数 (既定200)"
+    },
+    {
      "name": "includeVoided",
      "in": "query",
      "required": false,
@@ -33431,11 +33667,11 @@
    "hasBody": false,
    "bodyRequired": false,
    "facilityRequired": false,
-   "hasResponseSchema": false,
+   "hasResponseSchema": true,
    "fake": false,
    "fakeBody": false,
    "mcp": null,
-   "sig": "3125fe711ed4"
+   "sig": "bf9f8bbed11b"
   },
   {
    "id": "post_api_record_app_records",

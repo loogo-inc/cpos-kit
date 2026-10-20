@@ -4,13 +4,13 @@
   "title": "CPOS (Care Planning OS) API",
   "version": "0.1.0",
   "description": "CPOS の HTTP API (公式 OpenAPI の写し)。kit の client はこれから生成する。",
-  "x-cpos-revision": "main@a4f76346"
+  "x-cpos-revision": "main@c0d9b32e"
  },
  "x-cpos-kit": {
   "version": "0.1.0",
-  "revision": "main@a4f76346",
-  "fetchedAt": "2026-10-17",
-  "operations": 1596,
+  "revision": "main@c0d9b32e",
+  "fetchedAt": "2026-10-20",
+  "operations": 1598,
   "note": "公式 OpenAPI の写し。内部情報 (x-cpos-source 等) を落としてある。kit の保守者が生成器 (gen-api) で作る。手で編集しない"
  },
  "paths": {
@@ -37596,6 +37596,251 @@
     }
    }
   },
+  "/api/care-documents/v1/review-queue": {
+   "get": {
+    "operationId": "get_api_care_documents_v1_review_queue",
+    "summary": "日々の記録から確認が必要なサービス計画を取得",
+    "tags": [
+     "業務ドキュメント"
+    ],
+    "parameters": [
+     {
+      "name": "facilityId",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "serviceDomain",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "day-service",
+        "small-scale-multifunctional",
+        "home-visit-care",
+        "visit-nursing",
+        "welfare-equipment"
+       ]
+      }
+     },
+     {
+      "name": "from",
+      "in": "query",
+      "required": false,
+      "description": "更新受領期間の初日 YYYY-MM-DD",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "to",
+      "in": "query",
+      "required": false,
+      "description": "更新受領期間の末日 YYYY-MM-DD",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "masterUserId",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "caseId",
+      "in": "query",
+      "required": false,
+      "description": "福祉用具の案件で絞り込む場合の固定case ID。各item.nativeContext.caseIdを保持する",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "cursor",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "contractVersion, scope, authorizationRevision, period, generatedAt, items, nextCursor, coverage, limitations。itemsは文書ID/版、本人ID、タイトル、状態、実対象期間、確認理由、5状態の件数、最終根拠日時、既存targetId。原記録本文は含めない。タイトルに個人情報を含み得るため現在の閲覧権限で絞り込む。"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     },
+     "404": {
+      "description": "現在の施設・本人関係で閲覧できない対象"
+     },
+     "409": {
+      "description": "SCOPE/CURSORの競合。現在条件で先頭から再取得する"
+     },
+     "503": {
+      "description": "準備未完または読み取り不能。件数を0として補わない"
+     }
+    },
+    "security": [
+     {
+      "bearerToken": [
+       "care-documents:read"
+      ]
+     },
+     {
+      "oauth2": [
+       "care-documents:read"
+      ]
+     },
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "bearer-or-session",
+    "x-cpos-scope": "care-documents:read",
+    "description": "契約1.0.0。既存の計画・更新候補・人の判断から読み取り投影する。from/toは更新が届いた期間（JST）で、各items.periodは実際の計画対象期間。判断済みの同一根拠は再要求しない。上限・読取不能はcoverage/limitationsに明示。本人・施設・認可・期間・結果が変わったcursorは409。原記録や正式計画は更新しない。"
+   }
+  },
+  "/api/care-documents/v1/{id}/evidence-coverage": {
+   "get": {
+    "operationId": "get_api_care_documents_v1_id_evidence_coverage",
+    "summary": "サービス計画の項目別に原記録の根拠と不足を表示",
+    "tags": [
+     "業務ドキュメント"
+    ],
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "facilityId",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "serviceDomain",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "day-service",
+        "small-scale-multifunctional",
+        "home-visit-care",
+        "visit-nursing",
+        "welfare-equipment"
+       ]
+      }
+     },
+     {
+      "name": "masterUserId",
+      "in": "query",
+      "required": false,
+      "description": "表示中の本人。保存された文書の本人と一致する必要がある",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "expectedDocumentRevision",
+      "in": "query",
+      "required": false,
+      "description": "表示中の文書updatedAt（opaque）。異なる場合は409",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "definitionKey",
+      "in": "query",
+      "required": false,
+      "description": "保存された様式の正確なkey。訪問看護・福祉用具の共通SDKでは必須。domainだけで様式を選ばない",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "caseId",
+      "in": "query",
+      "required": false,
+      "description": "福祉用具では必須。保存済み文書summary.weCaseIdの案件と一致すること",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "DocumentEvidenceProjection + contractVersion + authorizationRevision。scope/documentRef/definitionKey/nativeContext/mappingVersion/generatedAt/実対象期間/coverage/limitations/reviewRequired/fields/serviceProvisionRecord/goalProgressEvidence。各根拠は既存SourceRevisionRefと現行版・原記録位置・観測/記録日時・状態を持つ。小多機の根拠にはserviceMode（tsusho/houmon/shukuhaku/unknown）を付け、通い・訪問・泊まり・形態不明を区別する。予定・料金を実施として補わない。訪問介護は同じ施設・本人・サービスの確定記録を一次根拠とし、下書き・開始・予定・取消を提供済みにしない。訪問看護は通常・厚労省・精神科の保存済みkeyを区別し、確定した実訪問の原看護欄・VS・実施内容を参照する。AI要約・下書き・非訪問・予定・取消を実施根拠にしない。福祉用具は貸与・販売の保存済みkeyとnativeContext.caseIdを固定し、同じ案件・品目・契約行・実設置・確定モニタリングの根拠だけを返す。案件混在の原本全体を返さない。新しい正本ストアは作らない。"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     },
+     "404": {
+      "description": "現在の権限で閲覧できない文書。存在を公開しない"
+     },
+     "409": {
+      "description": "保存版・現在の対象が競合。入力を保持して再取得"
+     },
+     "503": {
+      "description": "読み取り不能または機能の準備未完"
+     }
+    },
+    "security": [
+     {
+      "bearerToken": [
+       "care-documents:read"
+      ]
+     },
+     {
+      "oauth2": [
+       "care-documents:read"
+      ]
+     },
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "bearer-or-session",
+    "x-cpos-scope": "care-documents:read",
+    "description": "契約1.0.0。保存された様式版と現在の本人・施設・原記録権限で検査。記入済み（人）/根拠候補あり/不足/不明/該当なしを区別する。訂正・取消・共有撤回後の古い本文は返さない。介助と医学的観察、観測時刻と記録時刻を分離し、目標・本人意向・同意・交付を推測で補わない。"
+   }
+  },
   "/api/care-documents/v1": {
    "get": {
     "operationId": "get_api_care_documents_v1",
@@ -38213,8 +38458,8 @@
      }
     ],
     "responses": {
-     "200": {
-      "description": "成功"
+     "201": {
+      "description": "既存のCareDocument下書き。旧正本は不変"
      },
      "400": {
       "description": "入力が正しくない (本文の error に日本語の理由)"
@@ -38223,7 +38468,10 @@
       "description": "セッション Cookie または Bearer トークンが必要"
      },
      "403": {
-      "description": "権限またはスコープが足りない"
+      "description": "新版改訂は職員による操作が必要"
+     },
+     "409": {
+      "description": "旧版競合、最新版不一致、準備台帳のrefreshが必要"
      }
     },
     "security": [
@@ -38243,13 +38491,31 @@
     ],
     "x-cpos-auth": "bearer-or-session",
     "x-cpos-scope": "care-documents:write",
+    "description": "通常は保存時の様式版を維持する。upgradeToCurrentTemplate=true は職員セッションによる通所計画の明示的な新版改訂。expectedUpdatedAtが必須で、旧正本・旧PDFを変更しない。説明・同意・交付等の実施済み項目を新たに引き継いで履行済みにしない。準備台帳の固定根拠がある計画は既存refresh経路を使う。",
     "requestBody": {
-     "required": false,
+     "required": true,
      "content": {
       "application/json": {
        "schema": {
         "type": "object",
-        "additionalProperties": true
+        "properties": {
+         "upgradeToCurrentTemplate": {
+          "type": "boolean"
+         },
+         "expectedUpdatedAt": {
+          "type": "string",
+          "description": "前提条件 (任意)。読んだときの updatedAt (ISO 8601。同じ時刻なら書式は問わない)。保存値と違えば書かずに 409 (reason: stale)。日時として読めない値 (null を含む) は 400 invalid-expected-updated-at。付けなければ従来どおり"
+         },
+         "title": {
+          "type": "string"
+         },
+         "documentDate": {
+          "type": "string"
+         },
+         "data": {
+          "type": "object"
+         }
+        }
        }
       }
      }
@@ -41000,6 +41266,15 @@
       "schema": {
        "type": "integer"
       }
+     },
+     {
+      "name": "targetId",
+      "in": "query",
+      "required": false,
+      "description": "指定した本人・事業所・サービスの既存targetに対する現在の候補だけを取得。系列headを直接参照し全件探索しない",
+      "schema": {
+       "type": "string"
+      }
      }
     ],
     "responses": {
@@ -41110,7 +41385,7 @@
     ],
     "x-cpos-auth": "bearer-or-session",
     "x-cpos-scope": "care-documents:read",
-    "description": "表示時に根拠の閲覧・利用権を再確認する。失効候補は本文を非開示とし確認が必要な状態を返す。"
+    "description": "表示時に根拠の閲覧・利用権を再確認する。失効候補は本文を非開示とし確認が必要な状態を返す。targetId指定では既存の現在候補だけを返し、supersededは再掲しない。別scope・不存在のtargetは404。"
    }
   },
   "/api/care-management/v1/review-drafts/{id}": {
@@ -42071,6 +42346,42 @@
       "schema": {
        "type": "string"
       }
+     },
+     {
+      "name": "nativeDocumentId",
+      "in": "query",
+      "required": false,
+      "description": "福祉用具モニタリング原本の表示対象native計画ID。案件混在原本では固定contextが必須。",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "nativeDocumentRevision",
+      "in": "query",
+      "required": false,
+      "description": "表示中のnative計画updatedAt opaque版。",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "definitionKey",
+      "in": "query",
+      "required": false,
+      "description": "we-rental-plan又はwe-purchase-planの正確な保存key。",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "caseId",
+      "in": "query",
+      "required": false,
+      "description": "固定native案件ID。同TXで計画・案件・品目・契約行等を再検査し、該当行だけ返す。response.documentContextが一致する必要がある。",
+      "schema": {
+       "type": "string"
+      }
      }
     ],
     "responses": {
@@ -42079,7 +42390,7 @@
       "content": {
        "application/json": {
         "schema": {
-         "$ref": "#/components/schemas/V2SharedSourceDisplayResponse"
+         "$ref": "#/components/schemas/V2DocumentEvidenceSourceDisplayResponse"
         }
        }
       }
@@ -43036,7 +43347,7 @@
     ],
     "x-cpos-auth": "bearer-or-session",
     "x-cpos-scope": "care-documents:read",
-    "description": "正本は既存のサービス別記録です。共有された正式評価と原本の閲覧権を別々に検査します。ETag が一致した場合は本文のない 304 を返します。"
+    "description": "正本は既存のサービス別記録です。共有された正式評価と原本の閲覧権を別々に検査します。If-None-Match が ETag と一致した場合は本文のない 304 を返します。本文の changeCursor は 30 分で期限が切れるため、応答は Cache-Control: private, no-store です (ブラウザに保存させません)。"
    }
   },
   "/api/care-management/v2/persons/{id}/assessment/changes": {
@@ -48855,6 +49166,15 @@
       "schema": {
        "type": "integer"
       }
+     },
+     {
+      "name": "targetId",
+      "in": "query",
+      "required": false,
+      "description": "指定した本人・事業所・サービスの既存targetに対する現在の候補だけを取得。系列headを直接参照し全件探索しない",
+      "schema": {
+       "type": "string"
+      }
      }
     ],
     "responses": {
@@ -48965,7 +49285,7 @@
     ],
     "x-cpos-auth": "bearer-or-session",
     "x-cpos-scope": "care-documents:read",
-    "description": "表示時に根拠の閲覧・利用権を再確認する。失効候補は本文を非開示とし確認が必要な状態を返す。 新しい対象は登録済み保存先と定義の版を検査します。"
+    "description": "表示時に根拠の閲覧・利用権を再確認する。失効候補は本文を非開示とし確認が必要な状態を返す。targetId指定では既存の現在候補だけを返し、supersededは再掲しない。別scope・不存在のtargetは404。 新しい対象は登録済み保存先と定義の版を検査します。"
    }
   },
   "/api/care-management/v2/review-drafts/{id}": {
@@ -71391,6 +71711,74 @@
     ],
     "parameters": [
      {
+      "name": "masterUserId",
+      "in": "query",
+      "required": false,
+      "description": "本人の不変 ID (mu_*)。番号のない新規利用者も本人の保存キーだけで読み、明示された別人の mu は返さない。本人不明は404、解決失敗・キー上限超過は503で施設全体の読みに戻らない。isUnclassified=trueとは併用不可",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "insuredNumber",
+      "in": "query",
+      "required": false,
+      "description": "現番号・旧番号・仮番号。masterUserIdも指定した場合は番号で読んだ結果を本人のmuで絞る",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "userName",
+      "in": "query",
+      "required": false,
+      "description": "本人の絞り込みには使わない。非空の氏名だけの照会 (masterUserId・非空insuredNumberなし) は400 PERSON_REFERENCE_REQUIRED。空の任意検索値・通常の施設一覧は従来どおり",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "filter",
+      "in": "query",
+      "required": false,
+      "description": "日付範囲 (明示したfrom/toを優先)",
+      "schema": {
+       "type": "string",
+       "enum": [
+        "today",
+        "yesterday",
+        "week"
+       ]
+      }
+     },
+     {
+      "name": "from",
+      "in": "query",
+      "required": false,
+      "description": "開始日 (YYYY-MM-DD)",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "to",
+      "in": "query",
+      "required": false,
+      "description": "終了日 (YYYY-MM-DD)",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "description": "返却件数 (既定200)",
+      "schema": {
+       "type": "integer"
+      }
+     },
+     {
       "name": "includeVoided",
       "in": "query",
       "required": false,
@@ -71411,16 +71799,47 @@
     ],
     "responses": {
      "200": {
-      "description": "成功"
+      "description": "記録一覧。masterUserId指定時のみ、サーバで本人を確認して絞った印 personScope:{facilityId,masterUserId} を付ける。旧クライアントは従来の包みのまま",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "properties": {
+          "personScope": {
+           "type": "object",
+           "required": [
+            "facilityId",
+            "masterUserId"
+           ],
+           "properties": {
+            "facilityId": {
+             "type": "string"
+            },
+            "masterUserId": {
+             "type": "string"
+            }
+           },
+           "additionalProperties": false
+          }
+         }
+        }
+       }
+      }
      },
      "400": {
-      "description": "入力が正しくない (本文の error に日本語の理由)"
+      "description": "氏名だけの個人照会、本人指定の型不正等。氏名だけならPERSON_REFERENCE_REQUIREDと再読み込み案内を返す"
      },
      "401": {
       "description": "セッション Cookie または Bearer トークンが必要"
      },
      "403": {
       "description": "権限またはスコープが足りない"
+     },
+     "404": {
+      "description": "指定の本人を確認できない (施設の全記録は返さない)"
+     },
+     "503": {
+      "description": "本人情報の取得失敗または本人キー上限超過。Retry-After:2。施設の全記録へ広げない"
      }
     },
     "security": [
@@ -97354,6 +97773,186 @@
      }
     },
     "additionalProperties": false
+   },
+   "V2DocumentEvidenceSourceDisplayResponse": {
+    "type": "object",
+    "required": [
+     "contractVersion",
+     "ownerScope",
+     "source",
+     "grantRevision"
+    ],
+    "properties": {
+     "contractVersion": {
+      "const": "2.0.0"
+     },
+     "ownerScope": {
+      "$ref": "#/components/schemas/V2CareScope"
+     },
+     "source": {
+      "type": "object",
+      "required": [
+       "ref",
+       "evidence"
+      ],
+      "properties": {
+       "ref": {
+        "$ref": "#/components/schemas/V2SourceRevisionRef"
+       },
+       "evidence": {
+        "type": "array",
+        "maxItems": 5000,
+        "items": {
+         "type": "object",
+         "required": [
+          "locator",
+          "text",
+          "assertionKind"
+         ],
+         "properties": {
+          "locator": {
+           "type": "object",
+           "required": [],
+           "properties": {
+            "page": {
+             "type": "integer",
+             "minimum": 1
+            },
+            "sheet": {
+             "type": "string",
+             "minLength": 1,
+             "maxLength": 1024
+            },
+            "cell": {
+             "type": "string",
+             "minLength": 1,
+             "maxLength": 1024
+            },
+            "field": {
+             "type": "string",
+             "minLength": 1,
+             "maxLength": 1024
+            },
+            "span": {
+             "type": "string",
+             "minLength": 1,
+             "maxLength": 1024
+            }
+           },
+           "additionalProperties": false
+          },
+          "text": {
+           "type": "string",
+           "maxLength": 50000
+          },
+          "assertionKind": {
+           "type": "string",
+           "enum": [
+            "observation",
+            "reported",
+            "professional-assessment",
+            "plan",
+            "performed-action",
+            "machine-inference"
+           ]
+          }
+         },
+         "additionalProperties": false
+        }
+       }
+      },
+      "additionalProperties": false
+     },
+     "grantRevision": {
+      "type": [
+       "integer",
+       "null"
+      ],
+      "minimum": 1
+     },
+     "documentContext": {
+      "type": "object",
+      "required": [
+       "documentRef",
+       "definitionKey",
+       "nativeContext"
+      ],
+      "properties": {
+       "documentRef": {
+        "type": "object",
+        "required": [
+         "kind",
+         "id",
+         "revision"
+        ],
+        "properties": {
+         "kind": {
+          "const": "care-document"
+         },
+         "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+         },
+         "revision": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+         }
+        },
+        "additionalProperties": false
+       },
+       "definitionKey": {
+        "enum": [
+         "we-rental-plan",
+         "we-purchase-plan"
+        ]
+       },
+       "nativeContext": {
+        "type": "object",
+        "required": [
+         "caseId"
+        ],
+        "properties": {
+         "caseId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.:-]{1,200}$"
+         }
+        },
+        "additionalProperties": false
+       }
+      },
+      "additionalProperties": false
+     }
+    },
+    "additionalProperties": false,
+    "allOf": [
+     {
+      "if": {
+       "properties": {
+        "ownerScope": {
+         "properties": {
+          "serviceDomain": {
+           "const": "welfare-equipment"
+          }
+         }
+        }
+       }
+      },
+      "then": {
+       "required": [
+        "documentContext"
+       ]
+      },
+      "else": {
+       "not": {
+        "required": [
+         "documentContext"
+        ]
+       }
+      }
+     }
+    ]
    },
    "V2ReviewShareGrantInput": {
     "type": "object",

@@ -1,5 +1,5 @@
 // 生成物。kit の保守者が生成器 (gen-api) で spec/cpos-openapi.json から作る。手で編集しない。
-// 生成元: CPOS OpenAPI 0.1.0 / revision main@a4f76346 / 2026-10-17 / 1596 operations
+// 生成元: CPOS OpenAPI 0.1.0 / revision main@c0d9b32e / 2026-10-20 / 1598 operations
 
 export interface CposApi_app {
   alerts: {
@@ -402,7 +402,10 @@ export interface CposApi_app {
     postV1ByIdCorrespondencePreviewAddressee(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
     /** 正本 (や任意ドキュメント) を下書きとして複製する明示エンドポイント。 cpos-record が「正本を編集」する際に新 draft を作るのに使う。
      * POST /api/care-documents/v1/{id}/duplicate-draft / scope care-documents:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
-    postV1ByIdDuplicateDraft(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    postV1ByIdDuplicateDraft(args: { id: string; body: unknown; facilityId?: string }): Promise<unknown>;
+    /** サービス計画の項目別に原記録の根拠と不足を表示
+     * GET /api/care-documents/v1/{id}/evidence-coverage / scope care-documents:read / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getV1ByIdEvidenceCoverage(args: { id: string; facilityId: string; serviceDomain: string; masterUserId?: string; expectedDocumentRevision?: string; definitionKey?: string; caseId?: string }): Promise<unknown>;
     /** 業務文書を CSV で出力
      * GET /api/care-documents/v1/{id}/export.csv / scope care-documents:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     getV1ByIdExportCsv(args: { id: string; facilityId?: string }): Promise<unknown>;
@@ -493,6 +496,9 @@ export interface CposApi_app {
     /** masterUserId 未付与の業務文書に本人の不変 ID を付ける (保守。被保険者番号 → 氏名の順で名簿から引く。dryRun 既定)
      * POST /api/care-documents/v1/maintenance/backfill-master-user-id / scope care-documents:approve / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV1MaintenanceBackfillMasterUserId(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 日々の記録から確認が必要なサービス計画を取得
+     * GET /api/care-documents/v1/review-queue / scope care-documents:read / 認証 both / facilityId 必須 / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getV1ReviewQueue(args: { facilityId: string; serviceDomain: string; from?: string; to?: string; masterUserId?: string; caseId?: string; cursor?: string; limit?: number }): Promise<unknown>;
     /** 文書テンプレートの一覧
      * GET /api/care-documents/v1/templates / scope care-documents:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items / 模擬サーバ: 無し (501) */
     getV1Templates(args?: { facilityId?: string }): Promise<unknown>;
@@ -515,7 +521,7 @@ export interface CposApi_app {
     postV1ReviewDecisions(args: { facilityId?: string; body: unknown }): Promise<unknown>;
     /** 利用者の更新候補と実行状態を一覧
      * GET /api/care-management/v1/review-drafts / scope care-documents:read / 認証 both / 応答の形あり / 模擬サーバ: 無し (501) */
-    getV1ReviewDrafts(args: { facilityId?: string; masterUserId: string; serviceDomain?: string; cursor?: string; limit?: number }): Promise<unknown>;
+    getV1ReviewDrafts(args: { facilityId?: string; masterUserId: string; serviceDomain?: string; cursor?: string; limit?: number; targetId?: string }): Promise<unknown>;
     /** 候補・固定した根拠・現在の作業本文を取得
      * GET /api/care-management/v1/review-drafts/{id} / scope care-documents:read / 認証 both / 応答の形あり / 模擬サーバ: 無し (501) */
     getV1ReviewDraftsById(args: { id: string; facilityId?: string }): Promise<unknown>;
@@ -575,7 +581,7 @@ export interface CposApi_app {
     postV2ReviewDecisions(args: { facilityId?: string; body: unknown }): Promise<unknown>;
     /** 利用者の更新候補と実行状態を一覧
      * GET /api/care-management/v2/review-drafts / scope care-documents:read / 認証 both / 応答の形あり / 模擬サーバ: 無し (501) */
-    getV2ReviewDrafts(args: { facilityId?: string; masterUserId: string; serviceDomain?: string; cursor?: string; limit?: number }): Promise<unknown>;
+    getV2ReviewDrafts(args: { facilityId?: string; masterUserId: string; serviceDomain?: string; cursor?: string; limit?: number; targetId?: string }): Promise<unknown>;
     /** 候補・固定した根拠・現在の作業本文を取得
      * GET /api/care-management/v2/review-drafts/{id} / scope care-documents:read / 認証 both / 応答の形あり / 模擬サーバ: 無し (501) */
     getV2ReviewDraftsById(args: { id: string; facilityId?: string }): Promise<unknown>;
@@ -596,7 +602,7 @@ export interface CposApi_app {
     getV2ServicePlanPreparationsByIdConsultationSeed(args: { id: string; facilityId: string; serviceDomain: string; masterUserId?: string }): Promise<unknown>;
     /** 現在閲覧できる原記録の本文を確認
      * GET /api/care-management/v2/shared-sources/{kind}/{id} / scope care-documents:read / 認証 both / facilityId 必須 / 応答の形あり / 模擬サーバ: 無し (501) */
-    getV2SharedSourcesByKindById(args: { kind: string; id: string; facilityId: string; masterUserId: string; serviceDomain: string; revision?: string }): Promise<unknown>;
+    getV2SharedSourcesByKindById(args: { kind: string; id: string; facilityId: string; masterUserId: string; serviceDomain: string; revision?: string; nativeDocumentId?: string; nativeDocumentRevision?: string; definitionKey?: string; caseId?: string }): Promise<unknown>;
     /** 現在共有できる受信先と共有設定の権限を確認
      * GET /api/care-management/v2/shares/options / 認証 both / facilityId 必須 / 応答の形あり / 模擬サーバ: 無し (501) */
     getV2SharesOptions(args: { facilityId: string; masterUserId: string; serviceDomain: string }): Promise<unknown>;
@@ -1838,8 +1844,8 @@ export interface CposApi_app {
      * DELETE /api/record-app/record-types / scope care-records:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     deleteRecordTypes(args?: { facilityId?: string }): Promise<unknown>;
     /** 記録の一覧 (利用者・種類・期間で絞る)
-     * GET /api/record-app/records / scope care-records:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
-    getRecords(args?: { includeVoided?: boolean; isUnclassified?: boolean; facilityId?: string }): Promise<unknown>;
+     * GET /api/record-app/records / scope care-records:read / 認証 both / 応答の形あり / 模擬サーバ: 無し (501) */
+    getRecords(args?: { masterUserId?: string; insuredNumber?: string; userName?: string; filter?: string; from?: string; to?: string; limit?: number; includeVoided?: boolean; isUnclassified?: boolean; facilityId?: string }): Promise<unknown>;
     /** 記録を 1 件保存
      * POST /api/record-app/records / scope care-records:write / 認証 none / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postRecords(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
