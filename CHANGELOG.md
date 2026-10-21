@@ -5,6 +5,11 @@ v1 の間は API の削除をしない (deprecated の印だけ)。
 
 ## [Unreleased]
 
+## [0.12.0] - 2026-10-21
+
+### Added
+- CPOS の API の追加に追随 (8 operation): 事業所の帳票の棚卸しを扱う `careDocuments.getV1FormInventory` / `postV1FormInventory` / `putV1FormInventoryById` と、候補 `getV1FormInventoryCandidates`、帳票ごとの出せるものの表示 `getV1FormInventorySummary`、人による確認 `postV1FormInventoryByIdConfirm` / `postV1FormInventoryByIdApplicability` / `postV1FormInventoryByIdOutputConfirmation`。いずれも職員のログインが必要。
+
 ## [0.11.0] - 2026-10-20
 
 ### Added

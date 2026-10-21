@@ -4,13 +4,13 @@
   "title": "CPOS (Care Planning OS) API",
   "version": "0.1.0",
   "description": "CPOS の HTTP API (公式 OpenAPI の写し)。kit の client はこれから生成する。",
-  "x-cpos-revision": "main@c0d9b32e"
+  "x-cpos-revision": "main@13ab4bc8"
  },
  "x-cpos-kit": {
   "version": "0.1.0",
-  "revision": "main@c0d9b32e",
-  "fetchedAt": "2026-10-20",
-  "operations": 1598,
+  "revision": "main@13ab4bc8",
+  "fetchedAt": "2026-10-21",
+  "operations": 1606,
   "note": "公式 OpenAPI の写し。内部情報 (x-cpos-source 等) を落としてある。kit の保守者が生成器 (gen-api) で作る。手で編集しない"
  },
  "paths": {
@@ -15636,6 +15636,7 @@
     ],
     "x-cpos-auth": "bearer-or-session",
     "x-cpos-scope": "welfare-equipment:read",
+    "description": "document の legalReview { status, pending } と legalReviewStatus は、文書が保存した要件プロファイルの版 (無ければ保存版の様式の版) を 文書の日付で判定する (LEGAL-REVIEW-04。現行のプロファイルで代用しない)。版を解決できない鍵は legalReviewStatus が pending-institutional-review (null にしない)。版を保存していない文書で保存版の様式を読めないとき (POST /v2/plans が保存する we-rental-plan の版 1 など) も、GET /api/care-documents/v1/:id と同じく legalReview は pending、legalReviewStatus は pending-institutional-review。institutionally-reviewed は legalReview.status が reviewed のときだけ。",
     "requestBody": {
      "required": false,
      "content": {
@@ -36789,7 +36790,146 @@
     "parameters": [],
     "responses": {
      "200": {
-      "description": "成功"
+      "description": "{ items, review: { asOf, requirements, approvals, states[{ profileKey, profileVersion, title, state }] } }",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "required": [
+          "items",
+          "review"
+         ],
+         "properties": {
+          "items": {
+           "type": "array"
+          },
+          "review": {
+           "type": "object",
+           "required": [
+            "asOf",
+            "requirements",
+            "approvals",
+            "states"
+           ],
+           "properties": {
+            "requirements": {
+             "type": "array",
+             "description": "確認が要る行: id・profileKey・profileVersion・scope { kind: national | jurisdiction | insurance-scheme | equipment-class, jurisdictionCode?, designatingAuthority?, insuranceScheme?, equipmentClass? }・requiredRoles・status (not-started | in-review | blocked)・openItems[{ topic, unverifiedReason, sourceUrl?, accessAttemptedAt?, resolvedAt?, resolvedEvidenceRef? }]・note?。未確認の事項は消さず、人が解消を記録すると resolvedAt (と記録の参照) が付く。文書ごとの legalReview.pending には、文書の日付の時点でまだ解消していない事項だけが resolvedAt を付けずに入る"
+            },
+            "approvals": {
+             "type": "array",
+             "description": "人の承認の記録: id・requirementId・role・reviewerRef (不透明な職員 ID だけ。氏名・メールは持たない)・reviewedAt・reviewedSources[{ title, url, revisionId?, effectiveFrom? }]・decision (approved | changes-required | withdrawn)・changeDecision { required, summary, targetProfileVersion? }・evidenceRef。出荷時は 0 件"
+            },
+            "asOf": {
+             "type": "string",
+             "description": "状態を求めた時刻 (サーバの現在時刻)"
+            },
+            "states": {
+             "type": "array",
+             "items": {
+              "type": "object",
+              "required": [
+               "profileKey",
+               "profileVersion",
+               "state"
+              ],
+              "properties": {
+               "profileKey": {
+                "type": "string"
+               },
+               "profileVersion": {
+                "type": "string"
+               },
+               "title": {
+                "type": [
+                 "string",
+                 "null"
+                ]
+               },
+               "state": {
+                "type": "object",
+                "required": [
+                 "status",
+                 "pending"
+                ],
+                "properties": {
+                 "status": {
+                  "type": "string",
+                  "enum": [
+                   "reviewed",
+                   "pending",
+                   "not-registered",
+                   "no-profile"
+                  ],
+                  "description": "reviewed: その版の確認の行すべてが、文書の日付までに必要な役割すべての承認を得ている / pending: 未承認の行・役割が残る (日付が読めないとき、保存版の様式を読めないときも) / not-registered: 版はあるが台帳に行が無い / no-profile: 要件プロファイルの無い様式・様式も版も持たない文書・解決できない版。reviewed 以外を「確認済み」「適合」と表示しない"
+                 },
+                 "pending": {
+                  "type": "array",
+                  "description": "status が pending のとき、承認の残る行。ほかの status では空",
+                  "items": {
+                   "type": "object",
+                   "required": [
+                    "requirementId",
+                    "missingRoles",
+                    "openItems"
+                   ],
+                   "properties": {
+                    "requirementId": {
+                     "type": "string",
+                     "description": "台帳の行 (例: day-service-plan@2026.10.19#jurisdiction-tokyo)"
+                    },
+                    "missingRoles": {
+                     "type": "array",
+                     "items": {
+                      "type": "string"
+                     },
+                     "description": "承認が無い役割 (例: institutional-owner = 制度責任者)"
+                    },
+                    "openItems": {
+                     "type": "array",
+                     "items": {
+                      "type": "object",
+                      "required": [
+                       "topic",
+                       "unverifiedReason"
+                      ],
+                      "properties": {
+                       "topic": {
+                        "type": "string"
+                       },
+                       "unverifiedReason": {
+                        "type": "string",
+                        "enum": [
+                         "source-unreachable",
+                         "not-yet-read",
+                         "awaiting-authority-answer",
+                         "scope-undecided"
+                        ]
+                       },
+                       "sourceUrl": {
+                        "type": "string"
+                       },
+                       "accessAttemptedAt": {
+                        "type": "string",
+                        "description": "記録があるときだけ。承認日・施行日ではない"
+                       }
+                      }
+                     }
+                    }
+                   }
+                  }
+                 }
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
      },
      "400": {
       "description": "入力が正しくない (本文の error に日本語の理由)"
@@ -36817,7 +36957,8 @@
      }
     ],
     "x-cpos-auth": "bearer-or-session",
-    "x-cpos-scope": "care-documents:read"
+    "x-cpos-scope": "care-documents:read",
+    "description": "items は現行の要件プロファイル。review は制度・地域の確認の台帳 (LEGAL-REVIEW-04。読み取りだけ): 確認が要る行、人の承認の記録、台帳にある版ごとのいまの状態 (states)。誰が未承認かは states[].state.pending[].missingRoles で分かる。能力 careDocuments.legalReviewLedger。"
    }
   },
   "/api/care-documents/v1/legal-profiles/{key}": {
@@ -36835,11 +36976,138 @@
       "schema": {
        "type": "string"
       }
+     },
+     {
+      "name": "version",
+      "in": "query",
+      "required": false,
+      "description": "要件プロファイルの版 (例: 2026.05)。省略は現行版",
+      "schema": {
+       "type": "string"
+      }
      }
     ],
     "responses": {
      "200": {
-      "description": "成功"
+      "description": "CareDocumentLegalProfile + review",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "required": [
+          "profileKey",
+          "version",
+          "review"
+         ],
+         "properties": {
+          "profileKey": {
+           "type": "string"
+          },
+          "version": {
+           "type": "string"
+          },
+          "review": {
+           "type": "object",
+           "required": [
+            "asOf",
+            "requirements",
+            "approvals",
+            "state"
+           ],
+           "properties": {
+            "requirements": {
+             "type": "array",
+             "description": "確認が要る行: id・profileKey・profileVersion・scope { kind: national | jurisdiction | insurance-scheme | equipment-class, jurisdictionCode?, designatingAuthority?, insuranceScheme?, equipmentClass? }・requiredRoles・status (not-started | in-review | blocked)・openItems[{ topic, unverifiedReason, sourceUrl?, accessAttemptedAt?, resolvedAt?, resolvedEvidenceRef? }]・note?。未確認の事項は消さず、人が解消を記録すると resolvedAt (と記録の参照) が付く。文書ごとの legalReview.pending には、文書の日付の時点でまだ解消していない事項だけが resolvedAt を付けずに入る"
+            },
+            "approvals": {
+             "type": "array",
+             "description": "人の承認の記録: id・requirementId・role・reviewerRef (不透明な職員 ID だけ。氏名・メールは持たない)・reviewedAt・reviewedSources[{ title, url, revisionId?, effectiveFrom? }]・decision (approved | changes-required | withdrawn)・changeDecision { required, summary, targetProfileVersion? }・evidenceRef。出荷時は 0 件"
+            },
+            "asOf": {
+             "type": "string",
+             "description": "状態を求めた時刻 (サーバの現在時刻)"
+            },
+            "state": {
+             "type": "object",
+             "required": [
+              "status",
+              "pending"
+             ],
+             "properties": {
+              "status": {
+               "type": "string",
+               "enum": [
+                "reviewed",
+                "pending",
+                "not-registered",
+                "no-profile"
+               ],
+               "description": "reviewed: その版の確認の行すべてが、文書の日付までに必要な役割すべての承認を得ている / pending: 未承認の行・役割が残る (日付が読めないとき、保存版の様式を読めないときも) / not-registered: 版はあるが台帳に行が無い / no-profile: 要件プロファイルの無い様式・様式も版も持たない文書・解決できない版。reviewed 以外を「確認済み」「適合」と表示しない"
+              },
+              "pending": {
+               "type": "array",
+               "description": "status が pending のとき、承認の残る行。ほかの status では空",
+               "items": {
+                "type": "object",
+                "required": [
+                 "requirementId",
+                 "missingRoles",
+                 "openItems"
+                ],
+                "properties": {
+                 "requirementId": {
+                  "type": "string",
+                  "description": "台帳の行 (例: day-service-plan@2026.10.19#jurisdiction-tokyo)"
+                 },
+                 "missingRoles": {
+                  "type": "array",
+                  "items": {
+                   "type": "string"
+                  },
+                  "description": "承認が無い役割 (例: institutional-owner = 制度責任者)"
+                 },
+                 "openItems": {
+                  "type": "array",
+                  "items": {
+                   "type": "object",
+                   "required": [
+                    "topic",
+                    "unverifiedReason"
+                   ],
+                   "properties": {
+                    "topic": {
+                     "type": "string"
+                    },
+                    "unverifiedReason": {
+                     "type": "string",
+                     "enum": [
+                      "source-unreachable",
+                      "not-yet-read",
+                      "awaiting-authority-answer",
+                      "scope-undecided"
+                     ]
+                    },
+                    "sourceUrl": {
+                     "type": "string"
+                    },
+                    "accessAttemptedAt": {
+                     "type": "string",
+                     "description": "記録があるときだけ。承認日・施行日ではない"
+                    }
+                   }
+                  }
+                 }
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
      },
      "400": {
       "description": "入力が正しくない (本文の error に日本語の理由)"
@@ -36849,6 +37117,9 @@
      },
      "403": {
       "description": "権限またはスコープが足りない"
+     },
+     "404": {
+      "description": "その鍵・版のプロファイルが無い"
      }
     },
     "security": [
@@ -36867,7 +37138,8 @@
      }
     ],
     "x-cpos-auth": "bearer-or-session",
-    "x-cpos-scope": "care-documents:read"
+    "x-cpos-scope": "care-documents:read",
+    "description": "`?version=` で旧版も引ける (新しい版で代用しない。無ければ 404)。応答はプロファイルに review { asOf, requirements, approvals, state } を足したもの (その版の台帳の行・承認の記録・いまの状態)。"
    }
   },
   "/api/care-documents/v1/care-plan-versions": {
@@ -37398,6 +37670,402 @@
     "x-cpos-auth": "bearer-or-session",
     "x-cpos-scope": "care-documents:read",
     "description": "`serviceTarget` (home-visit-care / visit-nursing / welfare-equipment) を付けると、第2表の全行を 自事業所の行かどうかの分類 (`selectable` / `preselected` / `prevention`) 付きで返す。"
+   }
+  },
+  "/api/care-documents/v1/form-inventory/summary": {
+   "get": {
+    "operationId": "get_api_care_documents_v1_form_inventory_summary",
+    "summary": "事業所の帳票ごとに、CPOS が出せるものと足りないもの ((i)〜(v)) を表示",
+    "tags": [
+     "業務ドキュメント"
+    ],
+    "parameters": [
+     {
+      "name": "facilityId",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "{ contractVersion, facilityId, asOf, outputReadyMeans, sources, rows[{ id, key, serviceDomain, label, version, updatedAt, mapping, template { name, version, profileKey, profileVersion }, status, counts }], unclassifiedTemplates, limitations }"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     },
+     "503": {
+      "description": "行そのものを読めない (rows-unavailable)、または事業所の確認ができない"
+     }
+    },
+    "security": [
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "session",
+    "x-cpos-scope": null,
+    "description": "行ごとに別々の印 (notApplicable・legalUnapproved・dataGap・draftOnly・outputReady・needsRecheck・unclassified・sourceUnavailable・partial・bodyIncomplete)、表示 display (v > iv > iii > unavailable > ii > unclassified > i)、理由のコード、書類の件数 (draft・review・canonical と complianceStatus ごと。上限 500 を超えれば partial)。読めなかった入力は sources で unavailable (0 件・なしとは返さない)。(iv) は、様式の要件プロファイルの版が制度・地域の確認の台帳 (LEGAL-REVIEW-04) で reviewed になり、プロファイルの reviewStatus も institutionally-reviewed になるまで外れない (出荷時の承認は 0 件)。行の無い様式は unclassifiedTemplates (未分類。必要とは扱わない)。書類の ID・利用者の ID・氏名・被保険者番号は返さない。能力 careDocuments.formInventory。"
+   }
+  },
+  "/api/care-documents/v1/form-inventory/candidates": {
+   "get": {
+    "operationId": "get_api_care_documents_v1_form_inventory_candidates",
+    "summary": "様式と要件プロファイルから、行に書く候補を出す (保存しない)",
+    "tags": [
+     "業務ドキュメント"
+    ],
+    "parameters": [
+     {
+      "name": "facilityId",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
+      "name": "templateKey",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "FormInventoryCandidates"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     },
+     "404": {
+      "description": "この事業所で有効な様式が無い"
+     }
+    },
+    "security": [
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "session",
+    "x-cpos-scope": null,
+    "description": "`templateKey` の様式の項目 (key・label)、requiredLevel・legalSources・humanConfirmationRequired、自動取得の候補 (fieldMappings)、正式化する職種と提出・交付先の候補。すべて suggested: true で、何も保存しない。人が画面で採用してから行を保存する。"
+   }
+  },
+  "/api/care-documents/v1/form-inventory": {
+   "get": {
+    "operationId": "get_api_care_documents_v1_form_inventory",
+    "summary": "事業所の帳票の棚卸し (人が入力した行) を一覧",
+    "tags": [
+     "業務ドキュメント"
+    ],
+    "parameters": [
+     {
+      "name": "facilityId",
+      "in": "query",
+      "required": false,
+      "description": "事業所。X-Cpos-Facility-Id と違えば 400 facility-mismatch",
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "{ facilityId, asOf, items[{ id, key, serviceDomain, label, description, isActive, version, createdAt, updatedAt, definition, historyCount }] }"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "session-required (トークン) / role-required / facility-not-allowed"
+     },
+     "503": {
+      "description": "access-unavailable / rows-unavailable。件数を 0 として補わない"
+     }
+    },
+    "security": [
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "session",
+    "x-cpos-scope": null,
+    "description": "`facilityId` (または X-Cpos-Facility-Id) の事業所の行だけ。有効・無効の行と、それぞれの履歴の件数 (historyCount)。読めないときは 503 (0 件とは返さない)。行は人が入力したもので、システムは候補を自動で保存しない。"
+   },
+   "post": {
+    "operationId": "post_api_care_documents_v1_form_inventory",
+    "summary": "帳票の棚卸しの行を作る (事業所 × 帳票で 1 行)",
+    "tags": [
+     "業務ドキュメント"
+    ],
+    "parameters": [],
+    "responses": {
+     "201": {
+      "description": "{ item }"
+     },
+     "400": {
+      "description": "検証の誤り (errors[])"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     },
+     "409": {
+      "description": "already-exists"
+     }
+    },
+    "security": [
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "session",
+    "x-cpos-scope": null,
+    "description": "body: { facilityId?, key: form-inventory.<serviceDomain>.<slug>, label, description?, definition: { currentSource, classification[], duplicateOf, cposMapping { templateKey, renderer, weFormTemplateId }, fields[] } }。enteredBy/At はサーバが打つ。enteredBy・confirmedBy・decidedBy・checked* を送っても使わない。自由記述が個人を特定できる情報 (敬称付きの氏名・電話番号・生年月日・被保険者番号・郵便番号・住所) に見えれば 400 (値は返さない。敬称の無い氏名は検出できない)。同じ事業所・同じ key の行があれば 409 already-exists。",
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": true
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/care-documents/v1/form-inventory/{id}": {
+   "put": {
+    "operationId": "put_api_care_documents_v1_form_inventory_id",
+    "summary": "帳票の棚卸しの行の内容を置き換える (前提条件つき)",
+    "tags": [
+     "業務ドキュメント"
+    ],
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "{ item }"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     },
+     "409": {
+      "description": "stale"
+     }
+    },
+    "security": [
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "session",
+    "x-cpos-scope": null,
+    "description": "expectedUpdatedAt 必須 (無ければ 400、違えば 409 stale + current)。置き換える前の内容を無効の履歴の行 `${id}__v${version}` に残し、version を 1 つ上げる。kind・key・scope は変えられない (400 immutable)。内容が変われば人の確認 (confirmedBy・checked*) を外す。削除の口は無い。isActive=false で無効にする。",
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": true
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/care-documents/v1/form-inventory/{id}/applicability": {
+   "post": {
+    "operationId": "post_api_care_documents_v1_form_inventory_id_applicability",
+    "summary": "帳票が事業所に当たるか (対象外か) を人が決める",
+    "tags": [
+     "業務ドキュメント"
+    ],
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     }
+    },
+    "security": [
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "session",
+    "x-cpos-scope": null,
+    "description": "body: { expectedUpdatedAt, status: applies | not-applicable | unknown, reason, reviewOn? }。対象外は理由が必須。判断した職員 (decidedBy) と日時はサーバが打つ。システムが対象外を推定することはない。",
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": true
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/care-documents/v1/form-inventory/{id}/confirm": {
+   "post": {
+    "operationId": "post_api_care_documents_v1_form_inventory_id_confirm",
+    "summary": "帳票の棚卸しの行を人が確認する",
+    "tags": [
+     "業務ドキュメント"
+    ],
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     }
+    },
+    "security": [
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "session",
+    "x-cpos-scope": null,
+    "description": "body: { expectedUpdatedAt, expectedTemplateVersion, expectedProfileKey, expectedProfileVersion }。expected* は画面に出ていた版 (summary の template)。様式を対応付けた行は必須 (無ければ 400 expected-template-version-required)、いまの版と違えば 409 template-changed で何も書かない。対応付けた様式の版と要件プロファイルの鍵・版はサーバが読んだ値を控える (checked*)。あとで版が変わると「要再確認」。様式がこの事業所で有効でなければ 409。",
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": true
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/care-documents/v1/form-inventory/{id}/output-confirmation": {
+   "post": {
+    "operationId": "post_api_care_documents_v1_form_inventory_id_output_confirmation",
+    "summary": "アプリの様式で実際に出せることを人が確認する",
+    "tags": [
+     "業務ドキュメント"
+    ],
+    "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "成功"
+     },
+     "400": {
+      "description": "入力が正しくない (本文の error に日本語の理由)"
+     },
+     "401": {
+      "description": "セッション Cookie または Bearer トークンが必要"
+     },
+     "403": {
+      "description": "権限またはスコープが足りない"
+     }
+    },
+    "security": [
+     {
+      "sessionCookie": []
+     }
+    ],
+    "x-cpos-auth": "session",
+    "x-cpos-scope": null,
+    "description": "renderer が app の行だけ (それ以外は 409)。body: { expectedUpdatedAt, note? }。CPOS はアプリの様式を確かめられない。",
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": true
+       }
+      }
+     }
+    }
    }
   },
   "/api/care-documents/v1/inbox": {
@@ -37978,7 +38646,45 @@
     ],
     "responses": {
      "200": {
-      "description": "items: 要約の配列。includeData=true なら各要素に data が入る。id が careplan: で始まる要素の data は V4 CarePlanBundle。 要約の targetMonth は帳票が何月分か (YYYY-MM。data.targetMonth、無ければ旧報告書の reportYear/reportMonth。明示が無ければ null)。"
+      "description": "items: 要約の配列。includeData=true なら各要素に data が入る。id が careplan: で始まる要素の data は V4 CarePlanBundle。 要約の targetMonth は帳票が何月分か (YYYY-MM。data.targetMonth、無ければ旧報告書の reportYear/reportMonth。明示が無ければ null)。 各要素の legalReview は { status } だけ (LEGAL-REVIEW-04)。判定は GET /v1/:id と同じで、legalProfileKey と legalRequirementVersion の両方を保存していない行は保存版の様式の版で判定する (様式の版ごとに 1 回だけ読む)。古い行のほか、いまも様式だけを保存する作成の経路 (福祉用具の POST /v2/plans・POST /v2/plans/draft-from-care-plan、受領したケアプランの確認) の行もそうなる。福祉用具の 2 つは組織の接頭辞の無い様式 ID を保存するので様式に当たらず pending (pending は空)。様式を読めない・無いときは pending。no-profile はプロファイルの無い様式、様式も版も無い行、保存した鍵と版を台帳が解決できない行、careplan: の行だけ。詳細 (pending) は GET /v1/:id。",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "required": [
+          "items"
+         ],
+         "properties": {
+          "items": {
+           "type": "array",
+           "items": {
+            "type": "object",
+            "properties": {
+             "legalReview": {
+              "type": "object",
+              "required": [
+               "status"
+              ],
+              "properties": {
+               "status": {
+                "type": "string",
+                "enum": [
+                 "reviewed",
+                 "pending",
+                 "not-registered",
+                 "no-profile"
+                ],
+                "description": "reviewed: その版の確認の行すべてが、文書の日付までに必要な役割すべての承認を得ている / pending: 未承認の行・役割が残る (日付が読めないとき、保存版の様式を読めないときも) / not-registered: 版はあるが台帳に行が無い / no-profile: 要件プロファイルの無い様式・様式も版も持たない文書・解決できない版。reviewed 以外を「確認済み」「適合」と表示しない"
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
      },
      "400": {
       "description": "入力が正しくない (本文の error に日本語の理由)"
@@ -38224,7 +38930,109 @@
     ],
     "responses": {
      "200": {
-      "description": "文書 1 件 (data 込み)"
+      "description": "文書 1 件 (data 込み) + legalReview。view=sections は { document, activeTemplateVersion, legalReview, legalReviewStatus, template, sections }",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "required": [
+          "legalReview"
+         ],
+         "properties": {
+          "legalReview": {
+           "type": "object",
+           "required": [
+            "status",
+            "pending"
+           ],
+           "properties": {
+            "status": {
+             "type": "string",
+             "enum": [
+              "reviewed",
+              "pending",
+              "not-registered",
+              "no-profile"
+             ],
+             "description": "reviewed: その版の確認の行すべてが、文書の日付までに必要な役割すべての承認を得ている / pending: 未承認の行・役割が残る (日付が読めないとき、保存版の様式を読めないときも) / not-registered: 版はあるが台帳に行が無い / no-profile: 要件プロファイルの無い様式・様式も版も持たない文書・解決できない版。reviewed 以外を「確認済み」「適合」と表示しない"
+            },
+            "pending": {
+             "type": "array",
+             "description": "status が pending のとき、承認の残る行。ほかの status では空",
+             "items": {
+              "type": "object",
+              "required": [
+               "requirementId",
+               "missingRoles",
+               "openItems"
+              ],
+              "properties": {
+               "requirementId": {
+                "type": "string",
+                "description": "台帳の行 (例: day-service-plan@2026.10.19#jurisdiction-tokyo)"
+               },
+               "missingRoles": {
+                "type": "array",
+                "items": {
+                 "type": "string"
+                },
+                "description": "承認が無い役割 (例: institutional-owner = 制度責任者)"
+               },
+               "openItems": {
+                "type": "array",
+                "items": {
+                 "type": "object",
+                 "required": [
+                  "topic",
+                  "unverifiedReason"
+                 ],
+                 "properties": {
+                  "topic": {
+                   "type": "string"
+                  },
+                  "unverifiedReason": {
+                   "type": "string",
+                   "enum": [
+                    "source-unreachable",
+                    "not-yet-read",
+                    "awaiting-authority-answer",
+                    "scope-undecided"
+                   ]
+                  },
+                  "sourceUrl": {
+                   "type": "string"
+                  },
+                  "accessAttemptedAt": {
+                   "type": "string",
+                   "description": "記録があるときだけ。承認日・施行日ではない"
+                  }
+                 }
+                }
+               }
+              }
+             }
+            }
+           }
+          },
+          "legalReviewStatus": {
+           "oneOf": [
+            {
+             "type": "string",
+             "enum": [
+              "institutionally-reviewed",
+              "pending-institutional-review"
+             ]
+            },
+            {
+             "type": "null"
+            }
+           ],
+           "description": "互換のため残す。institutionally-reviewed は legalReview.status が reviewed のときだけ。要件プロファイルの鍵があれば pending-institutional-review (旧来のプロファイル・解決できない版を含む)、鍵が無いときだけ null"
+          }
+         }
+        }
+       }
+      }
      },
      "400": {
       "description": "入力が正しくない (本文の error に日本語の理由)"
@@ -38256,7 +39064,7 @@
     ],
     "x-cpos-auth": "bearer-or-session",
     "x-cpos-scope": "care-documents:read",
-    "description": "**本文 (`data`) 込みで返す**。`?view=sections` を付けると、テンプレートの layout と fields に data を当てはめた表示用の sections を返す (viewer 向け)。一覧が返す `careplan:` 接頭辞付きの id もここで開ける。その場合 `data` は V4 CarePlanBundle で、テンプレートが無いため `view=sections` は `template: null` / `sections: []` を返す。 ケアプラン変更のご相談・情報提供 (`report` / `care-plan-change-consultation`) を `?evidence=1` で読むと、発信事業所のフラグ `evidenceStatus` (既定 OFF) が有効なとき、引用した根拠がいまも引用したときのままかをその読み取りで計算して足す (第一トラック E0。保存しない。`evidence=1` が無い読み取りは根拠を読まず項目も足さない。一覧・受信一覧・書き出しでは計算しない。能力 careDocuments.consultationEvidenceOnRequest): `evidenceStatus` (`current` | `stale` | `unavailable`) と `evidenceCheck` `{ checkedAt, citedAt, items[{ factId, index, kind, id, status, reason }] }`。reason は `voided` / `not-found` / `no-longer-qualifies` / `changed-after-citation` / `updated-after-citation` / `store-unavailable` / `lookup-failed` / `unknown-kind`。ほかの種類の文書の応答は従来どおり。"
+    "description": "**本文 (`data`) 込みで返す**。`?view=sections` を付けると、テンプレートの layout と fields に data を当てはめた表示用の sections を返す (viewer 向け)。一覧が返す `careplan:` 接頭辞付きの id もここで開ける。その場合 `data` は V4 CarePlanBundle で、テンプレートが無いため `view=sections` は `template: null` / `sections: []` を返す。 ケアプラン変更のご相談・情報提供 (`report` / `care-plan-change-consultation`) を `?evidence=1` で読むと、発信事業所のフラグ `evidenceStatus` (既定 OFF) が有効なとき、引用した根拠がいまも引用したときのままかをその読み取りで計算して足す (第一トラック E0。保存しない。`evidence=1` が無い読み取りは根拠を読まず項目も足さない。一覧・受信一覧・書き出しでは計算しない。能力 careDocuments.consultationEvidenceOnRequest): `evidenceStatus` (`current` | `stale` | `unavailable`) と `evidenceCheck` `{ checkedAt, citedAt, items[{ factId, index, kind, id, status, reason }] }`。reason は `voided` / `not-found` / `no-longer-qualifies` / `changed-after-citation` / `updated-after-citation` / `store-unavailable` / `lookup-failed` / `unknown-kind`。ほかの種類の文書の応答は従来どおり。 どの文書の応答にも `legalReview` `{ status, pending }` を足す (LEGAL-REVIEW-04。保存しない): `view` 無しは文書に、`view=sections` は `document` の外 (`legalReviewStatus` の隣) に置く。保存した要件プロファイルの版 (どちらかが無い文書は保存版の様式の版。様式を読めなければ pending) を 文書の日付 (canonicalAt、無ければ updatedAt) で判定するので、後から足された承認は前の日付の文書を変えない。`legalReviewStatus` (view=sections だけ) は互換のため残す。能力 careDocuments.legalReviewLedger。"
    },
    "put": {
     "operationId": "put_api_care_documents_v1_id",
@@ -39263,7 +40071,8 @@
      }
     ],
     "x-cpos-auth": "bearer-or-session",
-    "x-cpos-scope": "care-documents:read"
+    "x-cpos-scope": "care-documents:read",
+    "description": "確定したケアプラン変更のご相談・情報提供は、いまの確定のときに控えた PDF (generatedFiles の care-document-<id>.pdf、canonicalAt 以降に作成、memory:// 以外) があればそのバイト列を返す (ヘッダ X-CPOS-PDF-Source: finalized-copy。LEGAL-REVIEW-04)。控えは呼び出した職員のセッションの資格情報、無ければボット、無ければ実行アカウントで読み、Drive が 401 (期限切れ・取り消し) で断ったときだけ次の資格情報を試す。この呼び出しで読めない (Drive 403/404・すべての資格情報が 401・フォルダの外・PDF でない) ときは確定した内容から描き直し X-CPOS-PDF-Source: re-rendered を付ける。読み取り自体が失敗したときは 503 pdf-unavailable。控えが無ければ専用の帳票を strict で描く (描けなければ 503)。"
    }
   },
   "/api/care-documents/v1/{id}/save-to-user-drive": {

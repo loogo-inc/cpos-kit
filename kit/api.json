@@ -1,9 +1,9 @@
 {
  "generatedFrom": {
   "version": "0.1.0",
-  "revision": "main@c0d9b32e",
-  "fetchedAt": "2026-10-20",
-  "operations": 1598
+  "revision": "main@13ab4bc8",
+  "fetchedAt": "2026-10-21",
+  "operations": 1606
  },
  "note": "client が実行時に読む operation の表。kit の保守者が生成器 (gen-api) で spec/cpos-openapi.json から作る。手で編集しない",
  "operations": [
@@ -7721,7 +7721,7 @@
    "hasBody": false,
    "bodyRequired": false,
    "facilityRequired": false,
-   "hasResponseSchema": false,
+   "hasResponseSchema": true,
    "fake": false,
    "fakeBody": false,
    "mcp": null,
@@ -7817,7 +7817,7 @@
    "hasBody": false,
    "bodyRequired": false,
    "facilityRequired": false,
-   "hasResponseSchema": false,
+   "hasResponseSchema": true,
    "fake": false,
    "fakeBody": false,
    "mcp": null,
@@ -8864,6 +8864,246 @@
    "sig": "614910f822be"
   },
   {
+   "id": "get_api_care_documents_v1_form_inventory",
+   "ns": "session",
+   "group": "careDocuments",
+   "name": "getV1FormInventory",
+   "method": "GET",
+   "path": "/api/care-documents/v1/form-inventory",
+   "summary": "事業所の帳票の棚卸し (人が入力した行) を一覧",
+   "tags": [
+    "業務ドキュメント"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "事業所。X-Cpos-Facility-Id と違えば 400 facility-mismatch"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "16c2dfc1b752"
+  },
+  {
+   "id": "post_api_care_documents_v1_form_inventory",
+   "ns": "session",
+   "group": "careDocuments",
+   "name": "postV1FormInventory",
+   "method": "POST",
+   "path": "/api/care-documents/v1/form-inventory",
+   "summary": "帳票の棚卸しの行を作る (事業所 × 帳票で 1 行)",
+   "tags": [
+    "業務ドキュメント"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "0c1b2b522c4c"
+  },
+  {
+   "id": "put_api_care_documents_v1_form_inventory_id",
+   "ns": "session",
+   "group": "careDocuments",
+   "name": "putV1FormInventoryById",
+   "method": "PUT",
+   "path": "/api/care-documents/v1/form-inventory/{id}",
+   "summary": "帳票の棚卸しの行の内容を置き換える (前提条件つき)",
+   "tags": [
+    "業務ドキュメント"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "4a2d1009a191"
+  },
+  {
+   "id": "post_api_care_documents_v1_form_inventory_id_applicability",
+   "ns": "session",
+   "group": "careDocuments",
+   "name": "postV1FormInventoryByIdApplicability",
+   "method": "POST",
+   "path": "/api/care-documents/v1/form-inventory/{id}/applicability",
+   "summary": "帳票が事業所に当たるか (対象外か) を人が決める",
+   "tags": [
+    "業務ドキュメント"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "627489d04e2a"
+  },
+  {
+   "id": "post_api_care_documents_v1_form_inventory_id_confirm",
+   "ns": "session",
+   "group": "careDocuments",
+   "name": "postV1FormInventoryByIdConfirm",
+   "method": "POST",
+   "path": "/api/care-documents/v1/form-inventory/{id}/confirm",
+   "summary": "帳票の棚卸しの行を人が確認する",
+   "tags": [
+    "業務ドキュメント"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "6727a0a4246a"
+  },
+  {
+   "id": "post_api_care_documents_v1_form_inventory_id_output_confirmation",
+   "ns": "session",
+   "group": "careDocuments",
+   "name": "postV1FormInventoryByIdOutputConfirmation",
+   "method": "POST",
+   "path": "/api/care-documents/v1/form-inventory/{id}/output-confirmation",
+   "summary": "アプリの様式で実際に出せることを人が確認する",
+   "tags": [
+    "業務ドキュメント"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [
+    {
+     "name": "id",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": true,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "8d9fa0a46e53"
+  },
+  {
+   "id": "get_api_care_documents_v1_form_inventory_candidates",
+   "ns": "session",
+   "group": "careDocuments",
+   "name": "getV1FormInventoryCandidates",
+   "method": "GET",
+   "path": "/api/care-documents/v1/form-inventory/candidates",
+   "summary": "様式と要件プロファイルから、行に書く候補を出す (保存しない)",
+   "tags": [
+    "業務ドキュメント"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    },
+    {
+     "name": "templateKey",
+     "in": "query",
+     "required": true,
+     "type": "string"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "421e4487b748"
+  },
+  {
+   "id": "get_api_care_documents_v1_form_inventory_summary",
+   "ns": "session",
+   "group": "careDocuments",
+   "name": "getV1FormInventorySummary",
+   "method": "GET",
+   "path": "/api/care-documents/v1/form-inventory/summary",
+   "summary": "事業所の帳票ごとに、CPOS が出せるものと足りないもの ((i)〜(v)) を表示",
+   "tags": [
+    "業務ドキュメント"
+   ],
+   "auth": "session",
+   "scope": null,
+   "params": [
+    {
+     "name": "facilityId",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    }
+   ],
+   "hasBody": false,
+   "bodyRequired": false,
+   "facilityRequired": false,
+   "hasResponseSchema": false,
+   "fake": false,
+   "fakeBody": false,
+   "mcp": null,
+   "sig": "dad0ce407050"
+  },
+  {
    "id": "post_api_care_documents_v1_from_source_hub",
    "ns": "app",
    "group": "careDocuments",
@@ -8972,7 +9212,7 @@
    "hasBody": false,
    "bodyRequired": false,
    "facilityRequired": false,
-   "hasResponseSchema": false,
+   "hasResponseSchema": true,
    "fake": false,
    "fakeBody": false,
    "mcp": null,
@@ -9017,12 +9257,19 @@
      "in": "path",
      "required": true,
      "type": "string"
+    },
+    {
+     "name": "version",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "要件プロファイルの版 (例: 2026.05)。省略は現行版"
     }
    ],
    "hasBody": false,
    "bodyRequired": false,
    "facilityRequired": false,
-   "hasResponseSchema": false,
+   "hasResponseSchema": true,
    "fake": false,
    "fakeBody": false,
    "mcp": null,
@@ -9031,7 +9278,7 @@
     "at": "2026-09-27",
     "note": "パス変数を埋める値が取れない"
    },
-   "sig": "4faf5585512f"
+   "sig": "97d02b5e5281"
   },
   {
    "id": "post_api_care_documents_v1_maintenance_backfill_master_user_id",

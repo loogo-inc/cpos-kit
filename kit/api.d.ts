@@ -1,5 +1,5 @@
 // 生成物。kit の保守者が生成器 (gen-api) で spec/cpos-openapi.json から作る。手で編集しない。
-// 生成元: CPOS OpenAPI 0.1.0 / revision main@c0d9b32e / 2026-10-20 / 1598 operations
+// 生成元: CPOS OpenAPI 0.1.0 / revision main@13ab4bc8 / 2026-10-21 / 1606 operations
 
 export interface CposApi_app {
   alerts: {
@@ -365,13 +365,13 @@ export interface CposApi_app {
   };
   careDocuments: {
     /** 業務文書の一覧 (種類・利用者・状態で絞る)
-     * GET /api/care-documents/v1 / scope care-documents:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items / 模擬サーバ: 無し (501) */
+     * GET /api/care-documents/v1 / scope care-documents:read / 認証 both / 応答の形あり / 模擬サーバ: 無し (501) */
     getV1(args?: { insuredNumber?: string; facilityId?: string; documentType?: string; documentSubType?: string; serviceDomain?: string; templateKey?: string; status?: string; canonicalOnly?: boolean; includeCarePlans?: boolean; includeData?: boolean; from?: string; to?: string; query?: string; limit?: number }): Promise<unknown>;
     /** 業務文書を作成 (下書き)
      * POST /api/care-documents/v1 / scope care-documents:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV1(args: { body: unknown; facilityId?: string }): Promise<unknown>;
     /** 業務文書を 1 件取得
-     * GET /api/care-documents/v1/{id} / scope care-documents:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: data, documentDate, documentType, id, insuredNumber, organizationId, serviceDomain, source, status, summary, title, updatedAt / 模擬サーバ: 無し (501) */
+     * GET /api/care-documents/v1/{id} / scope care-documents:read / 認証 both / 応答の形あり / 模擬サーバ: 無し (501) */
     getV1ById(args: { id: string; view?: string; validatePlanBasis?: string; evidence?: string; facilityId?: string }): Promise<unknown>;
     /** 業務文書を更新
      * PUT /api/care-documents/v1/{id} / scope care-documents:write / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
@@ -488,11 +488,11 @@ export interface CposApi_app {
      * GET /api/care-documents/v1/inbox / scope care-documents:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     getV1Inbox(args?: { facilityId?: string }): Promise<unknown>;
     /** 法令項目レジストリ (GET /v1/:id より前に宣言して :id に食われないこと)
-     * GET /api/care-documents/v1/legal-profiles / scope care-documents:read / 認証 both / 実測 200 (2026-09-27) 応答の項目: items / 模擬サーバ: 無し (501) */
+     * GET /api/care-documents/v1/legal-profiles / scope care-documents:read / 認証 both / 応答の形あり / 模擬サーバ: 無し (501) */
     getV1LegalProfiles(args?: { facilityId?: string }): Promise<unknown>;
     /** 法令項目レジストリを 1 件取得
-     * GET /api/care-documents/v1/legal-profiles/{key} / scope care-documents:read / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
-    getV1LegalProfilesByKey(args: { key: string; facilityId?: string }): Promise<unknown>;
+     * GET /api/care-documents/v1/legal-profiles/{key} / scope care-documents:read / 認証 both / 応答の形あり / 実測 0 (2026-09-27) パス変数を埋める値が取れない / 模擬サーバ: 無し (501) */
+    getV1LegalProfilesByKey(args: { key: string; version?: string; facilityId?: string }): Promise<unknown>;
     /** masterUserId 未付与の業務文書に本人の不変 ID を付ける (保守。被保険者番号 → 氏名の順で名簿から引く。dryRun 既定)
      * POST /api/care-documents/v1/maintenance/backfill-master-user-id / scope care-documents:approve / 認証 both / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
     postV1MaintenanceBackfillMasterUserId(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
@@ -3396,6 +3396,32 @@ export interface CposApi_session {
     /** 機能セット: 一覧
      * GET /api/capabilities / 認証 session / 実測 200 (2026-09-27) 応答の項目: features, server / 模擬サーバ: あり */
     get(args?: { facilityId?: string }): Promise<unknown>;
+  };
+  careDocuments: {
+    /** 事業所の帳票の棚卸し (人が入力した行) を一覧
+     * GET /api/care-documents/v1/form-inventory / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getV1FormInventory(args?: { facilityId?: string }): Promise<unknown>;
+    /** 帳票の棚卸しの行を作る (事業所 × 帳票で 1 行)
+     * POST /api/care-documents/v1/form-inventory / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV1FormInventory(args?: { body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 帳票の棚卸しの行の内容を置き換える (前提条件つき)
+     * PUT /api/care-documents/v1/form-inventory/{id} / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    putV1FormInventoryById(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 帳票が事業所に当たるか (対象外か) を人が決める
+     * POST /api/care-documents/v1/form-inventory/{id}/applicability / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV1FormInventoryByIdApplicability(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 帳票の棚卸しの行を人が確認する
+     * POST /api/care-documents/v1/form-inventory/{id}/confirm / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV1FormInventoryByIdConfirm(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** アプリの様式で実際に出せることを人が確認する
+     * POST /api/care-documents/v1/form-inventory/{id}/output-confirmation / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    postV1FormInventoryByIdOutputConfirmation(args: { id: string; body?: unknown; facilityId?: string }): Promise<unknown>;
+    /** 様式と要件プロファイルから、行に書く候補を出す (保存しない)
+     * GET /api/care-documents/v1/form-inventory/candidates / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getV1FormInventoryCandidates(args: { facilityId?: string; templateKey: string }): Promise<unknown>;
+    /** 事業所の帳票ごとに、CPOS が出せるものと足りないもの ((i)〜(v)) を表示
+     * GET /api/care-documents/v1/form-inventory/summary / 認証 session / 応答の形: 未確認 (生の JSON。項目名を推測しない) / 模擬サーバ: 無し (501) */
+    getV1FormInventorySummary(args?: { facilityId?: string }): Promise<unknown>;
   };
   careManagement: {
     /** 人のログインと現在の本人・事業所で共通取り込みを開く
